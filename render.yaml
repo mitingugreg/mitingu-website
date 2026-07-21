@@ -1,0 +1,63 @@
+# Render Blueprint for the Mitingu website (static site)
+# Docs: https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: mitingu-website
+    runtime: static
+    buildCommand: npm run build
+    staticPublishPath: ./dist/client
+    # Serve a friendly 404 for unknown paths
+    routes:
+      # Legacy URL redirects (301) carried over from the previous site
+      - type: redirect
+        source: /features/ai
+        destination: /event-intelligence
+      - type: redirect
+        source: /features/ai/
+        destination: /event-intelligence
+      - type: redirect
+        source: /ai-insights
+        destination: /event-intelligence
+      - type: redirect
+        source: /ai-insights/
+        destination: /event-intelligence
+      - type: redirect
+        source: /features/analyics-and-reports
+        destination: /platform
+      - type: redirect
+        source: /features/analytics-and-reports
+        destination: /platform
+      - type: redirect
+        source: /features/event-communications
+        destination: /event-communications-platform
+      - type: redirect
+        source: /features/branded-event-web-and-emails
+        destination: /white-label-event-platform
+      - type: redirect
+        source: /features/event-surveys
+        destination: /event-analytics-reporting
+      - type: redirect
+        source: /analytics
+        destination: /platform
+      - type: redirect
+        source: /whitelabel-overview
+        destination: /platform
+      - type: redirect
+        source: /price-plans
+        destination: /pricing
+    headers:
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: X-Frame-Options
+        value: SAMEORIGIN
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin
+      - path: /*
+        name: Strict-Transport-Security
+        value: max-age=31536000
+      - path: /assets/*
+        name: Cache-Control
+        value: public, max-age=86400

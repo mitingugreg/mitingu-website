@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mitingu CMS</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/cms/cms.css">
+  </head>
+  <body>
+    <header class="cms-header">
+      <a class="cms-brand" href="/" aria-label="Open Mitingu site">
+        <img src="/assets/mitingu-logo.png" alt="Mitingu">
+      </a>
+      <div>
+        <h1>Mitingu CMS</h1>
+        <p id="status">Loading content</p>
+      </div>
+      <div class="cms-actions">
+        <button id="saveButton" type="button">Save</button>
+        <button id="rebuildButton" type="button">Rebuild</button>
+        <button id="downloadButton" type="button">Download JSON</button>
+        <label class="file-button" for="importFile">Import JSON</label>
+        <input id="importFile" type="file" accept="application/json,.json">
+        <a href="/" target="_blank" rel="noreferrer">Open Site</a>
+      </div>
+    </header>
+
+    <main class="cms-shell">
+      <aside class="cms-sidebar" aria-label="Content sections">
+        <nav id="sectionNav"></nav>
+      </aside>
+      <section class="cms-workspace" aria-live="polite">
+        <div class="workspace-heading">
+          <div>
+            <p id="sectionKicker">Content</p>
+            <h2 id="sectionTitle">Site details</h2>
+          </div>
+          <p id="sectionDescription"></p>
+        </div>
+        <div id="editor" class="editor"></div>
+      </section>
+    </main>
+
+    <template id="fieldTemplate">
+      <label class="field">
+        <span></span>
+      </label>
+    </template>
+
+    <script src="/cms/cms.js" type="module"></script>
+  </body>
+</html>
