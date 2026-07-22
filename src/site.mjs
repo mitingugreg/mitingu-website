@@ -449,10 +449,10 @@ function homeTrustedStrip() {
   return `<section class="trust-strip" aria-label="Trusted by">
     <p>${section.text || "Trusted by teams responsible for important corporate events."}</p>
     <div class="client-logos">
-      <span class="client-logo">Booking.com</span>
-      <span class="client-logo">Workday</span>
-      <span class="client-logo">CBRE</span>
-      <span class="client-logo">Campari</span>
+      <img class="client-logo logo-booking" src="/assets/logo-booking.png" alt="Booking.com" loading="lazy" width="336" height="56">
+      <img class="client-logo logo-workday" src="/assets/logo-workday.png" alt="Workday" loading="lazy" width="183" height="88">
+      <img class="client-logo logo-cbre" src="/assets/logo-cbre.png" alt="CBRE" loading="lazy" width="230" height="60">
+      <img class="client-logo logo-campari" src="/assets/logo-campari.png" alt="Campari" loading="lazy" width="296" height="62">
     </div>
   </section>`;
 }
