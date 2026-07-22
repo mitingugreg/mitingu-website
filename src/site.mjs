@@ -448,7 +448,12 @@ function homeTrustedStrip() {
   const section = homePage.trustedBy || {};
   return `<section class="trust-strip" aria-label="Trusted by">
     <p>${section.text || "Trusted by teams responsible for important corporate events."}</p>
-    <div>${(section.items || proofPoints).map((point) => `<span>${point}</span>`).join("")}</div>
+    <div class="client-logos">
+      <span class="client-logo">Booking.com</span>
+      <span class="client-logo">Workday</span>
+      <span class="client-logo">CBRE</span>
+      <span class="client-logo">Campari</span>
+    </div>
   </section>`;
 }
 

@@ -557,6 +557,30 @@ h3 {
   font-size: 0.92rem;
 }
 
+.trust-strip .client-logos {
+  align-items: center;
+  gap: clamp(28px, 5vw, 56px);
+}
+
+.trust-strip .client-logo {
+  border: 0;
+  background: none;
+  padding: 0;
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  color: var(--muted);
+  opacity: 0.72;
+  filter: grayscale(1);
+}
+
+.trust-strip .client-logos img {
+  height: 30px;
+  width: auto;
+  filter: grayscale(1);
+  opacity: 0.72;
+}
+
 .content-section {
   padding: var(--section-space) 0;
 }
