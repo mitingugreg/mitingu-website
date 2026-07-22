@@ -5,7 +5,8 @@
     "phone": "+44 1608 495288",
     "linkedin": "https://www.linkedin.com/company/mitingu-ltd",
     "instagram": "https://www.instagram.com/mitingu_software",
-    "formEndpoint": "https://formspree.io/f/YOUR_FORM_ID"
+    "formEndpoint": "https://api.web3forms.com/submit",
+    "formAccessKey": "7691210a-3a5c-4eb1-9408-92e1e8580235"
   },
   "media": {
     "logo": {

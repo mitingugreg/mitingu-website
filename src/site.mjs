@@ -1038,10 +1038,12 @@ function resourceCards() {
 }
 
 function demoForm() {
-  const endpoint = site.formEndpoint || "";
+  const endpoint = site.formEndpoint || "https://api.web3forms.com/submit";
   return `<form class="demo-form" data-demo-form action="${endpoint}" method="POST" novalidate>
-    <input type="hidden" name="_subject" value="New Mitingu demo request">
-    <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+    <input type="hidden" name="access_key" value="${site.formAccessKey || ""}">
+    <input type="hidden" name="subject" value="New Mitingu demo request">
+    <input type="hidden" name="from_name" value="Mitingu website">
+    <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
     <div><label for="name">Name</label><input id="name" name="name" type="text" autocomplete="name" required></div>
     <div><label for="email">Work email</label><input id="email" name="email" type="email" autocomplete="email" required></div>
     <div><label for="company">Company</label><input id="company" name="company" type="text" autocomplete="organization" required></div>
@@ -1077,7 +1079,8 @@ function demoFormScript() {
     status.dataset.state = state;
   };
   form.addEventListener("submit", async (event) => {
-    if (!form.action || form.action.indexOf("YOUR_FORM_ID") !== -1) return;
+    const keyField = form.querySelector("input[name=access_key]");
+    if (!keyField || !keyField.value) return;
     event.preventDefault();
     if (!form.reportValidity()) return;
     button.disabled = true;
@@ -1094,7 +1097,7 @@ function demoFormScript() {
         setStatus("Thank you. Your demo request has been sent and we will be in touch shortly.", "success");
       } else {
         const data = await response.json().catch(() => ({}));
-        const detail = data && data.errors && data.errors.length ? data.errors.map((e) => e.message).join(", ") : "";
+        const detail = data && data.message ? data.message : "";
         setStatus("Sorry, something went wrong" + (detail ? ": " + detail : "") + ". Please email " + ${JSON.stringify(site.email)} + " instead.", "error");
       }
     } catch (error) {
