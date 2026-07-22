@@ -1059,8 +1059,9 @@ function platformGrid() {
 
 function pricingCards() {
   return `<div class="pricing-grid">
-    ${pricingPlans.map(([name, description, features]) => `<article class="pricing-card">
+    ${pricingPlans.map(([name, description, features, price]) => `<article class="pricing-card">
       <h3>${name}</h3><p>${description}</p>
+      ${price ? `<div class="pricing-price"><div class="price-main"><span class="price-amount">${price.prefix || ""}${price.amount}</span><span class="price-period">${price.period || ""}</span></div>${price.note ? `<p class="price-note">${price.note}</p>` : ""}</div>` : ""}
       <ul>${features.map((feature) => `<li>${feature}</li>`).join("")}</ul>
       ${button("/book-a-demo", "Talk to us", "secondary")}
     </article>`).join("")}

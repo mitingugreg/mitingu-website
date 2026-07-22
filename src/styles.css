@@ -1212,9 +1212,44 @@ h3 {
 }
 
 .pricing-card {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 18px;
-  align-content: start;
+}
+
+.pricing-card .button {
+  margin-top: auto;
+}
+
+.pricing-price {
+  display: grid;
+  gap: 4px;
+}
+
+.price-main {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+}
+
+.price-amount {
+  font-size: 2.1rem;
+  line-height: 1;
+  font-weight: 850;
+  letter-spacing: -0.5px;
+  color: var(--ink);
+}
+
+.price-period {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.pricing-card .price-note {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--muted);
 }
 
 .pricing-card ul {
