@@ -668,9 +668,8 @@
           "label": "Branded Registration",
           "title": "Make registration feel like your event.",
           "subtitle": "Create branded event pages and registration journeys that work clearly on desktop and mobile.",
-          "image": "/assets/expo-registration-mitingu.webp",
-          "alt": "Example branded event registration website shown on laptop and mobile screens.",
-          "fit": "contain"
+          "image": "/assets/showcase-roadshow-registration.webp",
+          "alt": "Branded event registration website for The Business Marketing Roadshow, showing the event header, host cities and Register Now call to action."
         }
       ]
     },
