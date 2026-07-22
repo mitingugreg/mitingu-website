@@ -431,6 +431,14 @@
     "/solutions/multi-office-event-programmes": [
       "Multi-office Event Programmes",
       "For multi-office, multi-region and multi-brand event programmes that need central visibility and local control."
+    ],
+    "/privacy-policy": [
+      "Privacy Policy",
+      "How Mitingu collects, uses, stores and protects your personal data, and your rights under the GDPR."
+    ],
+    "/terms-and-conditions": [
+      "Terms and Conditions",
+      "The terms and conditions governing use of Mitingu's services."
     ]
   },
   "redirects": {

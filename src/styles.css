@@ -1603,9 +1603,151 @@ textarea:focus {
   }
 }
 
+.legal {
+  width: min(100% - 48px, 820px);
+  margin: 0 auto;
+  padding-bottom: var(--section-space);
+  color: var(--ink);
+}
+
+.legal h2 {
+  font-size: 1.4rem;
+  margin: 36px 0 12px;
+}
+
+.legal p {
+  color: var(--muted);
+  line-height: 1.75;
+  margin: 0 0 14px;
+}
+
+.legal a {
+  color: var(--teal);
+  font-weight: 700;
+}
+
+.legal-meta {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.legal-hero {
+  width: min(100% - 48px, 820px);
+  margin-left: auto;
+  margin-right: auto;
+  grid-template-columns: 1fr;
+}
+
+.cookie-banner {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 200;
+  display: flex;
+  justify-content: center;
+  padding: 16px;
+}
+
+.cookie-banner[hidden] {
+  display: none;
+}
+
+.cookie-inner {
+  width: min(100%, 1000px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  background: var(--ink);
+  color: #fff;
+  border-radius: 14px;
+  padding: 18px 24px;
+  box-shadow: 0 18px 45px rgba(21, 23, 22, 0.28);
+  transform: translateY(16px);
+  opacity: 0;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.cookie-banner.is-visible .cookie-inner {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.cookie-inner p {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.cookie-inner a {
+  color: #75d5d2;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.cookie-actions {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.cookie-btn {
+  cursor: pointer;
+  font: inherit;
+  font-weight: 800;
+  border-radius: 999px;
+  padding: 11px 22px;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  transition: filter 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+
+.cookie-btn-solid {
+  background: var(--teal);
+  color: #fff;
+}
+
+.cookie-btn-solid:hover {
+  filter: brightness(1.08);
+}
+
+.cookie-btn-ghost {
+  background: transparent;
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.cookie-btn-ghost:hover {
+  border-color: #fff;
+}
+
+@media (max-width: 620px) {
+  .cookie-inner {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: left;
+    gap: 14px;
+    padding: 18px;
+  }
+
+  .cookie-actions {
+    gap: 12px;
+  }
+
+  .cookie-btn {
+    flex: 1;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  .cookie-inner {
+    transition: none;
   }
 
   .showcase-slide,
