@@ -113,8 +113,8 @@ function layout({ path, title, description, body }) {
     <meta property="og:url" content="https://www.mitingu.com${path === "/" ? "" : path}">
     <meta property="og:image" content="https://www.mitingu.com/screenshot.jpeg">
     <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="750">
-    <meta property="og:image:alt" content="Mitingu Event Operations Platform">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Mitingu — Event Operations Platform">
     <meta property="og:locale" content="en_GB">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="${fullTitle}">
