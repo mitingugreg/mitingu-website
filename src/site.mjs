@@ -211,6 +211,7 @@ function jsonLd(path, title, description) {
 
 function header() {
   return `<header class="site-header">
+    <div class="header-inner">
     <a class="brand" href="/" aria-label="Mitingu home">
       <img src="${media.logo.src}" alt="${media.logo.alt}">
     </a>
@@ -229,15 +230,24 @@ function header() {
         .join("")}
     </nav>
     ${button("/book-a-demo", "Book a Demo", "dark")}
+    </div>
   </header>`;
 }
 
 function footer() {
   return `<footer class="site-footer">
     <div class="footer-inner">
-      <div>
+      <div class="footer-brand">
         <img class="footer-logo" src="${media.logo.src}" alt="${media.logo.alt}">
         <p>For corporate event teams and agencies who need less chasing and more control.</p>
+        <div class="footer-contact">
+          <a href="mailto:${site.email}">${site.email}</a>
+          <a href="tel:${site.phone.replaceAll(" ", "")}">${site.phone}</a>
+        </div>
+        <div class="footer-social">
+          <a href="${site.linkedin}">LinkedIn</a>
+          <a href="${site.instagram}">Instagram</a>
+        </div>
       </div>
       <div>
         <h2>Platform</h2>
@@ -252,15 +262,11 @@ function footer() {
         <a href="/enterprise-event-registration-platform">Registration capability</a>
       </div>
       <div>
-        <h2>Contact</h2>
+        <h2>Find out More</h2>
         <a href="/pricing">Pricing</a>
         <a href="/resources">Resources</a>
         <a href="/about">About</a>
         <a href="/book-a-demo">Book a Demo</a>
-        <a href="mailto:${site.email}">${site.email}</a>
-        <a href="tel:${site.phone.replaceAll(" ", "")}">${site.phone}</a>
-        <a href="${site.linkedin}">LinkedIn</a>
-        <a href="${site.instagram}">Instagram</a>
         <a href="/privacy-policy">Privacy</a>
         <a href="/terms-and-conditions">Terms</a>
       </div>
@@ -304,8 +310,10 @@ function cookieScript() {
 </script>`;
 }
 
+const CHEVRON = `<svg class="btn-chevron" aria-hidden="true" viewBox="0 0 320 512" fill="currentColor"><path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"/></svg>`;
+
 function button(href, label, variant = "primary") {
-  return `<a class="button button-${variant}" href="${href}"><span>${label}</span><span aria-hidden="true">-&gt;</span></a>`;
+  return `<a class="button button-${variant}" href="${href}"><span>${label}</span>${CHEVRON}</a>`;
 }
 
 function sectionIntro(eyebrow, title, text = "", align = "left") {
@@ -406,7 +414,7 @@ function statusCards(items = [], columns = "three") {
       ${statusLabel(item.status)}
       <h3>${item.title}</h3>
       <p>${item.text || item.description || ""}</p>
-      ${item.link ? `<a href="${item.link}">Learn more -&gt;</a>` : ""}
+      ${item.link ? `<a href="${item.link}">Learn more ${CHEVRON}</a>` : ""}
     </article>`,
       )
       .join("")}
@@ -573,7 +581,7 @@ function moneyPagesGrid() {
     ${moneyPages
       .map(
         ([title, href, text]) =>
-          `<a class="solution-card intent-card" href="${href}"><h3>${title}</h3><p>${text}</p><span>View page -&gt;</span></a>`,
+          `<a class="solution-card intent-card" href="${href}"><h3>${title}</h3><p>${text}</p><span class="card-cta">View page ${CHEVRON}</span></a>`,
       )
       .join("")}
   </div>`;
@@ -879,7 +887,7 @@ function controlList() {
 
 function solutionsGrid() {
   return `<div class="card-grid three">
-    ${solutions.map(([title, href, text]) => `<a class="solution-card" href="${href}"><h3>${title}</h3><p>${text}</p><span>Explore -&gt;</span></a>`).join("")}
+    ${solutions.map(([title, href, text]) => `<a class="solution-card" href="${href}"><h3>${title}</h3><p>${text}</p><span class="card-cta">Explore ${CHEVRON}</span></a>`).join("")}
   </div>`;
 }
 
@@ -1095,7 +1103,7 @@ function demoForm() {
       </select>
     </div>
     <div class="full"><label for="message">What needs to change?</label><textarea id="message" name="message" rows="5"></textarea></div>
-    <button class="button button-primary" type="submit"><span>Request a demo</span><span aria-hidden="true">-&gt;</span></button>
+    <button class="button button-primary" type="submit"><span>Request a demo</span>${CHEVRON}</button>
     <p class="form-status" data-form-status role="status" aria-live="polite" hidden></p>
     <p class="form-note">We usually reply within one working day. Prefer email? Write to <a href="mailto:${site.email}">${site.email}</a>.</p>
   </form>
@@ -1445,7 +1453,7 @@ const pageBodies = {
       text: "We look at event scale, support, white-label needs, account structure and usage. Then we shape the right plan.",
     }, pricingHeroVisual())}
     <section class="content-section">${sectionIntro("Options", "Choose the shape that matches your events.", "Pricing depends on programme structure, event volume, support and account requirements.")}${pricingCards()}</section>
-    <section class="content-band compact">${sectionIntro("Enterprise factors", "What affects pricing?", "Event volume, accounts, attendee usage, white-label depth, integrations, support, Event Intelligence, Mitingu MCP and custom work. SMS, WhatsApp and unusually high usage may carry additional charges.", "center")}</section>
+    <section class="content-band compact">${sectionIntro("Enterprise factors", "What affects pricing?", "Event volume, accounts, attendee usage, white-label depth, integrations, support, Event Intelligence, Mitingu MCP and custom work. SMS, WhatsApp and unusually high usage may carry additional charges.")}</section>
     ${finalCta("", {
       eyebrow: "Pricing conversation",
       title: "Talk through the right commercial shape.",
