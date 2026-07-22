@@ -8,6 +8,27 @@ const client = join(dist, "client");
 const server = join(dist, "server");
 const origin = "https://www.mitingu.com";
 
+// Make links to external sites (Instagram, LinkedIn, any non-mitingu.com URL)
+// open in a new tab, with safe rel attributes. Internal and anchor/mailto/tel
+// links are left untouched.
+function externalizeLinks(html) {
+  return html.replace(
+    /<a\b([^>]*?)href="(https?:\/\/[^"]+)"([^>]*)>/gi,
+    (match, pre, url, post) => {
+      let host;
+      try {
+        host = new URL(url).hostname.replace(/^www\./, "");
+      } catch {
+        return match;
+      }
+      if (host === "mitingu.com" || host.endsWith(".mitingu.com")) return match;
+      if (/\btarget=/.test(match)) return match; // already set
+      const rel = /\brel=/.test(match) ? "" : ' rel="noopener noreferrer"';
+      return `<a${pre}href="${url}"${post} target="_blank"${rel}>`;
+    },
+  );
+}
+
 await rm(dist, { recursive: true, force: true });
 await mkdir(client, { recursive: true });
 await mkdir(server, { recursive: true });
@@ -19,10 +40,10 @@ for (const path of pages) {
   const filePath =
     path === "/" ? join(client, "index.html") : join(client, path, "index.html");
   await mkdir(dirname(filePath), { recursive: true });
-  await writeFile(filePath, renderPage(path));
+  await writeFile(filePath, externalizeLinks(renderPage(path)));
 }
 
-await writeFile(join(client, "404.html"), renderNotFound());
+await writeFile(join(client, "404.html"), externalizeLinks(renderNotFound()));
 
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
