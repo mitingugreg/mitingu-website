@@ -380,7 +380,7 @@
   "metadata": {
     "/": [
       "Event Operations & Intelligence Platform for Corporate Event Teams",
-      "Mitingu is the Event Operations & Intelligence Platform for corporate event teams and agencies. Run your entire event programme — plan, launch, manage and measure every event, with one operational view and plain answers about what needs attention."
+      "Mitingu is the Event Operations & Intelligence Platform for corporate event teams and agencies. Run your entire event programme: plan, launch, manage and measure every event, with one operational view and plain answers about what needs attention."
     ],
     "/platform": [
       "Corporate Event Operations Platform",
@@ -612,7 +612,7 @@
       "hero": {
         "eyebrow": "Corporate event programmes",
         "title": "Run your event programme, not just the next event.",
-        "text": "Give internal event, comms and marketing teams one place to plan, launch, manage and measure every event — with the consistency, governance and visibility a programme needs.",
+        "text": "Give internal event, comms and marketing teams one place to plan, launch, manage and measure every event, with the consistency, governance and visibility a programme needs.",
         "checklist": [
           "Consistency across every event",
           "Governance without slowing teams",
@@ -625,7 +625,7 @@
       "hero": {
         "eyebrow": "Event agencies",
         "title": "Run more client events without the operational chaos.",
-        "text": "Deliver more events for more clients from one platform — separate branding, separate teams, shared templates and reporting — without rebuilding the operating layer every time."
+        "text": "Deliver more events for more clients from one platform, with separate branding, separate teams, shared templates and reporting, without rebuilding the operating layer every time."
       }
     },
     "/solutions/multi-office-event-programmes": {
@@ -640,7 +640,7 @@
     "hero": {
       "eyebrow": "Event Operations & Intelligence Platform",
       "title": "Run your entire event programme. Not just individual events.",
-      "text": "Most event software helps you build an event. Mitingu helps your team understand what's happening across every event, see what needs attention and deliver consistently — without the complexity of traditional enterprise event software.",
+      "text": "Most event software helps you build an event. Mitingu helps your team understand what's happening across every event, see what needs attention and deliver consistently, without the complexity of traditional enterprise event software.",
       "primaryAction": [
         "Book a demo",
         "/book-a-demo"
@@ -749,7 +749,7 @@
       "benefits": [
         {
           "title": "No lock-in to one assistant",
-          "text": "Use Claude, ChatGPT or Microsoft Copilot — whichever your organisation has standardised on."
+          "text": "Use Claude, ChatGPT or Microsoft Copilot, whichever your organisation has standardised on."
         },
         {
           "title": "Secure, approved context",
@@ -776,7 +776,7 @@
     "eventIntelligence": {
       "eyebrow": "Event intelligence",
       "title": "Know what's happening. Know what to do next.",
-      "text": "Mitingu turns everything happening across your events into plain answers — so you spend less time reading reports and more time acting on them.",
+      "text": "Mitingu turns everything happening across your events into plain answers, so you spend less time reading reports and more time acting on them.",
       "questions": [
         "Which events are underperforming?",
         "Which registrations have slowed?",
@@ -915,7 +915,7 @@
     "aiColleague": {
       "eyebrow": "Answers, not admin",
       "title": "Like having an experienced event colleague on the team.",
-      "text": "Ask Mitingu about your event programme and get a straight answer. It surfaces issues before they become problems, suggests what to do next and spots trends across events — the way a seasoned colleague would.",
+      "text": "Ask Mitingu about your event programme and get a straight answer. It surfaces issues before they become problems, suggests what to do next and spots trends across events, the way a seasoned colleague would.",
       "points": [
         {
           "title": "Ask about your programme",
@@ -927,7 +927,7 @@
         },
         {
           "title": "Get a recommended next action",
-          "text": "Not just data — a clear sense of what to do next."
+          "text": "Not just data, but a clear sense of what to do next."
         },
         {
           "title": "See trends across events",

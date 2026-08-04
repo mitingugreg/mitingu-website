@@ -896,7 +896,7 @@ h3 {
   font-weight: 750;
 }
 
-/* Event Intelligence — plain-English question chips (inside dark panel) */
+/* Event Intelligence: plain-English question chips (inside dark panel) */
 .answer-questions {
   display: flex;
   flex-wrap: wrap;
@@ -913,7 +913,7 @@ h3 {
   font-weight: 700;
 }
 
-/* Event Operations — operational cards with icons */
+/* Event Operations: operational cards with icons */
 .op-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -955,7 +955,7 @@ h3 {
   height: 22px;
 }
 
-/* Questions band — "what your platform should help with" */
+/* Questions band: "what your platform should help with" */
 .question-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -980,7 +980,7 @@ h3 {
   font-weight: 800;
 }
 
-/* Comparison — traditional vs Mitingu */
+/* Comparison: traditional vs Mitingu */
 .compare-table {
   display: grid;
   grid-template-columns: 1fr 1fr;

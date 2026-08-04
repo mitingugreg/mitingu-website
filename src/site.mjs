@@ -114,7 +114,7 @@ function layout({ path, title, description, body }) {
     <meta property="og:image" content="https://www.mitingu.com/screenshot.jpeg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Mitingu — Event Operations Platform">
+    <meta property="og:image:alt" content="Mitingu Event Operations Platform">
     <meta property="og:locale" content="en_GB">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="${fullTitle}">
@@ -1652,7 +1652,7 @@ const pageBodies = {
       ${renderPageHero("/solutions/corporate-events", {
         eyebrow: "Corporate event programmes",
         title: "Run your event programme, not just the next event.",
-        text: "Give internal event, comms and marketing teams one place to plan, launch, manage and measure every event — with the consistency, governance and visibility a programme needs.",
+        text: "Give internal event, comms and marketing teams one place to plan, launch, manage and measure every event, with the consistency, governance and visibility a programme needs.",
       }, corporateHeroVisual())}
       <section class="content-section">
         ${sectionIntro("Corporate outcomes", "Consistency, governance and visibility across the whole programme.", "For corporate teams, the challenge is rarely one event. It is running many of them to the same standard, across offices and brands, without losing control.")}
@@ -1672,7 +1672,7 @@ const pageBodies = {
     ${renderPageHero("/solutions/event-agencies", {
       eyebrow: "Event agencies",
       title: "Run more client events without the operational chaos.",
-      text: "Deliver more events for more clients from one platform — separate branding, separate teams, shared templates and reporting — without rebuilding the operating layer every time.",
+      text: "Deliver more events for more clients from one platform, with separate branding, separate teams, shared templates and reporting, without rebuilding the operating layer every time.",
     }, agencyHeroVisual())}
     <section class="content-section">
       ${sectionIntro("Agency delivery", "One platform. Every client. No rebuild each time.")}
