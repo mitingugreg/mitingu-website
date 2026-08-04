@@ -379,8 +379,8 @@
   ],
   "metadata": {
     "/": [
-      "Event Operations & Intelligence Platform for Corporate Event Teams",
-      "Mitingu is the Event Operations & Intelligence Platform for corporate event teams and agencies. Run your entire event programme: plan, launch, manage and measure every event, with one operational view and plain answers about what needs attention."
+      "Event Operations Platform for Corporate Event Teams",
+      "Mitingu is the Event Operations Platform for corporate event teams and event agencies, bringing planning, registration, communications, reporting and Event Intelligence together in one place."
     ],
     "/platform": [
       "Corporate Event Operations Platform",
@@ -638,15 +638,15 @@
   },
   "homePage": {
     "hero": {
-      "eyebrow": "Event Operations & Intelligence Platform",
-      "title": "Run your entire event programme. Not just individual events.",
-      "text": "Most event software helps you build an event. Mitingu helps your team understand what's happening across every event, see what needs attention and deliver consistently, without the complexity of traditional enterprise event software.",
+      "eyebrow": "Event Operations Platform",
+      "title": "Make running corporate events simpler.",
+      "text": "Mitingu brings planning, registration, communications, reporting and Event Intelligence together in one place for corporate event teams and event agencies.",
       "primaryAction": [
-        "Book a demo",
+        "Book a Demo",
         "/book-a-demo"
       ],
       "secondaryAction": [
-        "See how it works",
+        "See How Mitingu Works",
         "#how-it-works"
       ],
       "showcase": [
@@ -685,7 +685,8 @@
           "image": "/assets/showcase-roadshow-registration.webp",
           "alt": "Branded event registration website for The Business Marketing Roadshow, showing the event header, host cities and Register Now call to action."
         }
-      ]
+      ],
+      "supportLine": "Use the AI assistant your team already trusts, with the event context it needs."
     },
     "trustedBy": {
       "text": "We've worked with event teams at",

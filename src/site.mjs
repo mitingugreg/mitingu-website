@@ -93,7 +93,7 @@ export function renderNotFound() {
 function layout({ path, title, description, body }) {
   const fullTitle =
     path === "/"
-      ? "Mitingu | Event Operations & Intelligence Platform for Corporate Event Teams"
+      ? "Mitingu | Event Operations Platform for Corporate Event Teams"
       : title.includes("|")
         ? title
         : `${title} | Mitingu`;
