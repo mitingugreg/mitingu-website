@@ -201,7 +201,12 @@
         "Event analytics and reporting",
         "Launch support"
       ],
-      { "prefix": "From ", "amount": "£399", "period": "/month", "note": "or £3,990 billed annually" }
+      {
+        "prefix": "From ",
+        "amount": "£399",
+        "period": "/month",
+        "note": "or £3,990 billed annually"
+      }
     ],
     [
       "White Label",
@@ -374,8 +379,8 @@
   ],
   "metadata": {
     "/": [
-      "Event Operations Platform for Corporate Event Teams",
-      "Mitingu is the Event Operations Platform for corporate event teams and event agencies, bringing planning, registration, communications, collaboration and Event Intelligence together in one place."
+      "Event Operations & Intelligence Platform for Corporate Event Teams",
+      "Mitingu is the Event Operations & Intelligence Platform for corporate event teams and agencies. Run your entire event programme — plan, launch, manage and measure every event, with one operational view and plain answers about what needs attention."
     ],
     "/platform": [
       "Corporate Event Operations Platform",
@@ -605,22 +610,22 @@
     },
     "/solutions/corporate-events": {
       "hero": {
-        "eyebrow": "Corporate events",
-        "title": "Important events need more than another spreadsheet.",
-        "text": "Give internal event, comms and marketing teams structure, visibility and brand control without slowing them down.",
+        "eyebrow": "Corporate event programmes",
+        "title": "Run your event programme, not just the next event.",
+        "text": "Give internal event, comms and marketing teams one place to plan, launch, manage and measure every event — with the consistency, governance and visibility a programme needs.",
         "checklist": [
-          "Visibility across the programme",
-          "Governance without slowing teams down",
-          "Reporting stakeholders can trust",
-          "Control over attendee experience"
+          "Consistency across every event",
+          "Governance without slowing teams",
+          "Visibility for leadership",
+          "Knowledge kept between events"
         ]
       }
     },
     "/solutions/event-agencies": {
       "hero": {
         "eyebrow": "Event agencies",
-        "title": "Client-ready event technology, without rebuilding every time.",
-        "text": "Deliver branded event sites, registration, communications and reports with reusable templates and flexible account structures."
+        "title": "Run more client events without the operational chaos.",
+        "text": "Deliver more events for more clients from one platform — separate branding, separate teams, shared templates and reporting — without rebuilding the operating layer every time."
       }
     },
     "/solutions/multi-office-event-programmes": {
@@ -633,16 +638,15 @@
   },
   "homePage": {
     "hero": {
-      "eyebrow": "Event Operations Platform",
-      "title": "Make running corporate events simpler.",
-      "text": "Planning, registration, communications, reporting and Event Intelligence in one place. Built for corporate event teams and agencies who need less chasing and more control.",
-      "supportLine": "Use the AI assistant your team already trusts, with the event context it needs.",
+      "eyebrow": "Event Operations & Intelligence Platform",
+      "title": "Run your entire event programme. Not just individual events.",
+      "text": "Most event software helps you build an event. Mitingu helps your team understand what's happening across every event, see what needs attention and deliver consistently — without the complexity of traditional enterprise event software.",
       "primaryAction": [
-        "Book a Demo",
+        "Book a demo",
         "/book-a-demo"
       ],
       "secondaryAction": [
-        "See How Mitingu Works",
+        "See how it works",
         "#how-it-works"
       ],
       "showcase": [
@@ -693,89 +697,48 @@
         "Professional conference organisers"
       ]
     },
-    "problem": {
-      "eyebrow": "The problem",
-      "title": "Running corporate events has become too messy.",
-      "text": "Stakeholders, deadlines, suppliers, speakers, budgets and approvals are enough to manage. The work gets harder when the facts live in too many places.",
-      "cards": [
-        {
-          "title": "Systems drift apart",
-          "text": "Planning, registration, communications, files and reports end up in different places."
-        },
-        {
-          "title": "Context gets lost",
-          "text": "Useful knowledge about audiences, speakers, venues and messages is hard to reuse."
-        },
-        {
-          "title": "The update takes too long",
-          "text": "Someone still has to pull the latest numbers together before anyone can make a decision."
-        }
-      ]
-    },
     "betterWay": {
-      "eyebrow": "The better way",
-      "title": "Keep the event operation in one place.",
-      "text": "Mitingu brings the core work together so teams can plan clearly, move faster and keep everyone aligned.",
+      "eyebrow": "Everything, working together",
+      "title": "The features are all here. They just aren't the story.",
+      "text": "Every part of Mitingu earns its place by answering one question: so what does this do for the team?",
       "capabilities": [
         {
           "title": "Plan",
-          "text": "Keep briefs, suppliers, deadlines, approvals and practical details easier to find."
+          "text": "Keep briefs, suppliers, deadlines and approvals in one place your whole team can find."
         },
         {
           "title": "Register",
-          "text": "Create branded delegate journeys for public, private, invite-only, internal and paid events."
+          "text": "Launch fully branded registrations in minutes, for public, private, invite-only, internal or paid events."
         },
         {
           "title": "Communicate",
-          "text": "Send invitations, confirmations, reminders, updates and follow-up from the event record."
+          "text": "Keep attendees informed automatically, from first invitation to final follow-up."
         },
         {
           "title": "Collaborate",
-          "text": "Give organisers, agencies, stakeholders and local teams one shared place to work."
+          "text": "Give organisers, agencies and local teams one shared place to work."
         },
         {
           "title": "Deliver",
-          "text": "Support check-in, attendee management, event apps and on-the-day coordination."
+          "text": "Run check-in, attendee management and on-the-day coordination without switching tools."
         },
         {
-          "title": "Improve",
-          "text": "Use reporting, analytics and Event Intelligence to see what should happen next."
-        }
-      ]
-    },
-    "difference": {
-      "eyebrow": "Why Mitingu is different",
-      "title": "Built around the way corporate event teams actually work.",
-      "points": [
-        {
-          "title": "Fits the way teams work",
-          "text": "Shape Mitingu around your event process, stakeholders and approvals."
-        },
-        {
-          "title": "One source of truth",
-          "text": "Plans, registrations, messages, data and reports stay connected."
-        },
-        {
-          "title": "AI with event context",
-          "text": "Built-in and connected AI can work from approved event context, not a blank prompt."
-        },
-        {
-          "title": "Built for repeat events",
-          "text": "Support event programmes over time, not isolated registration forms."
+          "title": "Measure",
+          "text": "Understand performance across every event, not just who registered."
         }
       ]
     },
     "mcp": {
-      "eyebrow": "Mitingu MCP",
-      "title": "Use the AI assistant your team already trusts.",
-      "text": "Ask useful questions from the AI environment your organisation already uses. Mitingu MCP connects that assistant to approved event information and available Mitingu tools.",
-      "supportLine": "Connect Mitingu to compatible AI assistants, including Claude, ChatGPT and supported Microsoft Copilot environments.",
+      "eyebrow": "Bring your own AI",
+      "title": "Connect the AI your organisation already trusts.",
+      "text": "Organisations increasingly have a preferred AI assistant. Mitingu doesn't force you into ours. It connects securely to whichever platform your team already uses, giving that assistant approved event context and the right Mitingu tools.",
+      "supportLine": "Works with Claude, ChatGPT, Microsoft Copilot and future MCP-compatible assistants.",
       "qualification": "Available information and tools depend on the permissions and Mitingu capabilities enabled for your account.",
       "ctaLabel": "Explore Mitingu MCP",
       "ctaHref": "/mcp",
       "status": "Available now",
       "diagram": [
-        "Compatible AI assistant",
+        "Your chosen AI assistant",
         "Mitingu MCP",
         "Events",
         "Attendees",
@@ -785,60 +748,58 @@
       ],
       "benefits": [
         {
+          "title": "No lock-in to one assistant",
+          "text": "Use Claude, ChatGPT or Microsoft Copilot — whichever your organisation has standardised on."
+        },
+        {
+          "title": "Secure, approved context",
+          "text": "Your assistant works from approved Mitingu event context, not isolated exports."
+        },
+        {
           "title": "Ask questions in plain English",
           "text": "Work with event information without rebuilding the same background every time."
         },
         {
-          "title": "Work with relevant event context",
-          "text": "Give compatible assistants approved context, not isolated exports."
-        },
-        {
-          "title": "Reduce copying and exporting",
+          "title": "Less copying and exporting",
           "text": "Spend less time moving information between spreadsheets, reports and AI tools."
         },
         {
-          "title": "Use approved AI environments",
-          "text": "Use the assistant your organisation already trusts where compatible MCP support is available."
+          "title": "You control the access",
+          "text": "Available information depends on the permissions and capabilities enabled for your account."
         },
         {
-          "title": "Control available information",
-          "text": "Access depends on the permissions and Mitingu capabilities enabled for your account."
-        },
-        {
-          "title": "Keep people in control",
-          "text": "AI can support questions, reports and analysis, while decisions and actions remain with your team."
+          "title": "People stay in control",
+          "text": "AI can support questions, reports and analysis, while decisions and actions stay with your team."
         }
       ]
     },
     "eventIntelligence": {
-      "eyebrow": "Event Intelligence",
-      "title": "Every event should make the next one better.",
-      "text": "Use event data, reporting and approved context to understand what happened and what to do next.",
+      "eyebrow": "Event intelligence",
+      "title": "Know what's happening. Know what to do next.",
+      "text": "Mitingu turns everything happening across your events into plain answers — so you spend less time reading reports and more time acting on them.",
+      "questions": [
+        "Which events are underperforming?",
+        "Which registrations have slowed?",
+        "Which communications need attention?",
+        "What changed since yesterday?",
+        "Which events generated the best engagement?"
+      ],
       "parts": [
         {
-          "title": "Built-in Event Intelligence",
+          "title": "Built-in intelligence",
           "status": "Available now",
-          "text": "Reports Assistant, event questions, report generation, analytics, NPS and communications performance where supported."
+          "text": "Ask questions about your events and get answers, reports, analytics and sentiment without digging through spreadsheets."
         },
         {
-          "title": "Connected AI through Mitingu MCP",
+          "title": "Connected to your own AI",
           "status": "Available now",
-          "text": "Compatible external AI assistants can use approved Mitingu event context and available tools, depending on account permissions and enabled capabilities."
+          "text": "Bring the AI assistant your organisation already uses and give it approved event context through Mitingu MCP."
         },
         {
-          "title": "Organisational memory",
+          "title": "Memory across events",
           "status": "Product direction",
-          "text": "Mitingu is building towards richer memory across outcomes, communications, suppliers, venues, speakers, audiences and lessons learned."
+          "text": "Mitingu is building richer memory across outcomes, communications, suppliers, venues, speakers, audiences and lessons learned."
         }
-      ],
-      "memoryItems": [
-        "Previous event outcomes",
-        "Successful communications",
-        "Suppliers and venues",
-        "Speakers and audiences",
-        "Attendance trends",
-        "Templates and playbooks",
-        "Lessons learned"
       ]
     },
     "proof": {
@@ -890,6 +851,117 @@
       "text": "We will shape the demo around your events, your team and the things that are hardest to keep under control.",
       "actionLabel": "Book a Demo",
       "actionHref": "/book-a-demo"
+    },
+    "eventOperations": {
+      "eyebrow": "Event operations",
+      "title": "One operational view across every event.",
+      "text": "Stop jumping between spreadsheets, emails and separate systems just to understand what's happening. Mitingu gives your whole team a live operational view across every event you run.",
+      "cards": [
+        {
+          "icon": "calendar",
+          "title": "Upcoming events",
+          "text": "See everything in flight at a glance, from next week's webinar to next quarter's conference."
+        },
+        {
+          "icon": "register",
+          "title": "Registrations",
+          "text": "Track sign-ups across every event and see where numbers are slowing."
+        },
+        {
+          "icon": "comms",
+          "title": "Communications",
+          "text": "Know which invitations, reminders and follow-ups have gone out, and which are due."
+        },
+        {
+          "icon": "tasks",
+          "title": "Tasks",
+          "text": "Keep owners, deadlines and approvals visible so nothing slips between teams."
+        },
+        {
+          "icon": "reporting",
+          "title": "Reporting",
+          "text": "Understand performance across the programme without pulling numbers together by hand."
+        },
+        {
+          "icon": "team",
+          "title": "Team activity",
+          "text": "See who is doing what across events, offices and clients in one place."
+        },
+        {
+          "icon": "checkin",
+          "title": "Check-in",
+          "text": "Move from registration to on-the-day attendance without switching tools."
+        },
+        {
+          "icon": "ai",
+          "title": "AI guidance",
+          "text": "Ask what needs attention and get a clear answer, not another dashboard to read."
+        }
+      ]
+    },
+    "questions": {
+      "eyebrow": "The questions that matter",
+      "title": "What your event platform should actually help with.",
+      "items": [
+        "What's falling behind?",
+        "Which events need attention?",
+        "Where are registrations slowing?",
+        "Which attendees haven't engaged?",
+        "How did this compare with last year?",
+        "What should we do next?"
+      ],
+      "answer": "These are the questions Mitingu was built to answer."
+    },
+    "aiColleague": {
+      "eyebrow": "Answers, not admin",
+      "title": "Like having an experienced event colleague on the team.",
+      "text": "Ask Mitingu about your event programme and get a straight answer. It surfaces issues before they become problems, suggests what to do next and spots trends across events — the way a seasoned colleague would.",
+      "points": [
+        {
+          "title": "Ask about your programme",
+          "text": "Put questions in plain English and get answers in seconds."
+        },
+        {
+          "title": "Spot issues early",
+          "text": "See what needs attention before it turns into a problem."
+        },
+        {
+          "title": "Get a recommended next action",
+          "text": "Not just data — a clear sense of what to do next."
+        },
+        {
+          "title": "See trends across events",
+          "text": "Understand what's working across the whole programme, not one event at a time."
+        }
+      ]
+    },
+    "comparison": {
+      "eyebrow": "The difference",
+      "title": "Traditional event software vs Mitingu.",
+      "leftLabel": "Traditional event software",
+      "rightLabel": "Mitingu",
+      "rows": [
+        [
+          "Manage registrations.",
+          "Manage your event operation."
+        ],
+        [
+          "Build events.",
+          "Run event programmes."
+        ],
+        [
+          "Static reports.",
+          "Actionable intelligence."
+        ],
+        [
+          "Data.",
+          "Answers."
+        ],
+        [
+          "More software.",
+          "Less complexity."
+        ]
+      ]
     }
   },
   "eventIntelligencePage": {

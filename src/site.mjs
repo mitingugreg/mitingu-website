@@ -93,7 +93,7 @@ export function renderNotFound() {
 function layout({ path, title, description, body }) {
   const fullTitle =
     path === "/"
-      ? "Mitingu | Event Operations Platform for Corporate Event Teams"
+      ? "Mitingu | Event Operations & Intelligence Platform for Corporate Event Teams"
       : title.includes("|")
         ? title
         : `${title} | Mitingu`;
@@ -463,27 +463,11 @@ function homeTextBand(section, extraClass = "") {
   </section>`;
 }
 
-function homeProblem() {
-  const section = homePage.problem || {};
-  return `<section class="content-band">
-    ${sectionIntro(section.eyebrow, section.title, section.text)}
-    ${objectCards(section.cards || [], "info-card", "three")}
-  </section>`;
-}
-
 function homeCapabilities() {
   const section = homePage.betterWay || {};
-  return `<section id="how-it-works" class="content-section">
+  return `<section class="content-section">
     ${sectionIntro(section.eyebrow, section.title, section.text)}
     ${objectCards(section.capabilities, "module-card", "three")}
-  </section>`;
-}
-
-function homeDifference() {
-  const section = homePage.difference || {};
-  return `<section class="content-band">
-    ${sectionIntro(section.eyebrow, section.title)}
-    ${objectCards(section.points, "info-card", "four")}
   </section>`;
 }
 
@@ -517,11 +501,72 @@ function homeEventIntelligence() {
         <h2>${section.title}</h2>
         <p>${section.text}</p>
       </div>
-      <div class="memory-list">
-        ${(section.memoryItems || []).map((item) => `<span>${item}</span>`).join("")}
+      <div class="answer-questions">
+        ${(section.questions || []).map((q) => `<span>${q}</span>`).join("")}
       </div>
     </div>
     ${statusCards(section.parts || [], "three")}
+  </section>`;
+}
+
+const OP_ICONS = {
+  calendar: `<rect x="3" y="4.5" width="18" height="16" rx="2"/><path d="M3 9h18M8 2.5v4M16 2.5v4"/><circle cx="8.5" cy="13.5" r="1.1" fill="currentColor" stroke="none"/><circle cx="12" cy="13.5" r="1.1" fill="currentColor" stroke="none"/><circle cx="15.5" cy="13.5" r="1.1" fill="currentColor" stroke="none"/>`,
+  register: `<circle cx="10" cy="8" r="3.2"/><path d="M4 20c0-3.3 2.7-6 6-6 1.2 0 2.3.35 3.2.95"/><path d="M17.5 14v6M14.5 17h6"/>`,
+  comms: `<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6.5 12 13l8.5-6.5"/>`,
+  tasks: `<path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 5.5l1.3 1.3L7.5 4.5M4 11.5l1.3 1.3L7.5 10.5M4 17.5l1.3 1.3L7.5 16.5"/>`,
+  reporting: `<path d="M4 20h16"/><rect x="5" y="12" width="3.2" height="6" rx="0.6"/><rect x="10.4" y="8" width="3.2" height="10" rx="0.6"/><rect x="15.8" y="4.5" width="3.2" height="13.5" rx="0.6"/>`,
+  team: `<circle cx="8.5" cy="8.5" r="3"/><path d="M2.5 19c0-3 2.7-5.2 6-5.2s6 2.2 6 5.2"/><path d="M16 6.2a3 3 0 0 1 0 5.6M17.5 13.7c2.3.5 4 2.4 4 4.8"/>`,
+  checkin: `<circle cx="12" cy="12" r="8.5"/><path d="M8 12.3l2.6 2.6L16.3 9.2"/>`,
+  ai: `<path d="M12 3.5l1.9 4.6L18.5 10l-4.6 1.9L12 16.5l-1.9-4.6L5.5 10l4.6-1.9L12 3.5Z"/><path d="M18.5 15.5l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7.7-1.8Z"/>`,
+};
+
+function opIcon(name) {
+  const paths = OP_ICONS[name] || OP_ICONS.calendar;
+  return `<span class="op-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${paths}</svg></span>`;
+}
+
+function homeEventOperations() {
+  const section = homePage.eventOperations || {};
+  return `<section id="how-it-works" class="content-section op-section">
+    ${sectionIntro(section.eyebrow, section.title, section.text)}
+    <div class="op-grid">
+      ${(section.cards || []).map((card) => `<article class="op-card">
+        ${opIcon(card.icon)}
+        <h3>${card.title}</h3>
+        <p>${card.text}</p>
+      </article>`).join("")}
+    </div>
+  </section>`;
+}
+
+function homeQuestions() {
+  const section = homePage.questions || {};
+  return `<section class="content-band questions-band">
+    ${sectionIntro(section.eyebrow, section.title)}
+    <div class="question-grid">
+      ${(section.items || []).map((q) => `<span class="question-chip">${q}</span>`).join("")}
+    </div>
+    ${section.answer ? `<p class="questions-answer">${section.answer}</p>` : ""}
+  </section>`;
+}
+
+function homeAiColleague() {
+  const section = homePage.aiColleague || {};
+  return `<section class="content-section">
+    ${sectionIntro(section.eyebrow, section.title, section.text)}
+    ${objectCards(section.points || [], "info-card", "four")}
+  </section>`;
+}
+
+function homeComparison() {
+  const section = homePage.comparison || {};
+  return `<section class="content-band comparison-band">
+    ${sectionIntro(section.eyebrow, section.title)}
+    <div class="compare-table">
+      <div class="compare-head compare-trad">${section.leftLabel || "Traditional"}</div>
+      <div class="compare-head compare-miti">${section.rightLabel || "Mitingu"}</div>
+      ${(section.rows || []).map(([a, b]) => `<div class="compare-cell compare-trad">${a}</div><div class="compare-cell compare-miti">${b}</div>`).join("")}
+    </div>
   </section>`;
 }
 
@@ -557,11 +602,13 @@ function renderHomePage() {
   return `
     ${homeHeroSection()}
     ${homeTrustedStrip()}
-    ${homeProblem()}
-    ${homeCapabilities()}
-    ${homeDifference()}
-    ${homeMcp()}
+    ${homeEventOperations()}
+    ${homeQuestions()}
     ${homeEventIntelligence()}
+    ${homeAiColleague()}
+    ${homeMcp()}
+    ${homeComparison()}
+    ${homeCapabilities()}
     ${homeProof()}
     ${homeAudiences()}
     ${homeTextBand(homePage.philosophy || {}, "compact")}
@@ -1594,20 +1641,21 @@ const pageBodies = {
   `,
   "/solutions/corporate-events": () => {
     const benefits = [
-      ["Visibility across the programme", "See registrations, attendance, feedback and performance without asking every team for an update."],
-      ["Governance without delay", "Use approved templates, permissions and brand controls so organisers can move quickly."],
-      ["Reporting stakeholders can trust", "Turn event data into clearer evidence for leadership, sponsors and internal teams."],
-      ["Control over the attendee experience", "Keep registration, communications and follow-up connected before, during and after the event."],
-      ["Confidence for important events", "Reduce last-minute uncertainty by keeping ownership, information and reporting together."],
+      ["One view across the programme", "See registrations, attendance, feedback and performance across every event without chasing teams for updates."],
+      ["Consistency at scale", "Shared templates and brand controls keep every event on brand, whoever builds it and wherever they sit."],
+      ["Governance without the hold-ups", "Approved templates, permissions and brand rules let organisers move quickly while central teams keep control."],
+      ["Visibility for leadership", "Turn programme data into reporting that leadership, sponsors and internal teams can trust."],
+      ["Knowledge kept between events", "Audiences, suppliers, messages and lessons carry forward, so each event starts ahead of the last."],
+      ["Built for multi-office teams", "Central teams set the standard while local teams keep a practical place to work."],
     ];
     return `
       ${renderPageHero("/solutions/corporate-events", {
-        eyebrow: "Corporate events",
-        title: "Important events need more than another spreadsheet.",
-        text: "Give internal event, comms and marketing teams structure, visibility and brand control without slowing them down.",
+        eyebrow: "Corporate event programmes",
+        title: "Run your event programme, not just the next event.",
+        text: "Give internal event, comms and marketing teams one place to plan, launch, manage and measure every event — with the consistency, governance and visibility a programme needs.",
       }, corporateHeroVisual())}
       <section class="content-section">
-        ${sectionIntro("Corporate outcomes", "Brand consistency, faster launches and central reporting.", "For corporate teams, the issue is rarely one event. It is the work around every event that follows.")}
+        ${sectionIntro("Corporate outcomes", "Consistency, governance and visibility across the whole programme.", "For corporate teams, the challenge is rarely one event. It is running many of them to the same standard, across offices and brands, without losing control.")}
         ${cards(benefits, "info-card", "three")}
       </section>
       <section class="final-cta slim"><div><p class="eyebrow">Explore the platform</p><h2>See what sits behind a better-run event.</h2></div>${button("/platform", "View Platform", "dark")}</section>
@@ -1623,31 +1671,31 @@ const pageBodies = {
   "/solutions/event-agencies": () => `
     ${renderPageHero("/solutions/event-agencies", {
       eyebrow: "Event agencies",
-      title: "Client-ready event technology, without rebuilding every time.",
-      text: "Deliver branded event sites, registration, communications and reports with reusable templates and flexible account structures.",
+      title: "Run more client events without the operational chaos.",
+      text: "Deliver more events for more clients from one platform — separate branding, separate teams, shared templates and reporting — without rebuilding the operating layer every time.",
     }, agencyHeroVisual())}
     <section class="content-section">
-      ${sectionIntro("Agency delivery", "Stop rebuilding the operating layer for every client.")}
+      ${sectionIntro("Agency delivery", "One platform. Every client. No rebuild each time.")}
       ${cards([
-        ["White-label client delivery", "Present the environment as your own or as the client brand."],
-        ["Reusable build patterns", "Create templates that reduce repeated set-up across clients and event types."],
-        ["Client-ready reporting", "Give clients clearer evidence around registration, attendance, engagement, feedback and campaign performance."],
-        ["Room for specialist service", "Keep the software efficient while your agency adds strategy, delivery and creative expertise."],
+        ["One platform, multiple clients", "Run every client from a single place, with separate accounts, branding and teams kept cleanly apart."],
+        ["Shared templates, faster delivery", "Reusable event patterns cut set-up time so your team delivers more without more effort."],
+        ["Repeatable delivery", "Standardise the operational work so recurring events run predictably, client after client."],
+        ["Protect your margins", "Less manual rebuild means more billable time for strategy, creative and client service."],
       ], "module-card", "two")}
     </section>
     <section class="content-band">
-      ${sectionIntro("Agency outcomes", "Efficiency, profitability and consistency across client delivery.", "Standardise the operational work while keeping each client experience polished and on brand.")}
+      ${sectionIntro("Agency outcomes", "Scale delivery without scaling the chaos.", "Standardise the operational work while keeping each client experience polished and on brand.")}
       ${cards([
-        ["Multi-client delivery", "Separate accounts, templates and reports make it easier to serve different clients."],
-        ["Repeatable processes", "Reusable event patterns reduce setup time and make recurring event delivery more predictable."],
-        ["White labelling", "Client-facing event sites and communications can reflect the right brand instead of the software vendor."],
-        ["Better margin on delivery", "Less manual rebuild work means more time for strategy, creative and client service."],
+        ["Separate branding and teams", "Each client sees their own brand, and each team sees only their own work."],
+        ["Agency-wide reporting", "See performance across every client and event, and give each client clear reporting of their own."],
+        ["Repeatable processes", "Reusable event patterns make recurring event delivery faster and more predictable."],
+        ["Room to scale", "Take on more clients and more events without adding operational drag."],
       ], "info-card", "two")}
     </section>
     ${finalCta("", {
       eyebrow: "Event agencies",
       title: "See how Mitingu can support client delivery.",
-      text: "Explore how white-label event operations can help your agency deliver faster and report clearly.",
+      text: "Explore how one platform can help your agency run more client events, protect margins and report clearly.",
       actionLabel: "See Mitingu in Action",
       actionHref: "/book-a-demo",
     })}
