@@ -239,7 +239,7 @@ h3 {
 
 .hero-section {
   display: grid;
-  grid-template-columns: minmax(300px, 1fr) minmax(0, 1.05fr);
+  grid-template-columns: minmax(300px, 1.05fr) minmax(0, 1fr);
   gap: clamp(48px, 5vw, 80px);
   align-items: center;
   padding: 64px 0 56px;
@@ -247,7 +247,7 @@ h3 {
 
 .hero-copy {
   display: grid;
-  max-width: 560px;
+  max-width: 600px;
 }
 
 /* Hero vertical rhythm (8px system):
