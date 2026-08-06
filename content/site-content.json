@@ -639,8 +639,8 @@
   "homePage": {
     "hero": {
       "eyebrow": "Event Operations Platform",
-      "title": "Make running corporate events simpler.",
-      "text": "Mitingu brings planning, registration, communications, reporting and Event Intelligence together in one place for corporate event teams and event agencies.",
+      "title": "Your stakeholders won't ask whether registration worked. They'll ask whether the event did.",
+      "text": "Mitingu runs your corporate events, measures them against their objectives and recommends what to do when results are heading in the wrong direction.",
       "primaryAction": [
         "Book a Demo",
         "/book-a-demo"
@@ -685,8 +685,7 @@
           "image": "/assets/showcase-roadshow-registration.webp",
           "alt": "Branded event registration website for The Business Marketing Roadshow, showing the event header, host cities and Register Now call to action."
         }
-      ],
-      "supportLine": "Use the AI assistant your team already trusts, with the event context it needs."
+      ]
     },
     "trustedBy": {
       "text": "We've worked with event teams at",

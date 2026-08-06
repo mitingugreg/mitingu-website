@@ -257,7 +257,10 @@ h3 {
 }
 
 .hero-copy h1 {
-  margin-bottom: 32px;
+  margin-bottom: 28px;
+  font-size: 2.3rem;
+  line-height: 1.16;
+  letter-spacing: -0.3px;
 }
 
 .hero-copy > p:not(.eyebrow) {
@@ -1698,6 +1701,11 @@ textarea:focus {
     --panel-padding: 24px;
     --intro-gap: 12px;
     --intro-bottom: 28px;
+  }
+
+  .hero-copy h1 {
+    font-size: 1.95rem;
+    line-height: 1.18;
   }
 
   .hero-section,
