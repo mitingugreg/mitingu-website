@@ -598,6 +598,26 @@ function homeFinalCta() {
   </section>`;
 }
 
+function homeEventBuilder() {
+  const s = homePage.eventBuilder || {};
+  return `<section class="content-section" id="event-builder">
+    <div class="section-intro">
+      <p class="eyebrow">${s.eyebrow || "Event builder"}</p>
+      <div class="section-title-row"><h2>${s.title || ""}</h2>${statusLabel(s.status)}</div>
+      ${s.text ? `<p>${s.text}</p>` : ""}
+    </div>
+    ${objectCards(s.ways || [], "info-card", "two")}
+  </section>`;
+}
+
+function homeCollaboration() {
+  const s = homePage.collaboration || {};
+  return `<section class="content-band" id="collaboration">
+    ${sectionIntro(s.eyebrow, s.title, s.text)}
+    ${objectCards(s.points || [], "info-card", "four")}
+  </section>`;
+}
+
 function renderHomePage() {
   return `
     ${homeHeroSection()}
@@ -607,8 +627,10 @@ function renderHomePage() {
     ${homeEventIntelligence()}
     ${homeAiColleague()}
     ${homeMcp()}
+    ${homeEventBuilder()}
     ${homeComparison()}
     ${homeCapabilities()}
+    ${homeCollaboration()}
     ${homeProof()}
     ${homeAudiences()}
     ${homeTextBand(homePage.philosophy || {}, "compact")}

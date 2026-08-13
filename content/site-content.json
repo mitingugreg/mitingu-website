@@ -495,7 +495,7 @@
     "/platform": {
       "hero": {
         "eyebrow": "Platform",
-        "title": "Keep the whole event operation in one place.",
+        "title": "How many events are you running? And which one needs more of your attention?",
         "text": "Planning, registration, communications, attendee management, delivery, reporting and Event Intelligence stay connected for corporate event teams and agencies."
       }
     },
@@ -538,8 +538,8 @@
     "/enterprise-event-registration-platform": {
       "hero": {
         "eyebrow": "Enterprise event registration",
-        "title": "Registration that does not sit on its own.",
-        "text": "Replace forms, spreadsheets and disconnected tools with branded registration journeys connected to attendee data, communications and reporting.",
+        "title": "Badge scans looked great on a slide deck in 2010 maybe. Did we make any money?",
+        "text": "Mitingu. The events software that answers those ‘awkward’ questions.",
         "checklist": [
           "Public, private and invite-only workflows",
           "Branded registration journeys",
@@ -560,8 +560,8 @@
     "/event-analytics-reporting": {
       "hero": {
         "eyebrow": "Event analytics and reporting",
-        "title": "Know which events are working, not just who registered.",
-        "text": "See registrations, attendance, feedback, engagement and performance across events, offices and regions."
+        "title": "100% event show rate? Amazing, did anybody make any money?",
+        "text": "Mitingu. The events software that answers those ‘awkward’ questions."
       },
       "answer": {
         "title": "Turn event activity into evidence.",
@@ -577,7 +577,7 @@
     "/event-communications-platform": {
       "hero": {
         "eyebrow": "Event communications platform",
-        "title": "Keep everyone informed before, during and after.",
+        "title": "Are you sure everyone has the right information?",
         "text": "Manage invitations, confirmations, reminders, updates, segmented messages and follow-up alongside registration and reporting.",
         "checklist": [
           "Invitations and confirmations",
@@ -631,7 +631,7 @@
     "/solutions/multi-office-event-programmes": {
       "hero": {
         "eyebrow": "Multi-office programmes",
-        "title": "Central visibility for events happening everywhere.",
+        "title": "How do you give every office control without losing yours?",
         "text": "When offices, regions and brands all run events differently, central teams need control without blocking local teams."
       }
     }
@@ -962,13 +962,52 @@
           "Less complexity."
         ]
       ]
+    },
+    "eventBuilder": {
+      "eyebrow": "Event builder",
+      "status": "Coming soon",
+      "title": "Describe your event. Mitingu builds it.",
+      "text": "Tell Mitingu what you're running, from the audience and format to the dates, and it builds the branded event site, registration and communications for you to review, adjust and launch. Not a blank template: a complete first draft of the event.",
+      "ways": [
+        {
+          "title": "Inside Mitingu",
+          "text": "Start from a plain-English brief and get a working, on-brand event ready to refine."
+        },
+        {
+          "title": "Through your own AI",
+          "text": "Ask Claude, ChatGPT or Microsoft Copilot to build it via Mitingu MCP, using your approved brand and settings."
+        }
+      ]
+    },
+    "collaboration": {
+      "eyebrow": "Collaboration",
+      "title": "Everyone on the event, in one secure place.",
+      "text": "Give organisers, sub-contractors, agencies and stakeholders secure access to the same event, so everyone can plan, discuss and share files in one place instead of scattered email threads. Each person sees what they need, and nothing more.",
+      "points": [
+        {
+          "title": "Secure, role-based access",
+          "text": "Invite organisers, suppliers and partners with the right level of access to each event."
+        },
+        {
+          "title": "Discuss in context",
+          "text": "Keep questions, decisions and updates against the event itself, not lost in inboxes."
+        },
+        {
+          "title": "Shared files",
+          "text": "Upload and share briefs, artwork, run sheets and documents from one place."
+        },
+        {
+          "title": "Controlled visibility",
+          "text": "Permissions keep client, supplier and internal information appropriately separated."
+        }
+      ]
     }
   },
   "eventIntelligencePage": {
     "hero": {
       "eyebrow": "Event Intelligence",
-      "title": "Ask better questions of every event.",
-      "text": "Understand registrations, attendance, communications, feedback and reports using the event context already in Mitingu."
+      "title": "So 500 walked in the door. How many new relationships walked out?",
+      "text": "Mitingu. The events software that answers those ‘awkward’ questions."
     },
     "builtIn": {
       "eyebrow": "Built-in Event Intelligence",
