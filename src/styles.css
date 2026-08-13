@@ -263,6 +263,12 @@ h3 {
   letter-spacing: -0.3px;
 }
 
+.page-hero h1 {
+  font-size: 2.3rem;
+  line-height: 1.16;
+  letter-spacing: -0.3px;
+}
+
 .hero-copy > p:not(.eyebrow) {
   max-width: 520px;
 }
@@ -1704,6 +1710,11 @@ textarea:focus {
   }
 
   .hero-copy h1 {
+    font-size: 1.95rem;
+    line-height: 1.18;
+  }
+
+  .page-hero h1 {
     font-size: 1.95rem;
     line-height: 1.18;
   }
