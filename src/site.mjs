@@ -217,7 +217,7 @@ function header() {
     <a class="brand" href="/" aria-label="Mitingu home">
       <img src="${media.logo.src}" alt="${media.logo.alt}">
     </a>
-    <nav class="site-nav" aria-label="Primary navigation">
+    <nav class="site-nav" id="site-nav" aria-label="Primary navigation">
       ${navItems
         .map(([label, href]) =>
           label === "Solutions"
@@ -232,8 +232,27 @@ function header() {
         .join("")}
     </nav>
     ${button("/book-a-demo", "Book a Demo", "dark")}
+    <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav">
+      <svg class="icon-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      <svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
     </div>
-  </header>`;
+  </header>
+  <script>
+    (() => {
+      const header = document.querySelector(".site-header");
+      const toggle = header.querySelector(".nav-toggle");
+      const setOpen = (open) => {
+        header.classList.toggle("nav-open", open);
+        toggle.setAttribute("aria-expanded", String(open));
+        toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+      };
+      toggle.addEventListener("click", () => setOpen(!header.classList.contains("nav-open")));
+      header.querySelectorAll(".site-nav a").forEach((a) => a.addEventListener("click", () => setOpen(false)));
+      document.addEventListener("keydown", (e) => { if (e.key === "Escape") setOpen(false); });
+      document.addEventListener("click", (e) => { if (!header.contains(e.target)) setOpen(false); });
+    })();
+  </script>`;
 }
 
 function footer() {
