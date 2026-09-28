@@ -1017,8 +1017,8 @@
     },
     "appsOnsite": {
       "eyebrow": "Apps and onsite",
-      "title": "The event day runs on the same platform as everything else.",
-      "text": "A branded attendee app, self-service and staffed registration booths, and lead capture that scores as it scans. All of it feeds the same data as your registration and reporting, so you can show what the event achieved and what to change next time.",
+      "title": "One supplier for the app, another for check-in, and a spreadsheet to join them up?",
+      "text": "No more stitching three systems together after the event. The branded attendee app, self-service and staffed registration booths, and lead capture that scores as it scans all run on Mitingu, feeding the same data as your registration and reporting.",
       "points": [
         "White-label attendee app for iOS and Android",
         "App CMS that pulls from and pushes to Mitingu",

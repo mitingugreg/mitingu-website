@@ -652,10 +652,10 @@ function homeAppsOnsite() {
 function renderEventAppsPage() {
   const path = "/event-apps-onsite-registration";
   const features = [
-    ["leads", "Lead capture", "Leads that arrive already sorted.", "Exhibitors and your own team scan a badge, add a note and mark the lead hot, warm or cold there and then. The leads go to the right inbox the same day, and you can see which stands had real conversations rather than a bowl of business cards."],
-    ["floorplan", "Interactive floor plan", "Find the stand, not the help desk.", "An interactive floor plan across every hall and level. Attendees search for an exhibitor, see exactly where they are and find their own way there. Every exhibitor listing links straight to its stand."],
-    ["pass", "Attendee pass", "A pass in every pocket.", "Each attendee's QR pass lives in the app, ready for check-in and badge collection. Nobody is scrolling through their inbox at the front of the queue looking for a confirmation email."],
-    ["home", "Your brand, not ours", "Their app, under your name.", "Agenda, seminar booking with live places, venue and travel details, catering and allergens, and announcements. All in an app carrying your brand or your client's."],
+    ["leads", "Lead capture", "Leads scribbled on the back of business cards?", "No more bowls of business cards and illegible notes that never get followed up. Exhibitors and your own team scan a badge, add a note and mark the lead hot, warm or cold there and then. The leads land in the right inbox the same day, and you can see which stands had real conversations."],
+    ["floorplan", "Interactive floor plan", "Attendees wandering the halls looking for stand 42?", "No more queues at the help desk asking for directions. The interactive floor plan covers every hall and level. Attendees search for an exhibitor, see exactly where they are and find their own way there, and every exhibitor listing links straight to its stand."],
+    ["pass", "Attendee pass", "A queue at the door while people dig through their inbox?", "No more hunting for confirmation emails at the front of the queue. Each attendee's QR pass lives in the app, ready for check-in and badge collection the moment they arrive."],
+    ["home", "Your brand, not ours", "An event app that advertises its supplier instead of you?", "No more someone else's logo on your event. Agenda, seminar booking with live places, venue and travel details, catering and allergens, and announcements, all in an app carrying your brand or your client's."],
   ];
   return `
     ${renderPageHero(path, {
@@ -665,11 +665,11 @@ function renderEventAppsPage() {
     }, `<div class="phone-pair">${phone("home", "phone-back", false)}${phone("floorplan", "phone-front", false)}</div>`)}
     ${renderAnswerBox(path, {
       title: "One platform, from invitation to follow-up.",
-      text: "The attendee app, onsite check-in and lead capture share one attendee record with registration, communications and reporting. Nothing needs exporting, matching or re-keying after the event.",
+      text: "No more exporting, matching and re-keying data after the event. The attendee app, onsite check-in and lead capture share one attendee record with registration, communications and reporting.",
       facts: ["Branded iOS and Android attendee app", "App CMS connected to Mitingu", "Self-service and staffed registration booths", "Lead capture with hot, warm and cold scoring", "Interactive floor plan and exhibitor finder", "Full reporting suite"],
     })}
     <section class="content-section">
-      ${sectionIntro("The attendee app", "Everything they need on the day. Nothing they have to download twice.", "One app for the whole event, set up from the event you have already built in Mitingu. No second system to configure and no spreadsheet to upload the night before.")}
+      ${sectionIntro("The attendee app", "Answering the same question 500 times a day?", "No more help desk doubling as an information booth. One app for the whole event, set up from the event you have already built in Mitingu, with no second system to configure and no spreadsheet to upload the night before.")}
       <div class="app-features">
         ${features.map(([name, eyebrow, title, text], i) => `<article class="app-feature${i % 2 ? " reverse" : ""}">
           <div class="app-feature-media">${phone(name)}</div>
@@ -679,30 +679,30 @@ function renderEventAppsPage() {
       <p class="figure-note">Example event shown. The brand, names and details are illustrative.</p>
     </section>
     <section class="content-band">
-      ${sectionIntro("Running the app", "Change the app without calling anyone.", "The app has its own content management system, connected directly to Mitingu. Event details come in from Mitingu, changes you make go back into it, and the app is updated without re-keying anything.")}
+      ${sectionIntro("Running the app", "Last-minute content changes?", "No more calling the app builder and begging for an update the night before. The app has its own content management system, connected directly to Mitingu, so your team makes the changes themselves.")}
       ${cards([
-        ["Integrated app CMS", "Manage the app's content in one place. Sessions, speakers, exhibitors, venue details and announcements are pulled from Mitingu, and changes are pushed back so both always match."],
-        ["Change content on the day", "Room swap at 9am? Speaker stuck on the M4? Update the agenda, floor plan or announcements and the app reflects it, without waiting on a developer."],
-        ["One attendee record", "Everything the app does, from seminar bookings to lead scans, is written to the same record as registration and check-in."],
-        ["Full reporting suite", "App activity, check-ins, seminar bookings and leads, reported alongside registration and communications, ready to share with stakeholders."],
+        ["Waiting on someone else to update the app?", "No more tickets, emails and fingers crossed. Change the agenda, announcements and venue details yourself in the app CMS, and the app reflects it."],
+        ["Room swap at 9am? Speaker stuck on the M4?", "No more frantic phone calls. Move the session and send an announcement yourself, while the coffee is still hot."],
+        ["The same details typed into two systems?", "No more copying sessions, speakers and exhibitors from one place to another. The app CMS pulls them from Mitingu and pushes changes back, so both always match."],
+        ["Reports stitched together from four exports?", "No more merging spreadsheets after the event. App activity, check-ins, seminar bookings and leads sit in a full reporting suite alongside registration and communications."],
       ])}
     </section>
     <section class="content-section">
-      ${sectionIntro("Onsite technology", "Registration that keeps the queue moving.", "Self-service booths for the people who just want their badge, and a staffed desk for everyone else. Both work from the same live attendee list as the app.")}
+      ${sectionIntro("Onsite technology", "A queue out of the door at 8.55am?", "No more one harassed person with a clipboard. Self-service booths for the people who just want their badge, and a staffed desk for everyone else, both working from the same live attendee list as the app.")}
       ${cards([
-        ["Self-service registration booths", "Attendees scan the QR pass on their phone and collect their badge without waiting for a person. Ideal for the ten minutes before the keynote."],
-        ["Staffed registration desks", "Your team handles walk-ins, VIPs, name changes and the inevitable 'I never got the email', on the same live list."],
-        ["Live arrivals", "Every check-in, at a booth or at the desk, lands in one view. You know who is in the room before the first session starts."],
-        ["No end-of-day reconciling", "Check-in data is already attached to each registration, so nobody spends the evening merging lists from three different laptops."],
+        ["Everyone arriving at once?", "Self-service registration booths let attendees scan the QR pass on their phone and collect their badge without waiting for a person."],
+        ["Walk-ins, VIPs and 'I never got the email'?", "Your staffed desk handles the exceptions on the same live list, so nobody is checking names against a printout."],
+        ["No idea who is actually in the room?", "Every check-in, at a booth or at the desk, lands in one live view before the first session starts."],
+        ["An evening spent merging check-in lists?", "No more reconciling three laptops' worth of spreadsheets. Attendance is already attached to each registration."],
       ])}
     </section>
     <section class="content-band">
-      ${sectionIntro("Proving it worked", "The report is already written, because the data never left.", "Registration, attendance, app activity and leads sit in one place, with a full reporting suite on top. That is what lets you show stakeholders what the event achieved, and work out what to change next time.")}
+      ${sectionIntro("Proving it worked", "Asked whether the event worked, and all you have is a show rate?", "No more guessing. Registration, attendance, app activity and leads sit in one place with a full reporting suite on top, so you can show stakeholders what the event achieved and work out what to change next time.")}
       ${cards([
-        ["Registered versus attended", "See who turned up, by audience, company, region or ticket type, not just a headline show rate."],
-        ["Engagement on the day", "Seminar bookings, check-ins and leads captured, all connected to the people who did them."],
-        ["Value for exhibitors", "Leads per stand and how many were hot. That is the number sponsors will ask about when they decide whether to come back."],
-        ["What to change next time", "Event Intelligence shows where attendance dropped off or sessions filled up, so the next event is planned from evidence rather than habit."],
+        ["Only a headline percentage?", "See who turned up by audience, company, region or ticket type, not just how many."],
+        ["Engagement you cannot evidence?", "Seminar bookings, check-ins and leads captured, all connected to the people who did them."],
+        ["Sponsors asking what they got for their money?", "Leads per stand and how many were hot. That is the number they will ask about when deciding whether to come back."],
+        ["Planning the next event on gut feel?", "Event Intelligence shows where attendance dropped off or sessions filled up, so the next event is planned from evidence rather than habit."],
       ])}
     </section>
     ${faqSection(path)}

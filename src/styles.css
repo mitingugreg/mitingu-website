@@ -2046,11 +2046,13 @@ textarea:focus {
   display: block;
   width: 100%;
   height: auto;
+
 }
 
 .phone-pair {
   position: relative;
   display: flex;
+  align-items: flex-start;
   justify-content: center;
   padding: 10px 0 24px;
 }
