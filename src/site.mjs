@@ -630,7 +630,7 @@ const APP_SCREENS = {
 
 function phone(name, extraClass = "", lazy = true) {
   const [src, alt] = APP_SCREENS[name];
-  return `<img class="phone ${extraClass}" src="${src}" alt="${alt}" width="720" height="1484"${lazy ? ' loading="lazy"' : ""} decoding="async">`;
+  return `<img class="phone ${extraClass}" src="${src}" alt="${alt}" width="800" height="1536"${lazy ? ' loading="lazy"' : ""} decoding="async">`;
 }
 
 function homeAppsOnsite() {
@@ -666,7 +666,7 @@ function renderEventAppsPage() {
     ${renderAnswerBox(path, {
       title: "One platform, from invitation to follow-up.",
       text: "The attendee app, onsite check-in and lead capture share one attendee record with registration, communications and reporting. Nothing needs exporting, matching or re-keying after the event.",
-      facts: ["Branded iOS and Android attendee app", "Self-service and staffed registration booths", "Lead capture with hot, warm and cold scoring", "Interactive floor plan and exhibitor finder"],
+      facts: ["Branded iOS and Android attendee app", "App CMS connected to Mitingu", "Self-service and staffed registration booths", "Lead capture with hot, warm and cold scoring", "Interactive floor plan and exhibitor finder", "Full reporting suite"],
     })}
     <section class="content-section">
       ${sectionIntro("The attendee app", "Everything they need on the day. Nothing they have to download twice.", "One app for the whole event, set up from the event you have already built in Mitingu. No second system to configure and no spreadsheet to upload the night before.")}
@@ -679,6 +679,15 @@ function renderEventAppsPage() {
       <p class="figure-note">Example event shown. The brand, names and details are illustrative.</p>
     </section>
     <section class="content-band">
+      ${sectionIntro("Running the app", "Change the app without calling anyone.", "The app has its own content management system, connected directly to Mitingu. Event details come in from Mitingu, changes you make go back into it, and the app is updated without re-keying anything.")}
+      ${cards([
+        ["Integrated app CMS", "Manage the app's content in one place. Sessions, speakers, exhibitors, venue details and announcements are pulled from Mitingu, and changes are pushed back so both always match."],
+        ["Change content on the day", "Room swap at 9am? Speaker stuck on the M4? Update the agenda, floor plan or announcements and the app reflects it, without waiting on a developer."],
+        ["One attendee record", "Everything the app does, from seminar bookings to lead scans, is written to the same record as registration and check-in."],
+        ["Full reporting suite", "App activity, check-ins, seminar bookings and leads, reported alongside registration and communications, ready to share with stakeholders."],
+      ])}
+    </section>
+    <section class="content-section">
       ${sectionIntro("Onsite technology", "Registration that keeps the queue moving.", "Self-service booths for the people who just want their badge, and a staffed desk for everyone else. Both work from the same live attendee list as the app.")}
       ${cards([
         ["Self-service registration booths", "Attendees scan the QR pass on their phone and collect their badge without waiting for a person. Ideal for the ten minutes before the keynote."],
@@ -687,8 +696,8 @@ function renderEventAppsPage() {
         ["No end-of-day reconciling", "Check-in data is already attached to each registration, so nobody spends the evening merging lists from three different laptops."],
       ])}
     </section>
-    <section class="content-section">
-      ${sectionIntro("Proving it worked", "The report is already written, because the data never left.", "Registration, attendance, app activity and leads sit in one place. That is what lets you show stakeholders what the event achieved, and work out what to change next time.")}
+    <section class="content-band">
+      ${sectionIntro("Proving it worked", "The report is already written, because the data never left.", "Registration, attendance, app activity and leads sit in one place, with a full reporting suite on top. That is what lets you show stakeholders what the event achieved, and work out what to change next time.")}
       ${cards([
         ["Registered versus attended", "See who turned up, by audience, company, region or ticket type, not just a headline show rate."],
         ["Engagement on the day", "Seminar bookings, check-ins and leads captured, all connected to the people who did them."],
@@ -789,6 +798,10 @@ function faqsForPath(path) {
       [
         "Do you provide onsite registration and check-in?",
         "Yes. Mitingu supports self-service registration booths and staffed registration desks, both working from the same live attendee list as the app, registration and reporting.",
+      ],
+      [
+        "Can we change the app's content during the event?",
+        "Yes. The app has an integrated content management system that pulls event information from Mitingu and pushes changes back into it. You can update content such as the agenda, announcements and venue details without re-keying anything or waiting on a developer.",
       ],
       [
         "Why use one platform for registration, the app and check-in?",

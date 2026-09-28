@@ -1021,9 +1021,11 @@
       "text": "A branded attendee app, self-service and staffed registration booths, and lead capture that scores as it scans. All of it feeds the same data as your registration and reporting, so you can show what the event achieved and what to change next time.",
       "points": [
         "White-label attendee app for iOS and Android",
+        "App CMS that pulls from and pushes to Mitingu",
         "Interactive floor plan with exhibitor finder",
         "Lead capture with hot, warm and cold scoring",
-        "Self-service and staffed registration booths"
+        "Self-service and staffed registration booths",
+        "Full reporting suite across app, onsite and registration"
       ],
       "actionLabel": "Explore apps and onsite",
       "actionHref": "/event-apps-onsite-registration"

@@ -2046,7 +2046,6 @@ textarea:focus {
   display: block;
   width: 100%;
   height: auto;
-  filter: drop-shadow(0 22px 34px rgba(21, 23, 22, 0.2));
 }
 
 .phone-pair {
@@ -2057,16 +2056,17 @@ textarea:focus {
 }
 
 .phone-pair .phone {
-  width: min(250px, 42%);
+  width: min(290px, 48%);
 }
 
 .phone-pair .phone-back {
-  transform: translate(18%, -18px) rotate(-4deg);
+  margin-right: -16%;
+  margin-top: -40px;
 }
 
 .phone-pair .phone-front {
   position: relative;
-  transform: translate(-14%, 22px) rotate(3deg);
+  margin-top: 40px;
 }
 
 .apps-band-inner {
@@ -2110,22 +2110,25 @@ textarea:focus {
 }
 
 .phone-trio {
-  display: grid;
-  grid-template-columns: 1fr 1.15fr 1fr;
+  display: flex;
   align-items: center;
+  justify-content: center;
+}
+
+.phone-trio .phone {
+  width: 40%;
 }
 
 .phone-trio .phone-side {
-  opacity: 0.96;
-  transform: scale(0.94);
+  width: 35%;
 }
 
 .phone-trio .phone-side:first-child {
-  transform: translateX(14%) scale(0.9);
+  margin-right: -9%;
 }
 
 .phone-trio .phone-side:last-child {
-  transform: translateX(-14%) scale(0.9);
+  margin-left: -9%;
 }
 
 .phone-trio .phone-front {
@@ -2140,7 +2143,7 @@ textarea:focus {
 
 .app-feature {
   display: grid;
-  grid-template-columns: minmax(180px, 250px) minmax(0, 1fr);
+  grid-template-columns: minmax(200px, 290px) minmax(0, 1fr);
   gap: clamp(32px, 6vw, 96px);
   align-items: center;
   padding: 40px clamp(24px, 5vw, 64px);
@@ -2150,7 +2153,7 @@ textarea:focus {
 }
 
 .app-feature.reverse {
-  grid-template-columns: minmax(0, 1fr) minmax(180px, 250px);
+  grid-template-columns: minmax(0, 1fr) minmax(200px, 290px);
 }
 
 .app-feature.reverse .app-feature-media {
@@ -2210,6 +2213,6 @@ textarea:focus {
   }
 
   .phone-pair .phone {
-    width: min(200px, 44%);
+    width: min(230px, 52%);
   }
 }
