@@ -120,7 +120,9 @@ function layout({ path, title, description, body }) {
     <meta name="twitter:title" content="${fullTitle}">
     <meta name="twitter:description" content="${description}">
     <meta name="twitter:image" content="https://www.mitingu.com/screenshot.jpeg">
+    <link rel="icon" href="/favicon.ico" sizes="48x48">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="stylesheet" href="/styles.css">
     ${jsonLd(path, fullTitle, description)}
   </head>
@@ -252,6 +254,7 @@ function footer() {
       <div>
         <h2>Platform</h2>
         <a href="/platform">Platform</a>
+        <a href="/event-apps-onsite-registration">Event apps and onsite</a>
         <a href="/event-intelligence">Event Intelligence</a>
         <a href="/mcp">Mitingu MCP</a>
         <a href="/white-label-event-platform">White-label platform</a>
@@ -618,11 +621,98 @@ function homeCollaboration() {
   </section>`;
 }
 
+const APP_SCREENS = {
+  home: ["/assets/app-home.webp", "Branded attendee app home screen with agenda, seminars, floor plan, leads and pass"],
+  floorplan: ["/assets/app-floorplan.webp", "Interactive event floor plan showing halls, stands and the registration desk"],
+  leads: ["/assets/app-leads.webp", "Lead capture screen with leads scored hot, warm and cold"],
+  pass: ["/assets/app-pass.webp", "Attendee pass with QR code for check-in and badge collection"],
+};
+
+function phone(name, extraClass = "", lazy = true) {
+  const [src, alt] = APP_SCREENS[name];
+  return `<img class="phone ${extraClass}" src="${src}" alt="${alt}" width="720" height="1484"${lazy ? ' loading="lazy"' : ""} decoding="async">`;
+}
+
+function homeAppsOnsite() {
+  const s = homePage.appsOnsite || {};
+  return `<section class="content-band apps-band" id="apps-onsite">
+    <div class="apps-band-inner">
+      <div class="apps-band-copy">
+        ${sectionIntro(s.eyebrow, s.title, s.text)}
+        <ul class="tick-list">${(s.points || []).map((point) => `<li>${point}</li>`).join("")}</ul>
+        ${button(s.actionHref || "/event-apps-onsite-registration", s.actionLabel || "Explore apps and onsite", "primary")}
+      </div>
+      <div class="phone-trio" aria-label="Example attendee app screens">
+        ${phone("floorplan", "phone-side")}${phone("home", "phone-front")}${phone("leads", "phone-side")}
+      </div>
+    </div>
+  </section>`;
+}
+
+function renderEventAppsPage() {
+  const path = "/event-apps-onsite-registration";
+  const features = [
+    ["leads", "Lead capture", "Leads that arrive already sorted.", "Exhibitors and your own team scan a badge, add a note and mark the lead hot, warm or cold there and then. The leads go to the right inbox the same day, and you can see which stands had real conversations rather than a bowl of business cards."],
+    ["floorplan", "Interactive floor plan", "Find the stand, not the help desk.", "An interactive floor plan across every hall and level. Attendees search for an exhibitor, see exactly where they are and find their own way there. Every exhibitor listing links straight to its stand."],
+    ["pass", "Attendee pass", "A pass in every pocket.", "Each attendee's QR pass lives in the app, ready for check-in and badge collection. Nobody is scrolling through their inbox at the front of the queue looking for a confirmation email."],
+    ["home", "Your brand, not ours", "Their app, under your name.", "Agenda, seminar booking with live places, venue and travel details, catering and allergens, and announcements. All in an app carrying your brand or your client's."],
+  ];
+  return `
+    ${renderPageHero(path, {
+      eyebrow: "Event apps and onsite technology",
+      title: "Your app, your check-in desk and your report should all agree. Usually they have never met.",
+      text: "Mitingu runs the attendee app, the registration booths and lead capture on the same platform as your registration and communications. One set of data from the first invitation to the last follow-up, and a straight answer to whether the event worked.",
+    }, `<div class="phone-pair">${phone("home", "phone-back", false)}${phone("floorplan", "phone-front", false)}</div>`)}
+    ${renderAnswerBox(path, {
+      title: "One platform, from invitation to follow-up.",
+      text: "The attendee app, onsite check-in and lead capture share one attendee record with registration, communications and reporting. Nothing needs exporting, matching or re-keying after the event.",
+      facts: ["Branded iOS and Android attendee app", "Self-service and staffed registration booths", "Lead capture with hot, warm and cold scoring", "Interactive floor plan and exhibitor finder"],
+    })}
+    <section class="content-section">
+      ${sectionIntro("The attendee app", "Everything they need on the day. Nothing they have to download twice.", "One app for the whole event, set up from the event you have already built in Mitingu. No second system to configure and no spreadsheet to upload the night before.")}
+      <div class="app-features">
+        ${features.map(([name, eyebrow, title, text], i) => `<article class="app-feature${i % 2 ? " reverse" : ""}">
+          <div class="app-feature-media">${phone(name)}</div>
+          <div class="app-feature-copy"><p class="eyebrow">${eyebrow}</p><h3>${title}</h3><p>${text}</p></div>
+        </article>`).join("")}
+      </div>
+      <p class="figure-note">Example event shown. The brand, names and details are illustrative.</p>
+    </section>
+    <section class="content-band">
+      ${sectionIntro("Onsite technology", "Registration that keeps the queue moving.", "Self-service booths for the people who just want their badge, and a staffed desk for everyone else. Both work from the same live attendee list as the app.")}
+      ${cards([
+        ["Self-service registration booths", "Attendees scan the QR pass on their phone and collect their badge without waiting for a person. Ideal for the ten minutes before the keynote."],
+        ["Staffed registration desks", "Your team handles walk-ins, VIPs, name changes and the inevitable 'I never got the email', on the same live list."],
+        ["Live arrivals", "Every check-in, at a booth or at the desk, lands in one view. You know who is in the room before the first session starts."],
+        ["No end-of-day reconciling", "Check-in data is already attached to each registration, so nobody spends the evening merging lists from three different laptops."],
+      ])}
+    </section>
+    <section class="content-section">
+      ${sectionIntro("Proving it worked", "The report is already written, because the data never left.", "Registration, attendance, app activity and leads sit in one place. That is what lets you show stakeholders what the event achieved, and work out what to change next time.")}
+      ${cards([
+        ["Registered versus attended", "See who turned up, by audience, company, region or ticket type, not just a headline show rate."],
+        ["Engagement on the day", "Seminar bookings, check-ins and leads captured, all connected to the people who did them."],
+        ["Value for exhibitors", "Leads per stand and how many were hot. That is the number sponsors will ask about when they decide whether to come back."],
+        ["What to change next time", "Event Intelligence shows where attendance dropped off or sessions filled up, so the next event is planned from evidence rather than habit."],
+      ])}
+    </section>
+    ${faqSection(path)}
+    ${finalCta("", {
+      eyebrow: "See it end to end",
+      title: "See the app, the booths and the reporting working together.",
+      text: "We will walk you through a live event from invitation to post-event report, with your branding on the app.",
+      actionLabel: "Book a demo",
+      actionHref: "/book-a-demo",
+    })}
+  `;
+}
+
 function renderHomePage() {
   return `
     ${homeHeroSection()}
     ${homeTrustedStrip()}
     ${homeEventOperations()}
+    ${homeAppsOnsite()}
     ${homeQuestions()}
     ${homeEventIntelligence()}
     ${homeAiColleague()}
@@ -687,6 +777,24 @@ function faqSection(path) {
 
 function faqsForPath(path) {
   const pageFaqs = {
+    "/event-apps-onsite-registration": [
+      [
+        "Does Mitingu provide a branded event app?",
+        "Yes. Mitingu provides a white-label attendee app for iOS and Android, carrying your brand or your client's. It includes the agenda, seminar booking, an interactive floor plan, exhibitor listings, venue information, announcements and each attendee's QR pass.",
+      ],
+      [
+        "Can exhibitors capture and score leads in the app?",
+        "Yes. Exhibitors and event staff scan attendee badges, add notes and score each lead as hot, warm or cold. Leads are emailed to the address on the exhibitor's registration, and lead activity appears in event reporting.",
+      ],
+      [
+        "Do you provide onsite registration and check-in?",
+        "Yes. Mitingu supports self-service registration booths and staffed registration desks, both working from the same live attendee list as the app, registration and reporting.",
+      ],
+      [
+        "Why use one platform for registration, the app and check-in?",
+        "Because the data stays in one place. Registration, attendance, app activity and leads are already connected, so you can report on what the event achieved without exporting and matching spreadsheets afterwards.",
+      ],
+    ],
     "/white-label-event-platform": [
       [
         "What is a white-label event platform?",
@@ -1520,6 +1628,7 @@ const pageBodies = {
     })}
   `,
   "/event-intelligence": () => renderEventIntelligencePage(),
+  "/event-apps-onsite-registration": () => renderEventAppsPage(),
   "/mcp": () => renderMcpPage(),
   "/pricing": () => `
     ${renderPageHero("/pricing", {

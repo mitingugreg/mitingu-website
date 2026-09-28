@@ -2040,3 +2040,176 @@ textarea:focus {
     transition: none;
   }
 }
+
+/* ---------- Event apps and onsite ---------- */
+.phone {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 22px 34px rgba(21, 23, 22, 0.2));
+}
+
+.phone-pair {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  padding: 10px 0 24px;
+}
+
+.phone-pair .phone {
+  width: min(250px, 42%);
+}
+
+.phone-pair .phone-back {
+  transform: translate(18%, -18px) rotate(-4deg);
+}
+
+.phone-pair .phone-front {
+  position: relative;
+  transform: translate(-14%, 22px) rotate(3deg);
+}
+
+.apps-band-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: clamp(40px, 5vw, 72px);
+  align-items: center;
+}
+
+.apps-band-copy .section-intro {
+  margin-bottom: 24px;
+}
+
+.apps-band-copy .button {
+  margin-top: 30px;
+}
+
+.tick-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tick-list li {
+  position: relative;
+  padding-left: 30px;
+  font-weight: 600;
+}
+
+.tick-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.2em;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--teal) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 12.5l4 4 8-9'/%3E%3C/svg%3E") center / 12px no-repeat;
+}
+
+.phone-trio {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr 1fr;
+  align-items: center;
+}
+
+.phone-trio .phone-side {
+  opacity: 0.96;
+  transform: scale(0.94);
+}
+
+.phone-trio .phone-side:first-child {
+  transform: translateX(14%) scale(0.9);
+}
+
+.phone-trio .phone-side:last-child {
+  transform: translateX(-14%) scale(0.9);
+}
+
+.phone-trio .phone-front {
+  position: relative;
+  z-index: 1;
+}
+
+.app-features {
+  display: grid;
+  gap: 40px;
+}
+
+.app-feature {
+  display: grid;
+  grid-template-columns: minmax(180px, 250px) minmax(0, 1fr);
+  gap: clamp(32px, 6vw, 96px);
+  align-items: center;
+  padding: 40px clamp(24px, 5vw, 64px);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--soft), var(--paper) 70%);
+}
+
+.app-feature.reverse {
+  grid-template-columns: minmax(0, 1fr) minmax(180px, 250px);
+}
+
+.app-feature.reverse .app-feature-media {
+  order: 2;
+}
+
+.app-feature-copy {
+  display: grid;
+  gap: 14px;
+  max-width: 520px;
+}
+
+.app-feature-copy h3 {
+  font-size: 1.75rem;
+  line-height: 1.15;
+}
+
+.app-feature-copy p:not(.eyebrow) {
+  color: var(--muted);
+  font-size: 1.05rem;
+}
+
+.figure-note {
+  margin-top: 18px;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+@media (max-width: 900px) {
+  .apps-band-inner {
+    grid-template-columns: 1fr;
+  }
+
+  .phone-trio {
+    max-width: 520px;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 760px) {
+  .app-feature,
+  .app-feature.reverse {
+    grid-template-columns: 1fr;
+    padding: 28px 22px;
+    gap: 24px;
+  }
+
+  .app-feature .app-feature-media,
+  .app-feature.reverse .app-feature-media {
+    order: 0;
+    width: min(240px, 70%);
+    margin: 0 auto;
+  }
+
+  .app-feature-copy h3 {
+    font-size: 1.4rem;
+  }
+
+  .phone-pair .phone {
+    width: min(200px, 44%);
+  }
+}

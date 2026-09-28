@@ -34,6 +34,10 @@
       "/platform"
     ],
     [
+      "Apps & Onsite",
+      "/event-apps-onsite-registration"
+    ],
+    [
       "Solutions",
       "#solutions"
     ],
@@ -293,6 +297,11 @@
       "Event communications platform",
       "/event-communications-platform",
       "For teams that need branded invitations, reminders, updates and follow-up."
+    ],
+    [
+      "Event apps and onsite registration",
+      "/event-apps-onsite-registration",
+      "For teams that want the attendee app, check-in and lead capture on the same platform as registration and reporting."
     ]
   ],
   "discoveryFaqs": [
@@ -380,7 +389,7 @@
   "metadata": {
     "/": [
       "Event Operations Platform for Corporate Event Teams",
-      "Mitingu is the Event Operations Platform for corporate event teams and event agencies, bringing planning, registration, communications, reporting and Event Intelligence together in one place."
+      "Mitingu is the Event Operations Platform for corporate event teams and event agencies, bringing planning, registration, communications, attendee apps, onsite check-in, reporting and Event Intelligence together in one place."
     ],
     "/platform": [
       "Corporate Event Operations Platform",
@@ -445,6 +454,10 @@
     "/terms-and-conditions": [
       "Terms and Conditions",
       "The terms and conditions governing use of Mitingu's services."
+    ],
+    "/event-apps-onsite-registration": [
+      "Event Apps and Onsite Registration",
+      "Branded attendee apps, self-service and staffed registration booths, and lead capture with hot, warm and cold scoring, all on the same platform as your registration and reporting."
     ]
   },
   "redirects": {
@@ -1001,6 +1014,19 @@
           "text": "Permissions keep client, supplier and internal information appropriately separated."
         }
       ]
+    },
+    "appsOnsite": {
+      "eyebrow": "Apps and onsite",
+      "title": "The event day runs on the same platform as everything else.",
+      "text": "A branded attendee app, self-service and staffed registration booths, and lead capture that scores as it scans. All of it feeds the same data as your registration and reporting, so you can show what the event achieved and what to change next time.",
+      "points": [
+        "White-label attendee app for iOS and Android",
+        "Interactive floor plan with exhibitor finder",
+        "Lead capture with hot, warm and cold scoring",
+        "Self-service and staffed registration booths"
+      ],
+      "actionLabel": "Explore apps and onsite",
+      "actionHref": "/event-apps-onsite-registration"
     }
   },
   "eventIntelligencePage": {
