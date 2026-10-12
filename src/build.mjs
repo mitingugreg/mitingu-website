@@ -1,4 +1,5 @@
 import { cp, mkdir, rm, writeFile } from "node:fs/promises";
+import { execSync } from "node:child_process";
 import { dirname, join } from "node:path";
 import { pages, redirects, renderPage, renderNotFound } from "./site.mjs";
 
@@ -45,12 +46,23 @@ for (const path of pages) {
 
 await writeFile(join(client, "404.html"), externalizeLinks(renderNotFound()));
 
+// Last-modified date for the sitemap: the date of the latest commit, so
+// search engines can see when the site last changed. Falls back to today.
+let lastmod;
+try {
+  lastmod = execSync("git log -1 --format=%cs", { encoding: "utf8" }).trim();
+} catch {
+  lastmod = "";
+}
+if (!/^\d{4}-\d{2}-\d{2}$/.test(lastmod)) lastmod = new Date().toISOString().slice(0, 10);
+
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${pages
   .map(
     (path) => `  <url>
     <loc>${origin}${path === "/" ? "" : path}</loc>
+    <lastmod>${lastmod}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>${path === "/" ? "1.0" : path.includes("solutions") ? "0.8" : "0.9"}</priority>
   </url>`,
@@ -73,51 +85,65 @@ await writeFile(
   join(client, "llms.txt"),
   `# Mitingu
 
-Mitingu is the Event Operations Platform for corporate event teams and event agencies.
+> Mitingu is a UK event operations platform for corporate event teams and event agencies. It runs online registration and communications, a branded attendee app, onsite self-service and staffed check-in, lead capture and reporting on one platform, from one supplier, with one set of attendee data from first invitation to post-event report.
 
-## What Mitingu Does
+Mitingu is built and supported in the UK (Cornwall) and used by event teams globally. It has worked with event teams at Booking.com, Workday, CBRE and Campari.
 
-- Planning support for corporate event programmes
-- Branded event websites
-- Event registration
-- Event communications
-- Collaboration and attendee management
-- Event delivery support
-- Event analytics and reporting
-- Event Intelligence
-- Mitingu MCP for compatible AI assistants
-- White-label event environments
-- Multi-office and multi-region event programme control
+## What Mitingu does
 
-## Best Fit
+### Before the event
+- Branded event websites and registration journeys (public, private, invite-only, internal and paid events)
+- Automated, personalised event communications: invitations, confirmations, reminders, updates and follow-ups, segmented by audience
+- Planning, tasks and approvals across events, offices and clients
+- Secure collaboration with agencies, suppliers and stakeholders, with role-based access and shared files
 
+### At the event
+- White-label attendee app for iOS and Android, carrying the client's brand: agenda, seminar booking with live places, speakers, exhibitors, interactive floor plan with exhibitor finder, venue information, announcements and a QR attendee pass
+- App content management system connected to Mitingu, so organisers make last-minute agenda, room and announcement changes themselves
+- Onsite check-in: custom-branded self-service registration booths for badge collection, plus staffed registration desks, all working from the same live attendee list
+- Onsite support from the Mitingu team
+- Exhibitor lead capture with hot, warm and cold lead scoring
+
+### After the event
+- Reporting on registrations, attendance, app activity, seminar bookings, leads, communications and NPS
+- Event Intelligence: ask questions of event data in plain English, generate reports and see what needs attention
+- Mitingu MCP: connect Claude, ChatGPT or Microsoft Copilot (where MCP is supported) to approved Mitingu event data
+
+## Why teams choose Mitingu
+- One supplier instead of three: registration, the event app and onsite check-in are one platform, so there is no exporting and matching data between systems after the event
+- Fully white-label: the app, event sites, emails and booths carry the client's brand, which suits agencies delivering events for clients
+- Self-service: event teams update content themselves rather than waiting on a supplier
+- Built to show whether the event worked, not just how many people registered
+
+## Best fit
 - Corporate event teams
-- Event marketing teams
-- Internal communications teams
-- Event agencies
-- Enterprise organisations with multiple offices, regions, brands or clients
+- Event agencies (white-label delivery for multiple clients)
+- Event marketing and internal communications teams
+- Professional conference organisers
+- Organisations running events across multiple offices, regions or brands
+- Conferences, client events, supplier and partner summits, exhibitions, roadshows and internal events
 
-## Key Pages
-
-- ${origin}/platform
-- ${origin}/event-intelligence
-- ${origin}/mcp
-- ${origin}/white-label-event-platform
-- ${origin}/enterprise-event-registration-platform
-- ${origin}/event-communications-platform
-- ${origin}/event-analytics-reporting
-- ${origin}/pricing
-- ${origin}/about
-- ${origin}/book-a-demo
-
-## Mitingu MCP
-
-Mitingu connects with compatible MCP clients, including Claude and ChatGPT. It is compatible with Microsoft Copilot environments that support MCP, subject to configuration. Available information and tools depend on the permissions and Mitingu capabilities enabled for each account.
+## Key pages
+- [Platform overview](${origin}/platform)
+- [Event apps and onsite registration](${origin}/event-apps-onsite-registration): attendee app, self-service booths, staffed check-in and lead capture
+- [White-label event platform](${origin}/white-label-event-platform)
+- [Event registration](${origin}/enterprise-event-registration-platform)
+- [Event communications](${origin}/event-communications-platform)
+- [Event analytics and reporting](${origin}/event-analytics-reporting)
+- [Event Intelligence](${origin}/event-intelligence)
+- [Mitingu MCP](${origin}/mcp)
+- [For corporate event teams](${origin}/solutions/corporate-events)
+- [For event agencies](${origin}/solutions/event-agencies)
+- [For multi-office programmes](${origin}/solutions/multi-office-event-programmes)
+- [Pricing](${origin}/pricing)
+- [About Mitingu](${origin}/about)
+- [Book a demo](${origin}/book-a-demo)
 
 ## Contact
-
-Email: hello@mitingu.com
-Website: ${origin}
+- Email: hello@mitingu.com
+- Phone: +44 1608 495288
+- Website: ${origin}
+- LinkedIn: https://www.linkedin.com/company/mitingu-ltd
 `,
 );
 

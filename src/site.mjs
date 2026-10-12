@@ -148,6 +148,14 @@ function jsonLd(path, title, description) {
       name: "Mitingu",
       url: "https://www.mitingu.com",
       logo: `https://www.mitingu.com${media.logo.src}`,
+      description:
+        "UK event operations platform for corporate event teams and event agencies: registration, communications, branded attendee apps, onsite check-in, lead capture and reporting on one platform.",
+      areaServed: "Worldwide",
+      address: {
+        "@type": "PostalAddress",
+        addressRegion: "Cornwall",
+        addressCountry: "GB",
+      },
       sameAs: [site.linkedin, site.instagram],
       contactPoint: {
         "@type": "ContactPoint",
@@ -168,15 +176,22 @@ function jsonLd(path, title, description) {
       "@id": "https://www.mitingu.com/#software",
       name: "Mitingu",
       applicationCategory: "BusinessApplication",
-      operatingSystem: "Web",
       url: "https://www.mitingu.com",
       description:
-        "Event operations platform for corporate event teams and agencies, keeping planning, registration, communications, reporting and event intelligence in one place.",
-      offers: {
-        "@type": "Offer",
-        price: "Contact for pricing",
-        priceCurrency: "GBP",
-      },
+        "Event operations platform for corporate event teams and agencies, keeping planning, registration, communications, attendee apps, onsite check-in, reporting and event intelligence in one place.",
+      operatingSystem: "Web, iOS, Android",
+      featureList: [
+        "Branded event websites and registration",
+        "Automated event communications",
+        "White-label attendee app for iOS and Android",
+        "App content management system",
+        "Self-service registration booths and staffed check-in",
+        "Lead capture with hot, warm and cold scoring",
+        "Event reporting and analytics",
+        "Event Intelligence",
+        "Mitingu MCP for AI assistants",
+      ],
+      publisher: { "@id": "https://www.mitingu.com/#organization" },
     },
     {
       "@type": "WebPage",
