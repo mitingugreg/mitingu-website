@@ -167,7 +167,7 @@ function jsonLd(path, title, description, extraGraph = [], breadcrumbs = null) {
         "Event analytics",
       ],
       description:
-        "UK event operations platform for corporate event teams and event agencies: registration, communications, branded attendee apps, onsite check-in, lead capture and reporting on one platform.",
+        "Event operations platform for corporate event teams and event agencies worldwide, built and supported in the UK: registration, communications, branded attendee apps, onsite check-in, lead capture and reporting on one platform.",
       areaServed: "Worldwide",
       address: {
         "@type": "PostalAddress",
@@ -180,6 +180,7 @@ function jsonLd(path, title, description, extraGraph = [], breadcrumbs = null) {
         "https://www.capterra.co.uk/software/139028/mitingu",
         "https://www.capterra.com/p/139028/Mitingu/",
         "https://www.trustradius.com/products/mitingu/reviews",
+        "https://find-and-update.company-information.service.gov.uk/company/08876369",
       ],
       contactPoint: {
         "@type": "ContactPoint",

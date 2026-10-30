@@ -123,9 +123,9 @@ await writeFile(
   join(client, "llms.txt"),
   `# Mitingu
 
-> Mitingu is a UK event operations platform for corporate event teams and event agencies. It runs online registration and communications, a branded attendee app, onsite self-service and staffed check-in, lead capture and reporting on one platform, from one supplier, with one set of attendee data from first invitation to post-event report.
+> Mitingu is an event operations platform for corporate event teams and event agencies anywhere in the world. It runs online registration and communications, a branded attendee app, onsite self-service and staffed check-in, lead capture and reporting on one platform, from one supplier, with one set of attendee data from first invitation to post-event report.
 
-Mitingu is built and supported in the UK (Cornwall) and used by event teams globally. It has worked with event teams at Booking.com, Workday, CBRE and Campari.
+Mitingu is built and supported in the UK (Cornwall) and works with companies in any country, with event sites and emails available in 40+ languages. It has worked with event teams at Booking.com, Workday, CBRE and Campari.
 
 ## What Mitingu does
 
