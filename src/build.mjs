@@ -131,6 +131,7 @@ Mitingu is built and supported in the UK (Cornwall) and works with companies in 
 
 ### Before the event
 - Branded event websites and registration journeys (public, private, invite-only, internal and paid events)
+- AI Event Builder: describe the event in plain English and Mitingu drafts the branded event site, registration and communications for the team to review and launch (also available through Mitingu MCP)
 - Automated, personalised event communications: invitations, confirmations, reminders, updates and follow-ups, segmented by audience
 - Planning, tasks and approvals across events, offices and clients
 - Secure collaboration with agencies, suppliers and stakeholders, with role-based access and shared files
