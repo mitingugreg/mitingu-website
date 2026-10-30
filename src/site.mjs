@@ -781,7 +781,7 @@ function renderEventAppsPage() {
     <section class="content-section">
       ${sectionIntro("Onsite technology", "A queue out of the door at 8.55am?", "No more one harassed person with a clipboard. Self-service booths for the people who just want their badge, and a staffed desk for everyone else, both working from the same live attendee list as the app.")}
       ${cards([
-        ["Everyone arriving at once?", "Self-service registration booths let attendees scan the QR pass on their phone and collect their badge without waiting for a person."],
+        ["Everyone arriving at once?", "Self-service registration booths let attendees scan the QR pass on their phone and print their badge on the spot, without waiting for a person."],
         ["Walk-ins, VIPs and 'I never got the email'?", "Your staffed desk handles the exceptions on the same live list, so nobody is checking names against a printout."],
         ["No idea who is actually in the room?", "Every check-in, at a booth or at the desk, lands in one live view before the first session starts."],
         ["An evening spent merging check-in lists?", "No more reconciling three laptops' worth of spreadsheets. Attendance is already attached to each registration."],
