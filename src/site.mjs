@@ -100,7 +100,7 @@ export function renderNotFound() {
 export function layout({ path, title, description, body, ogImage = "/screenshot.jpeg", ogType = "website", extraGraph = [], breadcrumbs = null }) {
   const fullTitle =
     path === "/"
-      ? "Mitingu | Event Operations Platform for Corporate Event Teams"
+      ? "Mitingu | Event Registration Software, Apps and Check-in"
       : title.includes("|")
         ? title
         : `${title} | Mitingu`;
@@ -153,8 +153,19 @@ function jsonLd(path, title, description, extraGraph = [], breadcrumbs = null) {
       "@type": "Organization",
       "@id": "https://www.mitingu.com/#organization",
       name: "Mitingu",
+      legalName: "Mitingu Limited",
+      alternateName: ["Mitingu Ltd", "Mitingu event registration"],
       url: "https://www.mitingu.com",
       logo: `https://www.mitingu.com${media.logo.src}`,
+      foundingDate: "2014",
+      knowsAbout: [
+        "Event registration software",
+        "White-label event platforms",
+        "Event apps",
+        "Event check-in",
+        "Event communications",
+        "Event analytics",
+      ],
       description:
         "UK event operations platform for corporate event teams and event agencies: registration, communications, branded attendee apps, onsite check-in, lead capture and reporting on one platform.",
       areaServed: "Worldwide",
@@ -163,7 +174,13 @@ function jsonLd(path, title, description, extraGraph = [], breadcrumbs = null) {
         addressRegion: "Cornwall",
         addressCountry: "GB",
       },
-      sameAs: [site.linkedin, site.instagram],
+      sameAs: [
+        site.linkedin,
+        site.instagram,
+        "https://www.capterra.co.uk/software/139028/mitingu",
+        "https://www.capterra.com/p/139028/Mitingu/",
+        "https://www.trustradius.com/products/mitingu/reviews",
+      ],
       contactPoint: {
         "@type": "ContactPoint",
         email: site.email,
