@@ -376,8 +376,25 @@ function cookieScript() {
     banner.hidden = false;
     requestAnimationFrame(() => banner.classList.add("is-visible"));
   }
+  // Google Analytics 4: loaded only after the visitor accepts cookies.
+  const GA_ID = "G-3VE5T2CKTJ";
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
+  let analyticsLoaded = false;
+  const loadAnalytics = () => {
+    if (analyticsLoaded) return;
+    analyticsLoaded = true;
+    const tag = document.createElement("script");
+    tag.async = true;
+    tag.src = "https://www.googletagmanager.com/gtag/js?id=" + GA_ID;
+    document.head.appendChild(tag);
+    window.gtag("js", new Date());
+    window.gtag("config", GA_ID, { anonymize_ip: true });
+  };
+  if (stored === "accepted") loadAnalytics();
   const choose = (value) => {
     try { window.localStorage.setItem(KEY, value); } catch (e) {}
+    if (value === "accepted") loadAnalytics();
     banner.classList.remove("is-visible");
     window.setTimeout(() => { banner.hidden = true; }, 250);
   };
@@ -1408,6 +1425,7 @@ function demoFormScript() {
         headers: { Accept: "application/json" },
       });
       if (response.ok) {
+        if (window.gtag) window.gtag("event", "generate_lead", { form: "book_a_demo", page_path: location.pathname });
         form.reset();
         setStatus("Thank you. Your demo request has been sent and we will be in touch shortly.", "success");
       } else {
@@ -1605,9 +1623,10 @@ const privacyBlocks = [
   "13.1 Our Site may place and access certain first party Cookies on your computer or device. First party Cookies are those placed directly by Us and are used only by Us. We use Cookies to facilitate and improve your experience of Our Site and to provide and improve Our products and services. We have carefully chosen these Cookies and have taken steps to ensure that your privacy and personal data is protected and respected at all times.",
   "13.2 All Cookies used by and on Our Site are used in accordance with current Cookie Law.",
   "13.3 Before Cookies are placed on your computer or device, you will be shown a statement with a button requesting your consent to set those Cookies. By giving your consent to the placing of Cookies you are enabling Us to provide the best possible experience and service to you. You may, if you wish, deny consent to the placing of Cookies; however certain features of Our Site may not function fully or as intended.",
-  "13.4 In addition to the controls that We provide, you can choose to enable or disable Cookies in your internet browser. Most internet browsers also enable you to choose whether you wish to disable all cookies or only third party cookies. By default, most internet browsers accept Cookies but this can be changed. For further details, please consult the help menu in your internet browser or the documentation that came with your device.",
-  "13.5 You can choose to delete Cookies on your computer or device at any time, however you may lose any information that enables you to access Our Site more quickly and efficiently.",
-  "13.6 It is recommended that you keep your internet browser and operating system up-to-date and that you consult the help and guidance provided by the developer of your internet browser and manufacturer of your computer or device if you are unsure about adjusting your privacy settings.",
+  "13.4 With your consent, Our Site uses Google Analytics to understand how visitors use the Site, for example which pages are visited and whether a demo request is sent. Google Analytics sets Cookies (named _ga and _ga_*) and processes your IP address in shortened form. It is only loaded if you click Accept on the cookie banner; if you click Decline, it is not loaded. Google's privacy policy is at https://policies.google.com/privacy.",
+  "13.5 In addition to the controls that We provide, you can choose to enable or disable Cookies in your internet browser. Most internet browsers also enable you to choose whether you wish to disable all cookies or only third party cookies. By default, most internet browsers accept Cookies but this can be changed. For further details, please consult the help menu in your internet browser or the documentation that came with your device.",
+  "13.6 You can choose to delete Cookies on your computer or device at any time, however you may lose any information that enables you to access Our Site more quickly and efficiently.",
+  "13.7 It is recommended that you keep your internet browser and operating system up-to-date and that you consult the help and guidance provided by the developer of your internet browser and manufacturer of your computer or device if you are unsure about adjusting your privacy settings.",
   "## 14. The Mitingu Blog",
   "Our Site offers publicly accessible blogs. You should be aware that any information you provide in these areas may be read, collected, and used by others who access them. To request removal of your personal information from our blog, contact us at support@mitingu.com. In some cases, we may not be able to remove your personal information, in which case we will let you know if we are unable to do so and why.",
   "## 15. Social Media Features and Widgets",
