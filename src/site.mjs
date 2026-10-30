@@ -71,6 +71,13 @@ export function renderPage(path) {
   });
 }
 
+let latestBlogSection = () => "";
+export function setLatestBlogSection(fn) {
+  latestBlogSection = fn;
+}
+
+export { button, sectionIntro, finalCta };
+
 export function renderNotFound() {
   return layout({
     path: "/404",
@@ -90,7 +97,7 @@ export function renderNotFound() {
   });
 }
 
-function layout({ path, title, description, body }) {
+export function layout({ path, title, description, body, ogImage = "/screenshot.jpeg", ogType = "website", extraGraph = [], breadcrumbs = null }) {
   const fullTitle =
     path === "/"
       ? "Mitingu | Event Operations Platform for Corporate Event Teams"
@@ -108,23 +115,23 @@ function layout({ path, title, description, body }) {
     <meta name="theme-color" content="#151716">
     <meta property="og:title" content="${fullTitle}">
     <meta property="og:description" content="${description}">
-    <meta property="og:type" content="website">
+    <meta property="og:type" content="${ogType}">
     <meta property="og:site_name" content="Mitingu">
     <meta property="og:url" content="https://www.mitingu.com${path === "/" ? "" : path}">
-    <meta property="og:image" content="https://www.mitingu.com/screenshot.jpeg">
+    <meta property="og:image" content="https://www.mitingu.com${ogImage}">${ogImage === "/screenshot.jpeg" ? `
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Mitingu Event Operations Platform">
+    <meta property="og:image:alt" content="Mitingu Event Operations Platform">` : ""}
     <meta property="og:locale" content="en_GB">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="${fullTitle}">
     <meta name="twitter:description" content="${description}">
-    <meta name="twitter:image" content="https://www.mitingu.com/screenshot.jpeg">
+    <meta name="twitter:image" content="https://www.mitingu.com${ogImage}">
     <link rel="icon" href="/favicon.ico" sizes="48x48">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="stylesheet" href="/styles.css">
-    ${jsonLd(path, fullTitle, description)}
+    ${jsonLd(path, fullTitle, description, extraGraph, breadcrumbs)}
   </head>
   <body>
     ${header()}
@@ -139,7 +146,7 @@ function layout({ path, title, description, body }) {
 </html>`;
 }
 
-function jsonLd(path, title, description) {
+function jsonLd(path, title, description, extraGraph = [], breadcrumbs = null) {
   const url = `https://www.mitingu.com${path === "/" ? "" : path}`;
   const graph = [
     {
@@ -203,6 +210,20 @@ function jsonLd(path, title, description) {
       about: { "@id": "https://www.mitingu.com/#software" },
     },
   ];
+
+  graph.push(...extraGraph);
+  if (breadcrumbs) {
+    graph.push({
+      "@type": "BreadcrumbList",
+      "@id": `${url}#breadcrumbs`,
+      itemListElement: breadcrumbs.map(([name, href], index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name,
+        item: `https://www.mitingu.com${href === "/" ? "" : href}`,
+      })),
+    });
+  }
 
   const faqs = faqsForPath(path);
   if (faqs.length) {
@@ -302,6 +323,7 @@ function footer() {
         <h2>Find out More</h2>
         <a href="/pricing">Pricing</a>
         <a href="/resources">Resources</a>
+        <a href="/blog">Blog</a>
         <a href="/about">About</a>
         <a href="/book-a-demo">Book a Demo</a>
         <a href="/privacy-policy">Privacy</a>
@@ -1699,6 +1721,7 @@ const pageBodies = {
       title: "Practical resources for corporate event teams",
       text: "We're building a growing library of practical guides, checklists and templates to help corporate event teams plan, communicate and deliver better events.<br><br>The first resources are on their way.",
     }, resourceHeroVisual())}
+    ${latestBlogSection()}
     <section class="content-section">${sectionIntro("Resource library", "The first downloads are coming soon.", "We are preparing practical resources that will be useful enough to keep, share and come back to.")}${resourceCards()}</section>
     <section class="content-band">${sectionIntro("Common questions", "The things buyers usually want to understand.", "Start with the questions teams ask when event work has become too scattered.")}${intentGrid()}</section>
     <section class="content-section">${sectionIntro("Useful pages", "Explore the areas buyers ask about most.", "These pages cover the common places where event teams need more clarity.")}${moneyPagesGrid()}</section>

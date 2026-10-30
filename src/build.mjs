@@ -2,6 +2,7 @@ import { cp, mkdir, rm, writeFile } from "node:fs/promises";
 import { execSync } from "node:child_process";
 import { dirname, join } from "node:path";
 import { pages, redirects, renderPage, renderNotFound } from "./site.mjs";
+import { blogPages, blogForwards, posts, renderBlogPage } from "./blog.mjs";
 
 const root = process.cwd();
 const dist = join(root, "dist");
@@ -44,6 +45,28 @@ for (const path of pages) {
   await writeFile(filePath, externalizeLinks(renderPage(path)));
 }
 
+for (const path of blogPages) {
+  const filePath = join(client, path, "index.html");
+  await mkdir(dirname(filePath), { recursive: true });
+  await writeFile(filePath, externalizeLinks(renderBlogPage(path)));
+}
+
+// Old addresses: a tiny page that forwards straight to the new location.
+// Search engines treat an instant meta refresh plus canonical as a permanent move.
+const forwardPage = (to) => `<!doctype html>
+<html lang="en-GB"><head><meta charset="utf-8">
+<title>This page has moved | Mitingu</title>
+<link rel="canonical" href="${origin}${to === "/" ? "" : to}">
+<meta http-equiv="refresh" content="0; url=${to}">
+<script>location.replace(${JSON.stringify(to)} + location.hash)</script>
+</head><body><p>This page has moved to <a href="${to}">${origin}${to}</a>.</p></body></html>
+`;
+for (const [from, to] of Object.entries(blogForwards)) {
+  const filePath = join(client, decodeURIComponent(from.replaceAll("+", "%2B")), "index.html");
+  await mkdir(dirname(filePath), { recursive: true });
+  await writeFile(filePath, forwardPage(to));
+}
+
 await writeFile(join(client, "404.html"), externalizeLinks(renderNotFound()));
 
 // Last-modified date for the sitemap: the date of the latest commit, so
@@ -65,6 +88,21 @@ ${pages
     <lastmod>${lastmod}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>${path === "/" ? "1.0" : path.includes("solutions") ? "0.8" : "0.9"}</priority>
+  </url>`,
+  )
+  .join("\n")}
+  <url>
+    <loc>${origin}/blog</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+${posts
+  .map(
+    (post) => `  <url>
+    <loc>${origin}${post.path}</loc>
+    <lastmod>${post.published}</lastmod>
+    <priority>${post.published >= "2021" ? "0.6" : "0.4"}</priority>
   </url>`,
   )
   .join("\n")}
@@ -139,6 +177,13 @@ Mitingu is built and supported in the UK (Cornwall) and used by event teams glob
 - [About Mitingu](${origin}/about)
 - [Book a demo](${origin}/book-a-demo)
 
+## Guides from the Mitingu blog
+${posts
+  .filter((post) => post.published >= "2021")
+  .map((post) => `- [${post.title}](${origin}${post.path}): ${post.description}`)
+  .join("\n")}
+- [All articles](${origin}/blog)
+
 ## Contact
 - Email: hello@mitingu.com
 - Phone: +44 1608 495288
@@ -176,4 +221,4 @@ export default {
 `
 );
 
-console.log(`Built ${pages.length} pages into dist/`);
+console.log(`Built ${pages.length} pages, ${blogPages.length} blog pages and ${Object.keys(blogForwards).length} forwards into dist/`);
