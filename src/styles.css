@@ -2193,6 +2193,53 @@ textarea:focus {
   font-size: 0.92rem;
 }
 
+.blog-post-summary {
+  margin-top: 28px;
+  padding: 18px 22px;
+  border-radius: 8px;
+  background: var(--mist);
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+.blog-post-summary-label {
+  margin-bottom: 6px;
+  color: var(--teal);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+}
+
+.blog-post-faqs {
+  margin-top: 48px;
+}
+
+.blog-post-faqs h2 {
+  margin-bottom: 14px;
+  font-size: 1.6rem;
+}
+
+.blog-post-faqs details {
+  border-top: 1px solid var(--line);
+  padding: 14px 0;
+}
+
+.blog-post-faqs details:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+.blog-post-faqs summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.blog-post-faqs details p {
+  margin-top: 10px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
 .blog-post-image {
   display: block;
   width: 100%;

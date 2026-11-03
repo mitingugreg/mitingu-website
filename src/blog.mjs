@@ -207,6 +207,19 @@ function renderPost(post) {
         keywords: (post.tags || []).join(", "),
         inLanguage: "en-GB",
       },
+      ...(post.faqs && post.faqs.length
+        ? [
+            {
+              "@type": "FAQPage",
+              "@id": `${url}#faq`,
+              mainEntity: post.faqs.map(([question, answer]) => ({
+                "@type": "Question",
+                name: question,
+                acceptedAnswer: { "@type": "Answer", text: answer },
+              })),
+            },
+          ]
+        : []),
     ],
     body: `<article class="blog-post">
       <header class="blog-post-header">
@@ -220,7 +233,15 @@ function renderPost(post) {
           ? `<img class="blog-post-image" src="${post.image}" alt="" width="${post.imageWidth}" height="${post.imageHeight}">`
           : ""
       }
+      ${post.summary ? `<div class="blog-post-summary"><p class="blog-post-summary-label">In short</p><p>${post.summary}</p></div>` : ""}
       <div class="blog-post-body">${post.body}</div>
+      ${
+        post.faqs && post.faqs.length
+          ? `<section class="blog-post-faqs"><h2>Questions people ask</h2>${post.faqs
+              .map(([question, answer]) => `<details><summary>${escapeHtml(question)}</summary><p>${escapeHtml(answer)}</p></details>`)
+              .join("")}</section>`
+          : ""
+      }
       <aside class="blog-post-cta">
         <h2>Running events where this matters?</h2>
         <p>Mitingu brings registration, communications, the attendee app, onsite check-in and reporting into one white-label platform, so your team spends less time joining systems together.</p>
