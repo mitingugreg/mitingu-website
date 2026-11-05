@@ -1,4 +1,5 @@
 import { readFileSync } from "node:fs";
+import { alternatives, alternativesByPath, pay as altPay, clients as altClients } from "./alternatives.mjs";
 
 const contentUrl = new URL("../content/site-content.json", import.meta.url);
 
@@ -59,6 +60,7 @@ const aboutPage = content.aboutPage || {};
 const finalCtaCopy = content.finalCta || {};
 export const redirects = content.redirects;
 
+for (const alt of alternatives) metadata[alt.path] = [alt.title, alt.description];
 export const pages = Object.keys(metadata);
 
 export function renderPage(path) {
@@ -880,7 +882,11 @@ function faqsForPath(path) {
     "/event-apps-onsite-registration": [
       [
         "Does Mitingu provide a branded event app?",
-        "Yes. Mitingu provides a white-label attendee app for iOS and Android, carrying your brand or your client's. It includes the agenda, seminar booking, an interactive floor plan, exhibitor listings, venue information, announcements and each attendee's QR pass.",
+        "Yes. Mitingu provides a white-label attendee app for iOS and Android, carrying your brand or your client's. It includes the agenda, seminar booking, an interactive floor plan, exhibitor listings, venue information, announcements, attendee networking and meeting booking, and each attendee's QR pass.",
+      ],
+      [
+        "Can attendees network and book meetings in the app?",
+        "Yes. Attendees can find each other, network and book meetings in the white-label app, alongside the agenda and their QR pass.",
       ],
       [
         "Can exhibitors capture and score leads in the app?",
@@ -957,6 +963,10 @@ function faqsForPath(path) {
         "Yes. Mitingu can support internal, private, public, invite-only, paid and pre-registration events depending on the programme.",
       ],
       [
+        "Can delegates book hotel accommodation when they register?",
+        "Yes. Hotel and accommodation booking can be built into the registration journey, so delegates register and book their room in one go.",
+      ],
+      [
         "Can delegates pay when they register?",
         "Yes. Mitingu takes payment by card, bank transfer or invoice, and supports full payment or part payments, such as a deposit now and the balance later.",
       ],
@@ -991,7 +1001,7 @@ function faqsForPath(path) {
     ],
   };
 
-  return [...(pageFaqs[path] || []), ...(path === "/" ? discoveryFaqs : [])];
+  return [...(pageFaqs[path] || alternativesByPath[path]?.faqs || []), ...(path === "/" ? discoveryFaqs : [])];
 }
 
 function heroShowcaseItems(showcase = []) {
@@ -2046,3 +2056,34 @@ const pageBodies = {
     })}
   `,
 };
+
+function renderAlternativePage(alt) {
+  const differences = alt.noPay ? alt.differences : [...alt.differences, altPay];
+  return `
+    ${pageHero(`${alt.name} alternative`, `Looking for a ${alt.name} alternative?`, alt.intro[0], heroChecklist(alt.path, differences.map(([title]) => title)))}
+    ${answerBox(alt.answerTitle, `${alt.intro.slice(1).join(" ")} ${altClients}`, [])}
+    <section class="content-band">
+      ${sectionIntro("Where Mitingu is different", "What to test in a demo.")}
+      ${cards(differences, "module-card", "two")}
+    </section>
+    <section class="content-section">
+      <div class="split-panel">
+        <div><p class="eyebrow">Where ${alt.name} may suit you better</p><h2>Honesty saves everyone time.</h2></div>
+        <div>${alt.suitsBetter.map((line) => `<p>${line}</p>`).join("")}</div>
+      </div>
+    </section>
+    <section class="content-band">
+      ${sectionIntro("Questions to ask", "Whichever platform you're considering.")}
+      <div class="card-grid two">${alt.questions.map((q) => `<article class="info-card"><p>${q}</p></article>`).join("")}</div>
+    </section>
+    ${faqSection(alt.path)}
+    ${finalCta("", {
+      eyebrow: "See if Mitingu fits",
+      title: "Bring your most awkward event.",
+      text: "We'll show you how it would run in Mitingu, from registration to the report.",
+      actionLabel: "Book a Demo",
+      actionHref: "/book-a-demo",
+    })}
+  `;
+}
+for (const alt of alternatives) pageBodies[alt.path] = () => renderAlternativePage(alt);

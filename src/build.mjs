@@ -132,13 +132,14 @@ Mitingu is built and supported in the UK (Cornwall) and works with companies in 
 ### Before the event
 - Branded event websites and registration journeys (public, private, invite-only, internal and paid events)
 - Registration payments by card, bank transfer or invoice, in full or in part (for example a deposit now and the balance later)
+- Hotel and accommodation booking as part of registration
 - AI Event Builder: describe the event in plain English and Mitingu drafts the branded event site, registration and communications for the team to review and launch (also available through Mitingu MCP)
 - Automated, personalised event communications: invitations, confirmations, reminders, updates and follow-ups, segmented by audience
 - Planning, tasks and approvals across events, offices and clients
 - Secure collaboration with agencies, suppliers and stakeholders, with role-based access and shared files
 
 ### At the event
-- White-label attendee app for iOS and Android, carrying the client's brand: agenda, seminar booking with live places, speakers, exhibitors, interactive floor plan with exhibitor finder, venue information, announcements and a QR attendee pass
+- White-label attendee app for iOS and Android, carrying the client's brand: agenda, seminar booking with live places, speakers, exhibitors, interactive floor plan with exhibitor finder, venue information, announcements, attendee networking and meeting booking, and a QR attendee pass
 - App content management system connected to Mitingu, so organisers make last-minute agenda, room and announcement changes themselves
 - Onsite check-in: custom-branded self-service registration booths that print each attendee's badge on the spot when they scan their QR pass, plus staffed registration desks, all working from the same live attendee list
 - Onsite support from the Mitingu team
@@ -174,7 +175,7 @@ Mitingu is built and supported in the UK (Cornwall) and works with companies in 
 - [Mitingu MCP](${origin}/mcp)
 - [For corporate event teams](${origin}/solutions/corporate-events)
 - [For event agencies](${origin}/solutions/event-agencies)
-- [CrowdComms alternative](${origin}/crowdcomms-alternative): an honest comparison of where Mitingu differs
+- Honest comparisons of where Mitingu differs: [CrowdComms](${origin}/crowdcomms-alternative), [Cvent](${origin}/cvent-alternative), [Bizzabo](${origin}/bizzabo-alternative), [Swoogo](${origin}/swoogo-alternative), [EventsAir](${origin}/eventsair-alternative), [InEvent](${origin}/inevent-alternative), [RainFocus](${origin}/rainfocus-alternative), [Whova](${origin}/whova-alternative)
 - [For multi-office programmes](${origin}/solutions/multi-office-event-programmes)
 - [Pricing](${origin}/pricing)
 - [About Mitingu](${origin}/about)

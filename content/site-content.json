@@ -142,7 +142,7 @@
     ],
     [
       "Register",
-      "Create branded registration journeys for public, private, internal, invite-only and paid events, taking payment by card, bank transfer or invoice, in full or in part."
+      "Create branded registration journeys for public, private, internal, invite-only and paid events, with hotel and accommodation booking and payment by card, bank transfer or invoice, in full or in part."
     ],
     [
       "Communicate",
@@ -348,6 +348,10 @@
     [
       "Does Mitingu support white-label event delivery?",
       "Yes. Mitingu can support branded event environments, sites, emails and admin experiences."
+    ],
+    [
+      "Does Mitingu support attendee networking and meeting booking?",
+      "Yes. Attendees can network and book meetings with each other in Mitingu's white-label event app."
     ],
     [
       "Can Mitingu take payments for event registration?",
