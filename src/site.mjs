@@ -842,6 +842,27 @@ function answerBox(title, text, facts = []) {
   </section>`;
 }
 
+function comparisonGrid() {
+  const comparisons = [
+    ["Mitingu vs Cvent", "/cvent-alternative", "Registration, a branded app and check-in from one supplier, without the full suite."],
+    ["Mitingu vs CrowdComms", "/crowdcomms-alternative", "Flexible registration, the AI Event Builder and features built in when you ask."],
+    ["Mitingu vs Bizzabo", "/bizzabo-alternative", "The whole mix of corporate events, networking under your brand and self-service booths."],
+    ["Mitingu vs Swoogo", "/swoogo-alternative", "Registration plus a white-label app, badge booths and lead scoring from one supplier."],
+    ["Mitingu vs EventsAir", "/eventsair-alternative", "Getting events live quickly, for corporate teams and agencies."],
+    ["Mitingu vs InEvent", "/inevent-alternative", "In-person first and simpler to run, with support from the team that builds it."],
+    ["Mitingu vs RainFocus", "/rainfocus-alternative", "An event run well without needing a marketing data platform."],
+    ["Mitingu vs Whova", "/whova-alternative", "An event app that carries your brand, not the supplier's."],
+  ];
+  return `<div class="card-grid four">
+    ${comparisons
+      .map(
+        ([title, href, text]) =>
+          `<a class="solution-card intent-card" href="${href}"><h3>${title}</h3><p>${text}</p><span class="card-cta">Read the comparison ${CHEVRON}</span></a>`,
+      )
+      .join("")}
+  </div>`;
+}
+
 function moneyPagesGrid() {
   return `<div class="card-grid four">
     ${moneyPages
@@ -1814,6 +1835,7 @@ const pageBodies = {
     <section class="content-section">${sectionIntro("Resource library", "The first downloads are coming soon.", "We are preparing practical resources that will be useful enough to keep, share and come back to.")}${resourceCards()}</section>
     <section class="content-band">${sectionIntro("Common questions", "The things buyers usually want to understand.", "Start with the questions teams ask when event work has become too scattered.")}${intentGrid()}</section>
     <section class="content-section">${sectionIntro("Useful pages", "Explore the areas buyers ask about most.", "These pages cover the common places where event teams need more clarity.")}${moneyPagesGrid()}</section>
+    <section class="content-band">${sectionIntro("Comparing event platforms?", "Honest comparisons with the platforms buyers ask us about.", "What each one does well, where Mitingu is different, when the other might suit you better, and the questions worth asking in any demo.")}${comparisonGrid()}</section>
     ${finalCta("", {
       eyebrow: "Keep exploring",
       title: "Move from reading to seeing it.",
