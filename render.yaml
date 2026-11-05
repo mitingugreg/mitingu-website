@@ -79,6 +79,9 @@ services:
         source: "/done-for-you"
         destination: "/solutions/event-agencies"
       - type: redirect
+        source: "/for-agencies"
+        destination: "/solutions/event-agencies"
+      - type: redirect
         source: "/event-marketing"
         destination: "/event-communications-platform"
       - type: redirect

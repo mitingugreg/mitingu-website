@@ -26,6 +26,7 @@ const oldSitePages = {
   "/demo": "/book-a-demo",
   "/contact": "/book-a-demo",
   "/done-for-you": "/solutions/event-agencies",
+  "/for-agencies": "/solutions/event-agencies",
   "/event-marketing": "/event-communications-platform",
   "/security-statement": "/privacy-policy",
   "/blog-1": "/blog",
