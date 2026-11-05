@@ -342,7 +342,6 @@ function footer() {
         <a href="/pricing">Pricing</a>
         <a href="/resources">Resources</a>
         <a href="/blog">Blog</a>
-        <a href="/crowdcomms-alternative">CrowdComms alternative</a>
         <a href="/about">About</a>
         <a href="/book-a-demo">Book a Demo</a>
         <a href="/privacy-policy">Privacy</a>
