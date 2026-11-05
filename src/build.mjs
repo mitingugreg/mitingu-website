@@ -174,6 +174,7 @@ Mitingu is built and supported in the UK (Cornwall) and works with companies in 
 - [Mitingu MCP](${origin}/mcp)
 - [For corporate event teams](${origin}/solutions/corporate-events)
 - [For event agencies](${origin}/solutions/event-agencies)
+- [CrowdComms alternative](${origin}/crowdcomms-alternative): an honest comparison of where Mitingu differs
 - [For multi-office programmes](${origin}/solutions/multi-office-event-programmes)
 - [Pricing](${origin}/pricing)
 - [About Mitingu](${origin}/about)

@@ -342,6 +342,7 @@ function footer() {
         <a href="/pricing">Pricing</a>
         <a href="/resources">Resources</a>
         <a href="/blog">Blog</a>
+        <a href="/crowdcomms-alternative">CrowdComms alternative</a>
         <a href="/about">About</a>
         <a href="/book-a-demo">Book a Demo</a>
         <a href="/privacy-policy">Privacy</a>
@@ -911,6 +912,36 @@ function faqsForPath(path) {
       [
         "Can each client, office or region have a separate event account?",
         "Yes. Mitingu can support separate structures for brands, offices, regions or clients, with permissions and central visibility.",
+      ],
+    ],
+    "/crowdcomms-alternative": [
+      [
+        "What is a good alternative to CrowdComms?",
+        "It depends on why you're looking. If your registration needs don't fit a standard form, you want new events set up faster, or you need features built around how your events run, Mitingu is worth a look.",
+      ],
+      [
+        "Does Mitingu do the same things as CrowdComms?",
+        "Much of it: event registration with payments, a branded attendee app, onsite check-in and badges, lead capture, reporting and white-label branding for agencies. The differences are in how flexible the registration is, the AI Event Builder, and how readily new functionality is built into the platform for you.",
+      ],
+      [
+        "What is the Mitingu AI Event Builder?",
+        "You describe your event in plain English, from the audience and format to the dates, and Mitingu builds a first draft of the branded event site, registration and communications for your team to review, adjust and launch. It also works through Claude, ChatGPT or Microsoft Copilot via Mitingu MCP.",
+      ],
+      [
+        "Can Mitingu build custom features?",
+        "Yes. If your event needs something the platform doesn't do yet, you can ask for it and Mitingu builds it into the platform for you, so it runs alongside your registration, emails, app and check-in rather than as a separate bolt-on.",
+      ],
+      [
+        "Can Mitingu take payments for event registration?",
+        "Yes. Mitingu takes payment by card, bank transfer or invoice, and supports both full payment and part payments, such as a deposit with the balance paid later.",
+      ],
+      [
+        "Does Mitingu support live streaming?",
+        "Mitingu focuses on in-person events rather than streaming, but streaming can be added when an event needs it.",
+      ],
+      [
+        "Is Mitingu only for UK events?",
+        "No. Mitingu is built and supported in the UK and works with event teams and agencies anywhere.",
       ],
     ],
     "/enterprise-event-registration-platform": [
@@ -1910,6 +1941,58 @@ const pageBodies = {
       })}
     `;
   },
+  "/crowdcomms-alternative": () => `
+    ${renderPageHero("/crowdcomms-alternative", {
+      eyebrow: "CrowdComms alternative",
+      title: "Looking for a CrowdComms alternative?",
+      text: "Nobody goes looking for a new event platform because things are going swimmingly. The form can't ask what you need, each new event takes too long to set up, a client wants something the system doesn't do, or you've lost an afternoon waiting for a reply.",
+    }, heroChecklist("/crowdcomms-alternative", ["AI Event Builder", "Registration that bends to the event", "Custom features built in for you", "Quick replies and quick fixes"]))}
+    ${renderAnswerBox("/crowdcomms-alternative", {
+      title: "If CrowdComms does what you need, keep it.",
+      text: "CrowdComms is an established platform, running since 2011, covering registration, a branded event app, onsite badging, virtual and hybrid events, lead capture and reporting. Switching for the sake of it is a lot of work for no reward. If something is pinching, here is an honest look at where Mitingu is different, and where it isn't.",
+      facts: ["Plain-English AI Event Builder", "Flexible registration and payments", "Custom features built into the platform", "Built and supported in the UK, used anywhere"],
+    })}
+    <section class="content-section">
+      ${sectionIntro("What the two have in common", "On the brochure, there's a lot of overlap.", "So the useful question isn't “does it have feature X?”. Both lists are long. What matters is how quickly you can get an event live, and what happens when your event doesn't fit the standard version.")}
+      <div class="control-list">${["Branded event websites and emails", "Payment as part of registration", "Branded attendee app for iOS and Android", "Onsite check-in and badge printing", "Lead capture for exhibitors and sponsors", "Registration and attendance reporting", "White-label branding for agencies"].map((item) => `<span>${item}</span>`).join("")}</div>
+    </section>
+    <section class="content-band">
+      ${sectionIntro("Where Mitingu is different", "Four things to test in a demo.")}
+      ${cards([
+        ["Describe the event, and Mitingu builds it", "Most platforms start you with a blank template and a long afternoon. Mitingu's AI Event Builder starts with a plain-English description of the audience, format and dates, and builds a first draft of the branded event site, registration and communications for your team to review, adjust and launch. You can also ask Claude, ChatGPT or Microsoft Copilot to build it through Mitingu MCP."],
+        ["Registration that bends to the event", "Different guest types see different questions. Staff, partners and VIPs follow different routes. Someone needs a hotel, someone registers three colleagues at once. Mitingu's registration follows how your event works, and takes payment by card, bank transfer or invoice, in full or in part, so a delegate can pay a deposit now and the balance later."],
+        ["Custom features, built in for you", "Sooner or later an event needs something no platform does out of the box. Ask for it, and Mitingu builds it into the platform for you. It then runs alongside your registration, emails, app, check-in and reporting, rather than as a separate tool someone has to keep in sync. For agencies, that is often the difference between “yes” and “we'll find a workaround”."],
+        ["Quick replies and quick fixes", "We reply quickly and we fix things quickly. We can't tell you how that compares with anyone else's support, because we don't know. The fairest test is to ask us something awkward during your demo and time the answer."],
+      ], "module-card", "two")}
+    </section>
+    <section class="content-section">
+      <div class="split-panel">
+        <div><p class="eyebrow">Where CrowdComms may suit you better</p><h2>Honesty saves everyone time.</h2></div>
+        <div><p>CrowdComms lists virtual and hybrid events as a core part of its platform. Mitingu focuses on in-person events: we can add streaming when an event needs it, but it isn't where our attention goes. So if live streaming is at the centre of most of your events, a platform built around streaming may suit you better.</p><p>And if your team is happy with your current set-up and nothing is pinching, stay put.</p></div>
+      </div>
+    </section>
+    <section class="content-band">
+      ${sectionIntro("Questions to ask", "Whichever platform you're considering.")}
+      ${cards([
+        ["Your journey, not a sample", "Can we see our own registration journey built in the demo?"],
+        ["Set-up time", "How long does it take to set up a new event site and registration from scratch? Can you show us?"],
+        ["Payments", "Can delegates pay by card, bank transfer or invoice, and pay a deposit now and the rest later?"],
+        ["The thing it doesn't do", "When we need something the platform doesn't do, what happens next?"],
+        ["Event day", "Who do we talk to when something goes wrong on the day, and how quickly do they reply?"],
+        ["One record", "Do registration, emails, the app, check-in and lead capture all work from the same attendee record?"],
+        ["White label", "How far does the branding go: web addresses, emails, the app, the admin area?"],
+        ["Leaving", "How do we get our data out if we ever leave?"],
+      ], "info-card", "four")}
+    </section>
+    ${faqSection("/crowdcomms-alternative")}
+    ${finalCta("", {
+      eyebrow: "See if Mitingu fits",
+      title: "Bring your most awkward event.",
+      text: "If your registration needs more flexibility than a template allows, setting up each event takes too long, or you keep needing things built, we'll show you how it would run in Mitingu.",
+      actionLabel: "Book a Demo",
+      actionHref: "/book-a-demo",
+    })}
+  `,
   "/solutions/event-agencies": () => `
     ${renderPageHero("/solutions/event-agencies", {
       eyebrow: "Event agencies",
