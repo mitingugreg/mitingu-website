@@ -1260,12 +1260,15 @@ function screenshotFigure() {
 
 function registrationFigure() {
   const m = media.registrationScreenshot;
-  return `<figure class="browser-frame">
-    <div class="browser-bar" aria-hidden="true">
+  const bar = m.addressLabel
+    ? `<div class="browser-bar" aria-hidden="true">
       <span class="browser-dots"><i></i><i></i><i></i></span>
-      <span class="browser-address"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>${m.addressLabel || "Event registration"}</span>
-    </div>
-    <img src="${m.src}" alt="${m.alt}" width="1800" height="760" decoding="async">
+      <span class="browser-address"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>${m.addressLabel}</span>
+    </div>`
+    : "";
+  return `<figure class="browser-frame${bar ? "" : " is-plain"}">
+    ${bar}
+    <img src="${m.src}" alt="${m.alt}" width="1800" height="1125" decoding="async">
     <figcaption>${m.captionTitle ? `<strong>${m.captionTitle}</strong>` : ""}<span>${m.caption}</span></figcaption>
   </figure>`;
 }

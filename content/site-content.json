@@ -23,11 +23,10 @@
       "alt": "Mitingu domain restriction control"
     },
     "registrationScreenshot": {
-      "src": "/assets/registration-roadshow-top.webp",
-      "alt": "Branded registration website for The Business Marketing Roadshow, with the event header, three host cities and a Register Now button",
-      "addressLabel": "The Business Marketing Roadshow",
+      "src": "/assets/showcase-branded-event-site.webp",
+      "alt": "Branded registration website for the Aldermoor Partner Summit 2026 on desktop and mobile, with a Register your place button, a live countdown and agenda highlights",
       "captionTitle": "Still sending delegates to a form that looks nothing like your event?",
-      "caption": "Here one registration site covers three cities in the organiser's own brand, and every sign-up lands in the same attendee record as your emails, check-in and reports."
+      "caption": "Here the Partner Summit has its own branded site, with registration, agenda and a live countdown on desktop and mobile, and every sign-up lands in the same attendee record as your emails, check-in and reports."
     }
   },
   "navItems": [
