@@ -926,6 +926,10 @@ function faqsForPath(path) {
         "Does Mitingu support internal and invite-only events?",
         "Yes. Mitingu can support internal, private, public, invite-only, paid and pre-registration events depending on the programme.",
       ],
+      [
+        "Can delegates pay when they register?",
+        "Yes. Mitingu takes payments by card and by bank transfer, and supports full payment or part payments, such as a deposit now and the balance later.",
+      ],
     ],
     "/event-analytics-reporting": [
       [
