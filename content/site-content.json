@@ -23,9 +23,11 @@
       "alt": "Mitingu domain restriction control"
     },
     "registrationScreenshot": {
-      "src": "/assets/expo-registration-mitingu.webp",
-      "alt": "Example branded event registration website shown on laptop and mobile screens",
-      "caption": "Create branded registration journeys that look right on desktop and mobile."
+      "src": "/assets/registration-roadshow-top.webp",
+      "alt": "Branded registration website for The Business Marketing Roadshow, with the event header, three host cities and a Register Now button",
+      "addressLabel": "The Business Marketing Roadshow",
+      "captionTitle": "Still sending delegates to a form that looks nothing like your event?",
+      "caption": "Here one registration site covers three cities in the organiser's own brand, and every sign-up lands in the same attendee record as your emails, check-in and reports."
     }
   },
   "navItems": [

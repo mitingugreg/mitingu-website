@@ -2551,3 +2551,85 @@ textarea:focus {
     width: 104px;
   }
 }
+
+/* ---------- Browser-framed registration site ---------- */
+.browser-frame {
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--paper);
+  box-shadow: 0 24px 60px rgba(21, 23, 22, 0.14);
+}
+
+.browser-bar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+  background: var(--soft);
+}
+
+.browser-dots {
+  display: inline-flex;
+  gap: 6px;
+  flex: none;
+}
+
+.browser-dots i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #d5dbd7;
+}
+
+.browser-address {
+  display: inline-flex;
+  flex: 1;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  overflow: hidden;
+  padding: 6px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--muted);
+  font-size: 0.8rem;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.browser-address svg {
+  width: 13px;
+  height: 13px;
+  flex: none;
+  color: var(--green);
+}
+
+.browser-frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.browser-frame figcaption {
+  display: grid;
+  gap: 6px;
+  padding: 18px 20px 20px;
+  border-top: 1px solid var(--line);
+  border-left: 4px solid var(--teal);
+}
+
+.browser-frame figcaption strong {
+  color: var(--ink);
+  font-size: 1.02rem;
+  line-height: 1.3;
+}
+
+.browser-frame figcaption span {
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
