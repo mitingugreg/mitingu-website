@@ -226,7 +226,7 @@ function renderPost(post) {
         <nav class="blog-breadcrumb" aria-label="Breadcrumb"><a href="/blog">Blog</a></nav>
         <h1>${escapeHtml(post.title)}</h1>
         <p class="blog-post-meta"><time datetime="${post.published}">${formatDate(post.published)}</time></p>
-        ${old ? `<p class="blog-post-note">Written in ${post.published.slice(0, 4)}. Some product details have changed since; <a href="/platform">see what Mitingu does today</a>.</p>` : ""}
+        ${old ? `<p class="blog-post-note"><span class="note-label">Archive</span><span>Written in ${post.published.slice(0, 4)}. Some product details have changed since; <a href="/platform">see what Mitingu does today</a>.</span></p>` : ""}
       </header>
       ${
         post.image

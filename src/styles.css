@@ -350,8 +350,8 @@ h3 {
 .hero-copy p.hero-support {
   margin-top: 56px;
   max-width: 440px;
-  border-left: 4px solid var(--teal);
-  padding: 10px 0 10px 12px;
+  border-top: 1px solid var(--line);
+  padding: 14px 0 0;
   font-size: 1.05rem;
   font-weight: 450;
 }
@@ -827,42 +827,60 @@ h3 {
   display: grid;
   width: min(1160px, calc(100% - 48px));
   grid-template-columns: 1.05fr 0.95fr;
-  gap: 34px;
+  gap: 56px;
   align-items: start;
   margin: 60px auto;
-  border: 1px solid var(--line);
-  border-left: 6px solid var(--teal);
-  border-radius: 8px;
-  background: var(--paper);
-  padding: var(--panel-padding);
-  box-shadow: var(--shadow);
+  border-radius: 16px;
+  background: #1b1f1e;
+  color: #ffffff;
+  padding: 52px 52px 48px;
 }
-
 .answer-box > div {
   display: grid;
-  gap: 14px;
+  gap: 16px;
 }
-
+.answer-box .eyebrow {
+  color: #7fd3d8;
+}
+.answer-box h2 {
+  color: #ffffff;
+}
 .answer-box p:not(.eyebrow) {
-  color: var(--muted);
+  color: #c3cbc7;
   font-size: 1.12rem;
 }
-
-.answer-box ul {
+.answer-box a {
+  color: #7fd3d8;
+}
+.answer-box ol {
   display: grid;
-  gap: 12px;
   margin: 0;
   padding: 0;
   list-style: none;
+  counter-reset: answer;
 }
-
 .answer-box li {
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: var(--soft);
-  padding: 12px 14px;
-  color: var(--charcoal);
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+  padding: 18px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+  font-size: 1.06rem;
+  font-weight: 600;
+  counter-increment: answer;
+}
+.answer-box li:last-child {
+  border-bottom: 0;
+}
+.answer-box li::before {
+  content: counter(answer, decimal-leading-zero);
+  flex: none;
+  width: 24px;
+  color: #7fd3d8;
+  font-size: 0.8rem;
   font-weight: 700;
+  letter-spacing: 0.5px;
 }
 
 .ai-panel {
@@ -1909,6 +1927,7 @@ textarea:focus {
     gap: 24px;
     margin-top: 40px;
     margin-bottom: 40px;
+    padding: 32px 24px 24px;
   }
 
   .split-panel {
@@ -2185,12 +2204,25 @@ textarea:focus {
 }
 
 .blog-post-note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
   margin-top: 16px;
-  padding: 12px 16px;
-  border-left: 3px solid var(--amber);
-  background: var(--soft);
+  padding: 14px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
   color: var(--muted);
   font-size: 0.92rem;
+}
+
+.blog-post-note .note-label {
+  flex: none;
+  color: #8a5d00;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.4px;
 }
 
 .blog-post-summary {
@@ -2300,9 +2332,23 @@ textarea:focus {
 }
 
 .blog-post-body blockquote {
-  padding-left: 18px;
-  border-left: 3px solid var(--teal);
-  color: var(--muted);
+  margin-left: 0;
+  margin-right: 0;
+  padding: 0;
+  color: var(--ink);
+  font-size: 1.22rem;
+  line-height: 1.5;
+  font-weight: 500;
+  letter-spacing: -0.1px;
+}
+
+.blog-post-body blockquote::before {
+  content: "";
+  display: block;
+  width: 28px;
+  height: 2px;
+  margin-bottom: 16px;
+  background: var(--teal);
 }
 
 .blog-post-body hr {
@@ -2554,12 +2600,17 @@ textarea:focus {
 
 /* ---------- Browser-framed registration site ---------- */
 .browser-frame {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
   margin: 0;
-  overflow: hidden;
+}
+
+.browser-frame:not(.is-plain) .browser-bar {
   border: 1px solid var(--line);
-  border-radius: 12px;
-  background: var(--paper);
-  box-shadow: 0 24px 60px rgba(21, 23, 22, 0.14);
+  border-bottom: 0;
+  border-radius: 12px 12px 0 0;
+  margin-bottom: -18px;
 }
 
 .browser-bar {
@@ -2612,14 +2663,15 @@ textarea:focus {
   display: block;
   width: 100%;
   height: auto;
+  border: 1px solid var(--line);
+  border-radius: 12px;
 }
 
 .browser-frame figcaption {
   display: grid;
   gap: 6px;
-  padding: 18px 20px 20px;
+  padding-top: 14px;
   border-top: 1px solid var(--line);
-  border-left: 4px solid var(--teal);
 }
 
 .browser-frame figcaption strong {

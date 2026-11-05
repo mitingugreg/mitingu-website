@@ -838,7 +838,7 @@ function answerBox(title, text, facts = []) {
       <h2>${title}</h2>
       <p>${text}</p>
     </div>
-    ${facts.length ? `<ul>${facts.map((fact) => `<li>${fact}</li>`).join("")}</ul>` : ""}
+    ${facts.length ? `<ol>${facts.map((fact) => `<li>${fact}</li>`).join("")}</ol>` : ""}
   </section>`;
 }
 
