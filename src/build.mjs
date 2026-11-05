@@ -131,7 +131,7 @@ Mitingu is built and supported in the UK (Cornwall) and works with companies in 
 
 ### Before the event
 - Branded event websites and registration journeys (public, private, invite-only, internal and paid events)
-- Registration payments by card or bank transfer, in full or in part (for example a deposit now and the balance later)
+- Registration payments by card, bank transfer or invoice, in full or in part (for example a deposit now and the balance later)
 - AI Event Builder: describe the event in plain English and Mitingu drafts the branded event site, registration and communications for the team to review and launch (also available through Mitingu MCP)
 - Automated, personalised event communications: invitations, confirmations, reminders, updates and follow-ups, segmented by audience
 - Planning, tasks and approvals across events, offices and clients

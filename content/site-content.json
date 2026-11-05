@@ -142,7 +142,7 @@
     ],
     [
       "Register",
-      "Create branded registration journeys for public, private, internal, invite-only and paid events, taking card or bank transfer payments in full or in part."
+      "Create branded registration journeys for public, private, internal, invite-only and paid events, taking payment by card, bank transfer or invoice, in full or in part."
     ],
     [
       "Communicate",
@@ -351,7 +351,7 @@
     ],
     [
       "Can Mitingu take payments for event registration?",
-      "Yes. Mitingu takes payments by card and by bank transfer, and supports full payment or part payments, such as a deposit now and the balance later."
+      "Yes. Mitingu takes payment by card, bank transfer or invoice, and supports full payment or part payments, such as a deposit now and the balance later."
     ],
     [
       "How does Mitingu help with reporting and analytics?",
@@ -571,7 +571,7 @@
           "Consistent delegate experience",
           "Cleaner attendee data",
           "Faster repeat event setup",
-          "Card and bank transfer payments, in full or in part"
+          "Payment by card, bank transfer or invoice, in full or in part"
         ]
       }
     },
