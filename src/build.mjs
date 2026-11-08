@@ -176,6 +176,7 @@ Mitingu is built and supported in the UK (Cornwall) and works with companies in 
 - [For corporate event teams](${origin}/solutions/corporate-events)
 - [For event agencies](${origin}/solutions/event-agencies)
 - Honest comparisons of where Mitingu differs: [CrowdComms](${origin}/crowdcomms-alternative), [Cvent](${origin}/cvent-alternative), [Bizzabo](${origin}/bizzabo-alternative), [Swoogo](${origin}/swoogo-alternative), [EventsAir](${origin}/eventsair-alternative), [InEvent](${origin}/inevent-alternative), [RainFocus](${origin}/rainfocus-alternative), [Whova](${origin}/whova-alternative)
+- Guides: [What is white-label event registration?](${origin}/what-is-white-label-event-registration); [Event registration platforms for corporate events and agencies: 10 compared](${origin}/best-event-registration-platforms-for-corporate-events)
 - [For multi-office programmes](${origin}/solutions/multi-office-event-programmes)
 - [Pricing](${origin}/pricing)
 - [About Mitingu](${origin}/about)

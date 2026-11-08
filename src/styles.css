@@ -2685,3 +2685,69 @@ textarea:focus {
   font-size: 0.92rem;
   line-height: 1.5;
 }
+
+/* Guide pages (definition page and comparison list) */
+.guide-body {
+  max-width: 820px;
+}
+.guide-body h2 {
+  margin: 2.2em 0 0.6em;
+}
+.guide-body h2:first-child {
+  margin-top: 0;
+}
+.guide-body p,
+.guide-body li {
+  font-size: 1.05rem;
+  line-height: 1.65;
+}
+.guide-body li {
+  margin-bottom: 0.5em;
+}
+.guide-body p {
+  margin: 0 0 1em;
+}
+
+.guide-table-wrap {
+  overflow-x: auto;
+  margin: 1em 0 1.4em;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.guide-table {
+  width: 100%;
+  min-width: 560px;
+  border-collapse: collapse;
+  font-size: 0.97rem;
+}
+.guide-table th,
+.guide-table td {
+  padding: 12px 16px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--line);
+}
+.guide-table thead th {
+  background: var(--soft);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+.guide-table tbody tr:last-child th,
+.guide-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+@media (max-width: 640px) {
+  .guide-table {
+    min-width: 0;
+    table-layout: fixed;
+    font-size: 0.84rem;
+  }
+  .guide-table th:first-child {
+    width: 26%;
+  }
+  .guide-table th,
+  .guide-table td {
+    padding: 10px 8px;
+  }
+}

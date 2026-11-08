@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
 import { alternatives, alternativesByPath, pay as altPay, clients as altClients } from "./alternatives.mjs";
+import { guides, guidesByPath } from "./guides.mjs";
 
 const contentUrl = new URL("../content/site-content.json", import.meta.url);
 
@@ -61,6 +62,7 @@ const finalCtaCopy = content.finalCta || {};
 export const redirects = content.redirects;
 
 for (const alt of alternatives) metadata[alt.path] = [alt.title, alt.description];
+for (const guide of guides) metadata[guide.path] = [guide.title, guide.description];
 export const pages = Object.keys(metadata);
 
 export function renderPage(path) {
@@ -852,6 +854,8 @@ function comparisonGrid() {
     ["Mitingu vs InEvent", "/inevent-alternative", "In-person first and simpler to run, with support from the team that builds it."],
     ["Mitingu vs RainFocus", "/rainfocus-alternative", "An event run well without needing a marketing data platform."],
     ["Mitingu vs Whova", "/whova-alternative", "An event app that carries your brand, not the supplier's."],
+    ["10 platforms compared", "/best-event-registration-platforms-for-corporate-events", "Ten event registration platforms for corporate teams and agencies, and when each fits."],
+    ["What is white-label registration?", "/what-is-white-label-event-registration", "A plain-English guide, and what to check before you choose."],
   ];
   return `<div class="card-grid four">
     ${comparisons
@@ -1022,7 +1026,7 @@ function faqsForPath(path) {
     ],
   };
 
-  return [...(pageFaqs[path] || alternativesByPath[path]?.faqs || []), ...(path === "/" ? discoveryFaqs : [])];
+  return [...(pageFaqs[path] || alternativesByPath[path]?.faqs || guidesByPath[path]?.faqs || []), ...(path === "/" ? discoveryFaqs : [])];
 }
 
 function heroShowcaseItems(showcase = []) {
@@ -2117,3 +2121,48 @@ function renderAlternativePage(alt) {
   `;
 }
 for (const alt of alternatives) pageBodies[alt.path] = () => renderAlternativePage(alt);
+
+function guideTable(rows) {
+  const [head, ...body] = rows;
+  return `<div class="guide-table-wrap"><table class="guide-table">
+    <thead><tr>${head.map((cell) => `<th scope="col">${cell}</th>`).join("")}</tr></thead>
+    <tbody>${body.map(([first, ...rest]) => `<tr><th scope="row">${first}</th>${rest.map((cell) => `<td>${cell}</td>`).join("")}</tr>`).join("")}</tbody>
+  </table></div>`;
+}
+
+function renderGuidePage(guide) {
+  return `
+    ${pageHero(guide.eyebrow, guide.h1, guide.lead)}
+    ${answerBox(guide.answerTitle, guide.answer, [])}
+    <section class="content-section">
+      <article class="guide-body">
+        ${guide.sections
+          .map(
+            (section) =>
+              `<h2>${section.h2}</h2>${section.html || ""}${section.table ? guideTable(section.table) : ""}${section.after || ""}`,
+          )
+          .join("")}
+        <h2>How Mitingu helps</h2>
+        <p>${guide.mitingu} <a href="/book-a-demo">Book a demo</a>.</p>
+      </article>
+    </section>
+    <section class="content-band">
+      ${sectionIntro("Read next", "Related pages.")}
+      <div class="card-grid three">${guide.related
+        .map(
+          ([title, href, text]) =>
+            `<a class="solution-card intent-card" href="${href}"><h3>${title}</h3><p>${text}</p><span class="card-cta">Read more ${CHEVRON}</span></a>`,
+        )
+        .join("")}</div>
+    </section>
+    ${faqSection(guide.path)}
+    ${finalCta("", {
+      eyebrow: "See if Mitingu fits",
+      title: "Bring your most awkward event.",
+      text: "We'll show you how it would run in Mitingu, from registration to the report.",
+      actionLabel: "Book a Demo",
+      actionHref: "/book-a-demo",
+    })}
+  `;
+}
+for (const guide of guides) pageBodies[guide.path] = () => renderGuidePage(guide);
