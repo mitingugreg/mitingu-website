@@ -310,6 +310,9 @@ services:
         source: "/blog/tag/eventprofs"
         destination: "/blog"
       - type: redirect
+        source: "/blog/tag/Events+Apps"
+        destination: "/blog"
+      - type: redirect
         source: "/blog/category/Technical"
         destination: "/blog"
       - type: redirect

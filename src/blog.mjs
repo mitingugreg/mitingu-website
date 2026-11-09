@@ -61,6 +61,7 @@ const oldTagAndCategoryPages = [
   "event+planning", "email+deliverability", "%23TicketSales", "event-roi", "event+registration", "Tagging",
   "registrationsoftware", "file-upload", "Secure+Event+Registration", "Event+check-in", "eventtech",
   "Event+Technology", "event+marketing", "Event+Management", "whitelabel", "eventplanning", "eventprofs",
+  "Events+Apps",
 ].map((tag) => `/blog/tag/${tag}`);
 
 export const blogForwards = {
