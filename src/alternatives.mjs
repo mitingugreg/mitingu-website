@@ -120,8 +120,8 @@ export const alternatives = [
   {
     path: "/eventsair-alternative",
     name: "EventsAir",
-    title: "EventsAir Alternative for Corporate Event Teams",
-    description: "Looking for an EventsAir alternative? Mitingu is built for corporate event teams and agencies: quick set-up, a white-label app and onsite check-in.",
+    title: "EventsAir Alternatives for Corporate Events",
+    description: "Comparing EventsAir alternatives? Where Mitingu fits for corporate event teams and agencies, and where EventsAir may still suit you better.",
     intro: [
       "EventsAir has been around since 1990 and covers almost everything: registration, apps, check-in, lead capture, abstracts, travel and accommodation, live streaming and AI assistants. It's built for every kind of event planner, from associations and congress organisers to corporate teams.",
       "Breadth is useful, but it comes with set-up. If you're a corporate event team or an agency, most of your time goes on getting the next event live, branded and running smoothly. That's where Mitingu concentrates.",
