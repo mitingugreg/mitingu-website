@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { alternatives, alternativesByPath, pay as altPay, clients as altClients } from "./alternatives.mjs";
 import { guides, guidesByPath } from "./guides.mjs";
+import { personalityPath, personalityMeta, renderPersonalityPage } from "./personality.mjs";
 
 const contentUrl = new URL("../content/site-content.json", import.meta.url);
 
@@ -63,6 +64,7 @@ export const redirects = content.redirects;
 
 for (const alt of alternatives) metadata[alt.path] = [alt.title, alt.description];
 for (const guide of guides) metadata[guide.path] = [guide.title, guide.description];
+metadata[personalityPath] = personalityMeta;
 export const pages = Object.keys(metadata);
 
 export function renderPage(path) {
@@ -2167,3 +2169,4 @@ function renderGuidePage(guide) {
   `;
 }
 for (const guide of guides) pageBodies[guide.path] = () => renderGuidePage(guide);
+pageBodies[personalityPath] = () => renderPersonalityPage(site);
