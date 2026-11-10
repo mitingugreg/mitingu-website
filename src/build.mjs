@@ -164,6 +164,13 @@ Mitingu is built and supported in the UK (Cornwall) and works with companies in 
 - Organisations running events across multiple offices, regions or brands
 - Conferences, client events, supplier and partner summits, exhibitions, roadshows and internal events
 
+## Pricing
+Full details: ${origin}/pricing
+- Platform Entry: from £399 a month, or £3,990 billed annually. For teams moving beyond ad hoc tools and single-event builds: a single branded account, core event websites and registration, event communications, event analytics and reporting, and launch support
+- White Label: priced on request. For organisations or agencies that need multiple branded accounts and repeatable delivery: white-label platform, multiple sub-accounts, custom event themes, custom report builder and dedicated account management
+- Enterprise: priced on request. For scaled programmes across regions, brands, clients or operating units: programme-level structure, Event Intelligence workflows, Mitingu MCP where enabled, integration and API planning, and a security, access and governance review
+- What affects price: event volume, accounts, attendee usage, white-label depth, integrations, support, Event Intelligence, Mitingu MCP and custom work. SMS, WhatsApp and unusually high usage may carry additional charges
+
 ## Key pages
 - [Platform overview](${origin}/platform)
 - [Event apps and onsite registration](${origin}/event-apps-onsite-registration): attendee app, self-service booths, staffed check-in and lead capture
