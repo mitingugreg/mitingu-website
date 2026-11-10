@@ -141,7 +141,7 @@ Mitingu is built and supported in the UK (Cornwall) and works with companies in 
 ### At the event
 - White-label attendee app for iOS and Android, carrying the client's brand: agenda, seminar booking with live places, speakers, exhibitors, interactive floor plan with exhibitor finder, venue information, announcements, attendee networking and meeting booking, and a QR attendee pass
 - App content management system connected to Mitingu, so organisers make last-minute agenda, room and announcement changes themselves
-- Onsite check-in: custom-branded self-service registration booths that print each attendee's badge on the spot when they scan their QR pass, plus staffed registration desks, all working from the same live attendee list
+- Onsite check-in: custom-branded self-service registration booths that print each attendee's badge on the spot when they scan their QR pass, plus staffed registration desks, all working from the same live attendee list; an offline option, and a version of the booths with battery backup for power cuts
 - Onsite support from the Mitingu team
 - Exhibitor lead capture with hot, warm and cold lead scoring
 

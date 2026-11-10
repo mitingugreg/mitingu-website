@@ -789,7 +789,8 @@ function renderEventAppsPage() {
         ["Walk-ins, VIPs and 'I never got the email'?", "Your staffed desk handles the exceptions on the same live list, so nobody is checking names against a printout."],
         ["No idea who is actually in the room?", "Every check-in, at a booth or at the desk, lands in one live view before the first session starts."],
         ["An evening spent merging check-in lists?", "No more reconciling three laptops' worth of spreadsheets. Attendance is already attached to each registration."],
-      ])}
+        ["Venue wi-fi down? Power cut?", "Check-in carries on. There's an offline option, and a version of the booths with battery backup."],
+      ], "info-card", "three")}
     </section>
     <section class="content-band">
       ${sectionIntro("Proving it worked", "Asked whether the event worked, and all you have is a show rate?", "No more guessing. Registration, attendance, app activity and leads sit in one place with a full reporting suite on top, so you can show stakeholders what the event achieved and work out what to change next time.")}
@@ -919,7 +920,7 @@ function faqsForPath(path) {
       ],
       [
         "Do you provide onsite registration and check-in?",
-        "Yes. Mitingu supports self-service registration booths and staffed registration desks, both working from the same live attendee list as the app, registration and reporting.",
+        "Yes. Mitingu supports self-service registration booths and staffed registration desks, both working from the same live attendee list as the app, registration and reporting. There's also an offline option, and a version of the booths with battery backup, so check-in carries on if the venue wi-fi or power doesn't.",
       ],
       [
         "Can we change the app's content during the event?",
