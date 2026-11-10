@@ -5,13 +5,159 @@
 // site in their own branding. Four views on one address, switched by the hash:
 //   #start, #quiz, #<type-key> (a result), #thanks (only after a real submission).
 //
-// All result and quiz wording lives in TYPES and QUESTIONS near the top of the
-// script below: edit the words there, not in the markup.
+// All result and quiz wording lives in TYPES and QUESTIONS just below: edit the
+// words there, not in the markup. The page and its script both read them.
 //
 // The demo form posts to Web3Forms (the same account as the Book a Demo form),
 // which emails each request to Greg. Keep the field names as they are
 // (name, email, organisation, website, event_type, event, notes, personality):
 // the AI builder will read the same fields later.
+
+// ---- WORDING: edit the result and quiz words here (used by the page and its script) ----
+// Results: one entry per type.
+export const TYPES = {
+  "platform-loyalist": {
+    name: "The Platform Loyalist",
+    code: "PL-01",
+    quote: "“It's fine. We just work around it.”",
+    tag: "You chose a system, you stuck with it, and it mostly works.",
+    symptoms: [
+      "Your events look a lot like everyone else's events on the same platform.",
+      "There's one field you really need, and the form won't let you have it.",
+      "“How did it go?” still ends with an export and a spreadsheet.",
+      "You pay for a hundred features and use about eleven."
+    ],
+    cost: "Mostly it's the workarounds: the small jobs your team does by hand because the system almost fits.",
+    lead: "Keep what works. Try one event on Mitingu and compare.",
+    gains: [
+      "Event sites that look like your organisation, not a template",
+      "Forms built around your event, awkward bits included",
+      "Reports that answer “was it worth it?” without an export"
+    ]
+  },
+  "spreadsheet-wrangler": {
+    name: "The Spreadsheet Wrangler",
+    code: "SW-02",
+    quote: "“Let me just check the spreadsheet.”",
+    tag: "A form, an inbox and a spreadsheet. Free, flexible, and held together by you.",
+    symptoms: [
+      "guest_list_FINAL_v7.xlsx exists, and someone is still working from v6.",
+      "A dietary requirement once arrived by text message.",
+      "You've pasted the same confirmation email into 140 replies.",
+      "“Is Sarah coming or not?” takes three inboxes to answer."
+    ],
+    cost: "Hours of copying, chasing and checking, plus the nagging worry that the list on the door is out of date.",
+    lead: "Same flexibility, without the copying and pasting.",
+    gains: [
+      "One live guest list that keeps itself up to date",
+      "Confirmations and reminders that send themselves",
+      "Check-in on the day from the same list"
+    ]
+  },
+  "bespoke-builder": {
+    name: "The Bespoke Builder",
+    code: "BB-03",
+    quote: "“I'll ask the developer.”",
+    tag: "Your event site looks exactly how you want it. Getting it there took a while.",
+    symptoms: [
+      "The site looks fantastic. The registrations land in an inbox.",
+      "Changing a date means emailing the developer and waiting.",
+      "Every new event is a new build, and a new invoice.",
+      "The emails to guests live somewhere else entirely."
+    ],
+    cost: "Paying to rebuild much the same thing for every event, and waiting on someone else for every change.",
+    lead: "The tailored look you like, without starting from scratch each time.",
+    gains: [
+      "Your own look and feel, ready to reuse for the next event",
+      "Change wording, dates and forms yourself",
+      "Registration, emails and reporting in one place"
+    ]
+  },
+  "shopkeeper": {
+    name: "The Shopkeeper",
+    code: "SK-04",
+    quote: "“It's on the order. Somewhere.”",
+    tag: "Your website already sells things, so why not event places?",
+    symptoms: [
+      "One person bought four places. You know the name of one of them.",
+      "“Can I transfer my ticket?” sets off a small admin project.",
+      "Your shop knows what sold. It doesn't know who's coming.",
+      "Badges get made by hand the night before."
+    ],
+    cost: "Chasing guest details after the sale, and building the guest list by hand from order reports.",
+    lead: "Keep taking payments online, and get a proper guest list with them.",
+    gains: [
+      "Every guest's details collected as they book, group bookings included",
+      "Online payments, with the guest list built as you go",
+      "Reminders, badges and check-in from the same list"
+    ]
+  },
+  "juggler": {
+    name: "The Juggler",
+    code: "JG-05",
+    quote: "“Which system is this one on?”",
+    tag: "All of the above, depending on the week. Impressive, and slightly exhausting.",
+    symptoms: [
+      "The conference is on a platform, the dinners are on a form, and the webinar is on something else.",
+      "Every new event starts with “which system are we using for this one?”",
+      "Nobody can see the whole year's events in one place.",
+      "A new team member has to learn three systems before they can help."
+    ],
+    cost: "Running several systems to do one job, then stitching the numbers together at the end of the year.",
+    lead: "Put the whole programme in one place.",
+    gains: [
+      "Every event in one place, from a small dinner to a paid conference",
+      "The same branding and guest details across your whole programme",
+      "Reporting across all your events, not one at a time"
+    ]
+  }
+};
+export const ORDER = ["platform-loyalist", "spreadsheet-wrangler", "bespoke-builder", "shopkeeper", "juggler"];
+
+// Each answer maps to a personality, in ORDER.
+export const QUESTIONS = [
+  {
+    q: "A guest emails to change their dietary requirement. What happens next?",
+    a: [
+      "I update it in our event platform",
+      "I find the right row in the spreadsheet. Eventually.",
+      "It goes in a note, because the site can't change bookings",
+      "I dig out their order and add a comment",
+      "Depends which event it's for"
+    ]
+  },
+  {
+    q: "How do the joining instructions go out?",
+    a: [
+      "Scheduled from the platform's email tool",
+      "Mail merge, and fingers crossed",
+      "A separate email tool, with the list exported from the site",
+      "The order confirmation covers it. Sort of.",
+      "A different way for every event"
+    ]
+  },
+  {
+    q: "Your director asks “how did it go?” Where does the answer come from?",
+    a: [
+      "An export from the platform, tidied up in Excel",
+      "The spreadsheet is the report",
+      "I ask whoever built the site for the numbers",
+      "The shop's sales report",
+      "Three different places, stitched together"
+    ]
+  },
+  {
+    q: "Setting up your next event looks like…",
+    a: [
+      "Copy the last one and wrestle with the template",
+      "New form, new spreadsheet, new folder",
+      "A new brief to the web developer",
+      "Add a new product to the shop",
+      "First, decide which system to use"
+    ]
+  }
+];
+// ---- end of wording ----
 
 export const personalityPath = "/personality";
 
@@ -19,6 +165,78 @@ export const personalityMeta = [
   "What's your registration personality?",
   "Five ways event organisers run registration, and where each one quietly eats your time. Pick your badge or take the 30-second quiz.",
 ];
+
+// Questions answered on the page (also published as FAQPage structured data).
+export const personalityFaqs = [
+  [
+    "What is a registration personality?",
+    "A light-hearted way of describing how an event team runs registration. Mitingu sees five common set-ups: the Platform Loyalist, the Spreadsheet Wrangler, the Bespoke Builder, the Shopkeeper and the Juggler. Each one works, up to the point where it quietly starts eating the team's time.",
+  ],
+  [
+    "What are the five registration personalities?",
+    ORDER.map((key) => `${TYPES[key].name}: ${TYPES[key].tag}`).join(" "),
+  ],
+  [
+    "How does the registration personality quiz work?",
+    "Four questions about how you handle a guest's dietary change, send joining instructions, report on an event and set up the next one. Each answer matches one set-up, and the one you choose most often is your result. A tie makes you a Juggler. It takes about 30 seconds and your answers are not saved.",
+  ],
+  [
+    "Can I see Mitingu with my own branding?",
+    "Yes. Fill in the short form on your result and Mitingu will build a demo event site in your organisation's branding, with a sample event already set up, so you can click through it the way your guests and your team would. There is no obligation and nothing to install.",
+  ],
+  [
+    "How do I stop running event registration on spreadsheets?",
+    "Move one event onto a registration platform first. With Mitingu that means a branded event site, one live guest list, confirmations and reminders that send themselves, and check-in on the day from the same list, so there is nothing to copy between spreadsheets and inboxes.",
+  ],
+];
+
+export const personalityGraph = [
+  {
+    "@type": "DefinedTermSet",
+    "@id": "https://www.mitingu.com/personality#types",
+    name: "Registration personalities",
+    description: "Five common ways event organisers run registration, as described by Mitingu.",
+    hasDefinedTerm: ORDER.map((key) => ({
+      "@type": "DefinedTerm",
+      "@id": `https://www.mitingu.com/personality#${key}`,
+      name: TYPES[key].name,
+      termCode: TYPES[key].code,
+      description: `${TYPES[key].tag} ${TYPES[key].cost}`,
+      url: `https://www.mitingu.com/personality#${key}`,
+    })),
+  },
+];
+
+function escapeHtml(text) {
+  return String(text).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+// Readable without JavaScript, so search engines and AI tools can see every type.
+function personalitiesSummary() {
+  return `<section class="rp-summary" aria-labelledby="rp-types-title">
+      <h2 id="rp-types-title">The five registration personalities</h2>
+      <p class="rp-muted">Every set-up works up to a point. Here's where each one starts to cost you.</p>
+      <ol class="rp-type-list">
+        ${ORDER.map((key) => {
+          const t = TYPES[key];
+          return `<li>
+          <span class="rp-type-code">${escapeHtml(t.code)}</span>
+          <div>
+            <h3><a href="#${key}">${escapeHtml(t.name)}</a></h3>
+            <p>${escapeHtml(t.tag)}</p>
+            <p class="rp-muted">Where it hurts: ${escapeHtml(t.cost.charAt(0).toLowerCase() + t.cost.slice(1))}</p>
+          </div>
+        </li>`;
+        }).join("")}
+      </ol>
+    </section>
+    <section class="rp-faq" aria-labelledby="rp-faq-title">
+      <h2 id="rp-faq-title">Questions</h2>
+      ${personalityFaqs
+        .map(([q, a]) => `<details><summary>${escapeHtml(q)}</summary><p>${escapeHtml(a)}</p></details>`)
+        .join("")}
+    </section>`;
+}
 
 export function renderPersonalityPage(site) {
   const endpoint = site.formEndpoint || "https://api.web3forms.com/submit";
@@ -33,6 +251,7 @@ export function renderPersonalityPage(site) {
       <span>Not sure which one you are?</span>
       <button class="rp-btn ghost" type="button" id="start-quiz">Take the 4-question quiz</button>
     </div>
+    ${personalitiesSummary()}
   </section>
 
   <!-- QUIZ -->
@@ -156,152 +375,16 @@ export function renderPersonalityPage(site) {
 ${personalityScript(site)}`;
 }
 
+function safeJson(value) {
+  return JSON.stringify(value).replace(/</g, "\\u003c");
+}
+
 function personalityScript(site) {
   return `<script>
 (function () {
-  // Results: one entry per type. Edit the words here.
-  var TYPES = {
-    "platform-loyalist": {
-      name: "The Platform Loyalist",
-      code: "PL-01",
-      quote: "“It's fine. We just work around it.”",
-      tag: "You chose a system, you stuck with it, and it mostly works.",
-      symptoms: [
-        "Your events look a lot like everyone else's events on the same platform.",
-        "There's one field you really need, and the form won't let you have it.",
-        "“How did it go?” still ends with an export and a spreadsheet.",
-        "You pay for a hundred features and use about eleven."
-      ],
-      cost: "Mostly it's the workarounds: the small jobs your team does by hand because the system almost fits.",
-      lead: "Keep what works. Try one event on Mitingu and compare.",
-      gains: [
-        "Event sites that look like your organisation, not a template",
-        "Forms built around your event, awkward bits included",
-        "Reports that answer “was it worth it?” without an export"
-      ]
-    },
-    "spreadsheet-wrangler": {
-      name: "The Spreadsheet Wrangler",
-      code: "SW-02",
-      quote: "“Let me just check the spreadsheet.”",
-      tag: "A form, an inbox and a spreadsheet. Free, flexible, and held together by you.",
-      symptoms: [
-        "guest_list_FINAL_v7.xlsx exists, and someone is still working from v6.",
-        "A dietary requirement once arrived by text message.",
-        "You've pasted the same confirmation email into 140 replies.",
-        "“Is Sarah coming or not?” takes three inboxes to answer."
-      ],
-      cost: "Hours of copying, chasing and checking, plus the nagging worry that the list on the door is out of date.",
-      lead: "Same flexibility, without the copying and pasting.",
-      gains: [
-        "One live guest list that keeps itself up to date",
-        "Confirmations and reminders that send themselves",
-        "Check-in on the day from the same list"
-      ]
-    },
-    "bespoke-builder": {
-      name: "The Bespoke Builder",
-      code: "BB-03",
-      quote: "“I'll ask the developer.”",
-      tag: "Your event site looks exactly how you want it. Getting it there took a while.",
-      symptoms: [
-        "The site looks fantastic. The registrations land in an inbox.",
-        "Changing a date means emailing the developer and waiting.",
-        "Every new event is a new build, and a new invoice.",
-        "The emails to guests live somewhere else entirely."
-      ],
-      cost: "Paying to rebuild much the same thing for every event, and waiting on someone else for every change.",
-      lead: "The tailored look you like, without starting from scratch each time.",
-      gains: [
-        "Your own look and feel, ready to reuse for the next event",
-        "Change wording, dates and forms yourself",
-        "Registration, emails and reporting in one place"
-      ]
-    },
-    "shopkeeper": {
-      name: "The Shopkeeper",
-      code: "SK-04",
-      quote: "“It's on the order. Somewhere.”",
-      tag: "Your website already sells things, so why not event places?",
-      symptoms: [
-        "One person bought four places. You know the name of one of them.",
-        "“Can I transfer my ticket?” sets off a small admin project.",
-        "Your shop knows what sold. It doesn't know who's coming.",
-        "Badges get made by hand the night before."
-      ],
-      cost: "Chasing guest details after the sale, and building the guest list by hand from order reports.",
-      lead: "Keep taking payments online, and get a proper guest list with them.",
-      gains: [
-        "Every guest's details collected as they book, group bookings included",
-        "Online payments, with the guest list built as you go",
-        "Reminders, badges and check-in from the same list"
-      ]
-    },
-    "juggler": {
-      name: "The Juggler",
-      code: "JG-05",
-      quote: "“Which system is this one on?”",
-      tag: "All of the above, depending on the week. Impressive, and slightly exhausting.",
-      symptoms: [
-        "The conference is on a platform, the dinners are on a form, and the webinar is on something else.",
-        "Every new event starts with “which system are we using for this one?”",
-        "Nobody can see the whole year's events in one place.",
-        "A new team member has to learn three systems before they can help."
-      ],
-      cost: "Running several systems to do one job, then stitching the numbers together at the end of the year.",
-      lead: "Put the whole programme in one place.",
-      gains: [
-        "Every event in one place, from a small dinner to a paid conference",
-        "The same branding and guest details across your whole programme",
-        "Reporting across all your events, not one at a time"
-      ]
-    }
-  };
-  var ORDER = ["platform-loyalist", "spreadsheet-wrangler", "bespoke-builder", "shopkeeper", "juggler"];
-
-  // Each answer maps to a personality, in ORDER.
-  var QUESTIONS = [
-    {
-      q: "A guest emails to change their dietary requirement. What happens next?",
-      a: [
-        "I update it in our event platform",
-        "I find the right row in the spreadsheet. Eventually.",
-        "It goes in a note, because the site can't change bookings",
-        "I dig out their order and add a comment",
-        "Depends which event it's for"
-      ]
-    },
-    {
-      q: "How do the joining instructions go out?",
-      a: [
-        "Scheduled from the platform's email tool",
-        "Mail merge, and fingers crossed",
-        "A separate email tool, with the list exported from the site",
-        "The order confirmation covers it. Sort of.",
-        "A different way for every event"
-      ]
-    },
-    {
-      q: "Your director asks “how did it go?” Where does the answer come from?",
-      a: [
-        "An export from the platform, tidied up in Excel",
-        "The spreadsheet is the report",
-        "I ask whoever built the site for the numbers",
-        "The shop's sales report",
-        "Three different places, stitched together"
-      ]
-    },
-    {
-      q: "Setting up your next event looks like…",
-      a: [
-        "Copy the last one and wrestle with the template",
-        "New form, new spreadsheet, new folder",
-        "A new brief to the web developer",
-        "Add a new product to the shop",
-        "First, decide which system to use"
-      ]
-    }
-  ];
+  var TYPES = ${safeJson(TYPES)};
+  var ORDER = ${safeJson(ORDER)};
+  var QUESTIONS = ${safeJson(QUESTIONS)};
 
   var views = ["start", "quiz", "result", "thanks"];
   var current = null;

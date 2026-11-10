@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { alternatives, alternativesByPath, pay as altPay, clients as altClients } from "./alternatives.mjs";
 import { guides, guidesByPath } from "./guides.mjs";
-import { personalityPath, personalityMeta, renderPersonalityPage } from "./personality.mjs";
+import { personalityPath, personalityMeta, renderPersonalityPage, personalityFaqs, personalityGraph } from "./personality.mjs";
 
 const contentUrl = new URL("../content/site-content.json", import.meta.url);
 
@@ -74,6 +74,7 @@ export function renderPage(path) {
     title,
     description,
     body: pageBodies[path](),
+    extraGraph: path === personalityPath ? personalityGraph : [],
   });
 }
 
@@ -348,6 +349,7 @@ function footer() {
         <a href="/pricing">Pricing</a>
         <a href="/resources">Resources</a>
         <a href="/blog">Blog</a>
+        <a href="/personality">Registration personality quiz</a>
         <a href="/about">About</a>
         <a href="/book-a-demo">Book a Demo</a>
         <a href="/privacy-policy">Privacy</a>
@@ -1029,7 +1031,7 @@ function faqsForPath(path) {
     ],
   };
 
-  return [...(pageFaqs[path] || alternativesByPath[path]?.faqs || guidesByPath[path]?.faqs || []), ...(path === "/" ? discoveryFaqs : [])];
+  return [...(pageFaqs[path] || alternativesByPath[path]?.faqs || guidesByPath[path]?.faqs || (path === personalityPath ? personalityFaqs : [])), ...(path === "/" ? discoveryFaqs : [])];
 }
 
 function heroShowcaseItems(showcase = []) {

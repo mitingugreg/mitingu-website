@@ -188,6 +188,7 @@ Full details: ${origin}/pricing
 - [Pricing](${origin}/pricing)
 - [About Mitingu](${origin}/about)
 - [Book a demo](${origin}/book-a-demo)
+- [What's your registration personality?](${origin}/personality): a 30-second quiz on the five ways event teams run registration (the Platform Loyalist, Spreadsheet Wrangler, Bespoke Builder, Shopkeeper and Juggler), where each one starts costing time, and a free demo event site in your own branding
 
 ## Guides from the Mitingu blog
 ${posts
