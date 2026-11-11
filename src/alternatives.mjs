@@ -153,8 +153,8 @@ export const alternatives = [
   {
     path: "/inevent-alternative",
     name: "InEvent",
-    title: "InEvent Alternative for In-Person Corporate Events",
-    description: "Looking for an InEvent alternative? Mitingu focuses on in-person corporate events: registration, a white-label app, badge booths and lead scoring.",
+    title: "InEvent Alternatives for In-Person Corporate Events",
+    description: "Comparing InEvent alternatives? Mitingu focuses on in-person corporate events: registration, a white-label app, badge booths and lead scoring.",
     intro: [
       "InEvent describes itself as an all-in-one platform for virtual, hybrid and in-person events. It has a lot in it: a live streaming studio, virtual lobbies, NFC badges, facial-recognition check-in, AI matchmaking and a marketplace of service providers.",
       "If your events lean towards virtual and hybrid, that's a lot of capability. If they're mostly in-person corporate events, a long feature list can mean more to set up, more to train and more to ignore.",
