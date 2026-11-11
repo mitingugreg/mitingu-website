@@ -393,6 +393,7 @@ function personalityScript(site) {
   var quizIndex = 0;
   var answers = [];
   var FALLBACK_EMAIL = ${JSON.stringify(site.email || "hello@mitingu.com")};
+  var LEADS_ENDPOINT = ${JSON.stringify(site.leadsEndpoint || "")};
 
   function $(id) { return document.getElementById(id); }
 
@@ -561,23 +562,64 @@ function personalityScript(site) {
       form.reset();
       location.hash = "thanks";
     };
-    if (!keyField || !keyField.value) { done(); return; }
+    var reset = function () {
+      button.disabled = false;
+      button.textContent = "Build my demo site";
+    };
+    var failed = function () {
+      err.textContent = "Sorry, that didn't send. Please try again in a moment, or email " + FALLBACK_EMAIL + " and we'll set up your demo from there.";
+      reset();
+    };
+
+    // Backup route: Web3Forms emails the request to Greg if the leads service can't be reached.
+    var viaWeb3Forms = function () {
+      if (!keyField || !keyField.value) { failed(); return; }
+      fetch(form.action, { method: "POST", body: new FormData(form), headers: { Accept: "application/json" } })
+        .then(function (response) {
+          return response.json().catch(function () { return {}; }).then(function (data) {
+            if (response.ok && data.success !== false) { reset(); done(); return; }
+            throw new Error((data && data.message) || "Request failed");
+          });
+        })
+        .catch(failed);
+    };
 
     button.disabled = true;
     button.textContent = "Sending…";
-    fetch(form.action, { method: "POST", body: new FormData(form), headers: { Accept: "application/json" } })
+
+    if (!LEADS_ENDPOINT) { viaWeb3Forms(); return; }
+
+    // Main route: the Mitingu leads service stores the lead and sends the confirmation email.
+    var payload = {};
+    ["name", "email", "organisation", "website", "event_type", "event", "notes", "personality", "botcheck"].forEach(function (field) {
+      var el = form.elements[field];
+      if (!el) return;
+      payload[field] = el.type === "checkbox" ? (el.checked ? "on" : "") : el.value;
+    });
+    payload.source = "personality";
+    var controller = window.AbortController ? new AbortController() : null;
+    var timer = controller ? setTimeout(function () { controller.abort(); }, 20000) : null;
+    fetch(LEADS_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      signal: controller ? controller.signal : undefined
+    })
       .then(function (response) {
+        if (timer) clearTimeout(timer);
         return response.json().catch(function () { return {}; }).then(function (data) {
-          if (response.ok && data.success !== false) { done(); return; }
-          throw new Error((data && data.message) || "Request failed");
+          if (response.ok && data.success) { reset(); done(); return; }
+          if (response.status === 400 || response.status === 429) {
+            err.textContent = data.message || "Please check your details and try again.";
+            reset();
+            return;
+          }
+          viaWeb3Forms();
         });
       })
       .catch(function () {
-        err.textContent = "Sorry, that didn't send. Please try again in a moment, or email " + FALLBACK_EMAIL + " and we'll set up your demo from there.";
-      })
-      .then(function () {
-        button.disabled = false;
-        button.textContent = "Build my demo site";
+        if (timer) clearTimeout(timer);
+        viaWeb3Forms();
       });
   });
 
