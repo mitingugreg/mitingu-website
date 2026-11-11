@@ -3402,3 +3402,21 @@ textarea:focus {
   padding: 0 0 18px;
   color: var(--muted);
 }
+
+.rp-quiz-prompt {
+  margin-top: -0.25rem;
+  font-weight: 600;
+}
+
+.rp-quiz-prompt a {
+  color: var(--teal);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.rp-quiz-prompt a::after {
+  content: " \2192";
+  text-decoration: none;
+  display: inline-block;
+  margin-left: 2px;
+}

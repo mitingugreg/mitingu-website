@@ -246,10 +246,11 @@ export function renderPersonalityPage(site) {
     <p class="rp-eyebrow">30-second quiz</p>
     <h1 id="rp-title">What's your registration personality?</h1>
     <p class="rp-lede">Every event organiser we meet runs registration in one of five ways. Each one has a point where it quietly starts eating your time. Pick the badge that sounds like you.</p>
+    <p class="rp-quiz-prompt">Not sure? <a href="#quiz">Take the 30-second quiz</a></p>
     <div class="rp-picker" id="picker"></div>
     <div class="rp-or">
       <span>Not sure which one you are?</span>
-      <button class="rp-btn ghost" type="button" id="start-quiz">Take the 4-question quiz</button>
+      <button class="rp-btn" type="button" id="start-quiz">Take the 4-question quiz</button>
     </div>
     ${personalitiesSummary()}
   </section>
