@@ -16,6 +16,8 @@
 //   NOTIFY_EMAIL       Where new-lead notifications go (default: greg@mitingu.com)
 //   ALLOWED_ORIGINS    Comma-separated sites allowed to post (default: www.mitingu.com)
 //   DATABASE_SSL       "true" to force SSL to Postgres (external connections)
+//   ADMIN_HOST         Public host for the admin area, e.g. leads.mitingu.com. When set,
+//                      admin pages on any other host redirect there.
 
 import http from "node:http";
 import { createHash, createHmac, randomBytes, randomInt, timingSafeEqual } from "node:crypto";
@@ -34,6 +36,7 @@ const REMEMBER_DAYS = 30;
 const FROM_EMAIL = env.FROM_EMAIL || "greg.wood@mitingu.com";
 const FROM_NAME = env.FROM_NAME || "Greg Wood, Mitingu";
 const NOTIFY_EMAIL = env.NOTIFY_EMAIL || "greg@mitingu.com";
+const ADMIN_HOST = (env.ADMIN_HOST || "").trim().toLowerCase();
 const ALLOWED_ORIGINS = (env.ALLOWED_ORIGINS || "https://www.mitingu.com,https://mitingu.com")
   .split(",")
   .map((s) => s.trim())
@@ -348,7 +351,7 @@ async function handleDemoRequest(req, res) {
     [lead.name, lead.email, lead.organisation, lead.website, lead.event_type, lead.event, lead.notes, lead.personality, lead.source],
   );
   const saved = rows[0];
-  const adminUrl = `https://${req.headers.host}/admin`;
+  const adminUrl = `https://${ADMIN_HOST || req.headers.host}/admin`;
   // Respond as soon as the lead is safely stored; emails follow.
   sendJson(res, 200, { success: true, id: saved.id }, cors);
   await Promise.all([sendConfirmation(saved), sendNotification(saved, adminUrl)]);
@@ -784,6 +787,12 @@ export const server = http.createServer(async (req, res) => {
       return send(res, 200, "ok");
     }
     if (url.pathname === "/api/demo-requests") return await handleDemoRequest(req, res);
+    const isAdminPath = url.pathname === "/" || url.pathname === "/admin" || url.pathname.startsWith("/admin/");
+    const host = String(req.headers.host || "").toLowerCase();
+    if (isAdminPath && ADMIN_HOST && host !== ADMIN_HOST && req.method === "GET") {
+      const target = url.pathname === "/" ? "/admin" : url.pathname + url.search;
+      return send(res, 301, "", { Location: `https://${ADMIN_HOST}${target}` });
+    }
     if (url.pathname === "/admin" || url.pathname.startsWith("/admin/")) return await handleAdmin(req, res, url);
     if (url.pathname === "/") return send(res, 302, "", { Location: "/admin" });
     if (url.pathname === "/robots.txt") return send(res, 200, "User-agent: *\nDisallow: /\n");
