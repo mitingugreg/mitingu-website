@@ -7,7 +7,7 @@
     "instagram": "https://www.instagram.com/mitingu_software",
     "formEndpoint": "https://api.web3forms.com/submit",
     "formAccessKey": "7691210a-3a5c-4eb1-9408-92e1e8580235",
-    "leadsEndpoint": "https://mitingu-leads.onrender.com/api/demo-requests"
+    "leadsEndpoint": "https://leads.mitingu.com/api/demo-requests"
   },
   "media": {
     "logo": {
