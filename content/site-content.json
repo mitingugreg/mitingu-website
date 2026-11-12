@@ -667,7 +667,7 @@
   "homePage": {
     "hero": {
       "eyebrow": "Event Operations Platform",
-      "title": "Your stakeholders won't ask whether registration worked. They'll ask whether the event did.",
+      "title": "Your stakeholders won't ask whether registration worked. They'll ask <mark>whether the event did.</mark>",
       "text": "Mitingu runs your corporate events, measures them against their objectives and recommends what to do when results are heading in the wrong direction.",
       "primaryAction": [
         "Book a Demo",

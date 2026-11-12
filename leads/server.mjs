@@ -535,7 +535,7 @@ h1{margin:0;font-size:1.5rem;letter-spacing:-.01em}
 .csv:hover{border-color:#087b83;color:#087b83}
 .tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
 .tab{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;color:#3d4542;text-decoration:none;font-size:.85rem;font-weight:600}
-.tab span{color:#8a938f;font-weight:500}.tab:hover{background:#eaefec}.tab.on{background:#151716;color:#fff}.tab.on span{color:#b8c2bd}
+.tab span{color:#8a938f;font-weight:500}.newcount{margin-right:auto;padding:3px 10px;border-radius:999px;background:#f2b233;color:#151716;font-size:.78rem;font-weight:700;text-decoration:none}.bar{border-top:4px solid #f2b233}.tab:hover{background:#eaefec}.tab.on{background:#151716;color:#fff}.tab.on span{color:#b8c2bd}
 .flash{margin:0 0 14px;padding:9px 12px;border-radius:8px;background:#e6f1f0;color:#065f65;font-size:.9rem}
 .list{background:#fff;border:1px solid #e3e8e5;border-radius:12px;overflow:hidden}
 .cols,.row summary{display:grid;grid-template-columns:minmax(0,2.2fr) minmax(0,1.2fr) minmax(0,1.5fr) minmax(0,1fr) 140px 20px;gap:16px;align-items:center;padding:0 18px}
@@ -546,8 +546,8 @@ h1{margin:0;font-size:1.5rem;letter-spacing:-.01em}
 .c-who{display:flex;flex-direction:column;min-width:0}.c-who strong,.c-who span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.c-who span{color:#5d6562;font-size:.85rem}
 .c-type,.c-event,.c-date{color:#3d4542;font-size:.88rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.c-date{color:#5d6562}
 .pill{display:inline-block;padding:2px 9px;border-radius:999px;font-size:.75rem;font-weight:700;white-space:nowrap}
-.s-new{background:#fdecc8;color:#6b4500}.s-building-demo{background:#e6f1f0;color:#065f65}.s-demo-sent{background:#dcecff;color:#174a8b}
-.s-follow-up-booked{background:#ece3fb;color:#4b2a85}.s-won{background:#d9f2df;color:#1e5b2c}.s-not-now{background:#eef1ef;color:#5d6562}
+.s-new{background:#f2b233;color:#151716}.s-building-demo{background:#fdf1d6;color:#6b4500}.s-demo-sent{background:#e6f1f0;color:#065f65}
+.s-follow-up-booked{background:#ece3fb;color:#4b2a85}.s-won{background:#087b83;color:#fff}.s-not-now{background:#eef1ef;color:#5d6562}
 .chev{width:8px;height:8px;border-right:2px solid #8a938f;border-bottom:2px solid #8a938f;transform:rotate(-45deg);justify-self:end}
 .row[open] .chev{transform:rotate(45deg)}
 .detail{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:28px;padding:6px 18px 22px;background:#fafbf9}
@@ -575,7 +575,7 @@ button.link{background:none;color:#087b83;padding:0;text-decoration:underline;fo
 }
 </style></head><body>
 <header class="bar"><div class="bar-in">
-  <a class="brand" href="/admin"><img src="https://www.mitingu.com/assets/mitingu-logo.png" alt="Mitingu" width="72" height="22"><span>Leads</span></a>
+  <a class="brand" href="/admin"><img src="https://www.mitingu.com/assets/mitingu-logo.png" alt="Mitingu" width="72" height="22"><span>Leads</span></a>${counts.New ? `<a class="newcount" href="/admin?status=New">${counts.New} new</a>` : ""}
   <div class="who-am-i"><span>${esc(signedInAs)}</span><form method="post" action="/admin/logout"><button type="submit" class="link">Sign out</button></form></div>
 </div></header>
 <main class="wrap">

@@ -408,7 +408,7 @@ function personalityScript(site) {
       var t = TYPES[key];
       var b = document.createElement("button");
       b.type = "button";
-      b.className = "rp-pick" + (key === "juggler" ? " juggler" : "");
+      b.className = "rp-pick is-" + key + (key === "juggler" ? " juggler" : "");
       b.innerHTML =
         '<span class="strip"><span>Delegate</span><span class="code"></span></span>' +
         '<span class="name"></span><span class="quote"></span>';
@@ -423,6 +423,7 @@ function personalityScript(site) {
   function renderResult(key) {
     var t = TYPES[key];
     current = key;
+    $("view-result").setAttribute("data-type", key);
     $("r-name").textContent = t.name.replace(/^The /, "");
     $("r-tag").textContent = t.tag;
     $("r-code").textContent = t.code;
