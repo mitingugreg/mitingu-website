@@ -3,7 +3,7 @@
 //   TEST_DATABASE_URL=postgres://postgres@localhost:5433/leads_test node test.mjs
 
 process.env.DATABASE_URL = process.env.TEST_DATABASE_URL;
-process.env.ADMIN_PASSWORD = "test-password";
+process.env.NODE_ENV = "test";
 process.env.SENDGRID_API_KEY = "SG.fake";
 
 const sent = [];
@@ -106,52 +106,134 @@ check("SendGrid failure: lead still saved and accepted", r.status === 200 && row
 check("SendGrid failure recorded on the lead", (rows[0].confirmation_error || "").includes("401") && !rows[0].confirmation_sent_at);
 sendgridFails = false;
 
-// Admin
-r = await realFetch(`${base}/admin`);
-check("Admin needs a password", r.status === 401 && (r.headers.get("www-authenticate") || "").includes("Basic"));
-r = await realFetch(`${base}/admin`, { headers: auth("greg", "wrong") });
-check("Wrong password refused", r.status === 401);
+// Admin: sign in with an emailed code
+const form = (o) => new URLSearchParams(o).toString();
+const formPost = (path, body, cookie = "", origin = base) =>
+  realFetch(`${base}${path}`, {
+    method: "POST",
+    redirect: "manual",
+    headers: { "Content-Type": "application/x-www-form-urlencoded", ...(origin ? { Origin: origin } : {}), ...(cookie ? { Cookie: cookie } : {}) },
+    body: form(body),
+  });
+const setCookies = (r) => r.headers.getSetCookie();
+const cookieFrom = (r, name) => (setCookies(r).find((c) => c.startsWith(name + "=")) || "").split(";")[0];
+const lastCode = () => {
+  const m = [...sent].reverse().find((x) => /sign-in code/.test(x.subject));
+  return m ? m.subject.slice(0, 6) : null;
+};
+
+r = await realFetch(`${base}/admin`, { redirect: "manual" });
+check("Admin sends signed-out visitors to the sign-in page", r.status === 303 && r.headers.get("location") === "/admin/login");
+r = await realFetch(`${base}/admin/leads.csv`, { redirect: "manual" });
+check("CSV needs sign-in", r.status === 303);
+r = await realFetch(`${base}/admin/login`);
+let html = await r.text();
+check("Sign-in page shows and isn't indexable", r.status === 200 && html.includes("Email me a code") && (r.headers.get("x-robots-tag") || "").includes("noindex"));
+
+// Address that isn't allowed: same response, no email sent
+sent.length = 0;
+r = await formPost("/admin/login", { email: "intruder@example.com" });
+check("Unknown email: same response as a real one", r.status === 303 && r.headers.get("location") === "/admin/login?step=code");
+check("Unknown email: no code sent", sent.length === 0);
+
+// Real admin address
+sent.length = 0;
+r = await formPost("/admin/login", { email: "Greg@Mitingu.com" });
+let pending = cookieFrom(r, "mitingu_admin_pending");
+let code = lastCode();
+check("Allowed email gets a 6-digit code", r.status === 303 && /^\d{6}$/.test(code || "") && sent[0]?.personalizations[0].to[0].email === "greg@mitingu.com");
+check("Code email comes from Mitingu", sent[0]?.from.email === "greg.wood@mitingu.com");
+r = await realFetch(`${base}/admin/login?step=code`, { headers: { Cookie: pending } });
+html = await r.text();
+check("Code page shows", html.includes("Check your email") && html.includes("greg@mitingu.com"));
+
+r = await formPost("/admin/login", { email: "greg@mitingu.com" }, "", "https://evil.example");
+check("Sign-in form from another site blocked", r.status === 403);
+
+const wrongCode = code === "000000" ? "111111" : "000000";
+r = await formPost("/admin/verify", { code: wrongCode }, pending);
+html = await r.text();
+check("Wrong code refused with tries left", r.status === 401 && html.includes("4 tries left"));
+r = await formPost("/admin/verify", { code }, "");
+check("Code without the pending cookie is refused", r.status === 303 && r.headers.get("location").includes("expired"));
+r = await formPost("/admin/verify", { code }, pending);
+let session = cookieFrom(r, "mitingu_admin");
+const sessionCookieFlags = setCookies(r).find((c) => c.startsWith("mitingu_admin="));
+check("Right code signs in", r.status === 303 && r.headers.get("location") === "/admin" && session.length > 40);
+check("Session cookie is HttpOnly and SameSite", /HttpOnly/.test(sessionCookieFlags) && /SameSite=Lax/.test(sessionCookieFlags));
+check("Session lasts for the browser session unless remembered", !/Max-Age/.test(sessionCookieFlags));
+r = await formPost("/admin/verify", { code }, pending);
+check("A code only works once", r.status === 401);
+
 await post({ ...good, name: "<script>alert(1)</script> Smith", email: "xss@example.com" }, { ip: "4.4.4.4" });
 await wait(150);
-r = await realFetch(`${base}/admin`, { headers: auth("greg", "test-password") });
-let html = await r.text();
-check("Admin opens with the right password", r.status === 200 && html.includes("Demo requests") && html.includes("Kestrel Park"));
+r = await realFetch(`${base}/admin`, { headers: { Cookie: session } });
+html = await r.text();
+check("Admin opens when signed in", r.status === 200 && html.includes("Demo requests") && html.includes("Kestrel Park"));
+check("Admin shows who is signed in and a sign-out button", html.includes("Signed in as greg@mitingu.com") && html.includes("Sign out"));
 check("Admin escapes what visitors typed", !html.includes("<script>alert(1)") && html.includes("&lt;script&gt;"));
 check("Admin shows failed confirmation", html.includes("Confirmation not sent"));
 check("Admin is not indexable", (r.headers.get("x-robots-tag") || "").includes("noindex"));
 
 const id = (await pool.query("SELECT id FROM leads WHERE email = $1 ORDER BY id LIMIT 1", [good.email])).rows[0].id;
-r = await realFetch(`${base}/admin/leads/${id}`, {
-  method: "POST",
-  redirect: "manual",
-  headers: { ...auth("greg", "test-password"), "Content-Type": "application/x-www-form-urlencoded" },
-  body: "status=Demo+sent&internal_note=Link+sent",
-});
-check("Admin change without same-site origin blocked", r.status === 403);
-r = await realFetch(`${base}/admin/leads/${id}`, {
-  method: "POST",
-  redirect: "manual",
-  headers: { ...auth("greg", "test-password"), "Content-Type": "application/x-www-form-urlencoded", Origin: base },
-  body: "status=Demo+sent&internal_note=Link+sent+12+Nov",
-});
+r = await formPost(`/admin/leads/${id}`, { status: "Demo sent", internal_note: "x" }, session, "https://evil.example");
+check("Admin change from another site blocked", r.status === 403);
+r = await formPost(`/admin/leads/${id}`, { status: "Demo sent", internal_note: "Link sent 12 Nov" }, "");
+check("Admin change without signing in refused", r.status === 401);
+r = await formPost(`/admin/leads/${id}`, { status: "Demo sent", internal_note: "Link sent 12 Nov" }, session);
 ({ rows } = await pool.query("SELECT status, internal_note FROM leads WHERE id = $1", [id]));
 check("Status and note saved", r.status === 303 && rows[0].status === "Demo sent" && rows[0].internal_note === "Link sent 12 Nov");
-r = await realFetch(`${base}/admin?status=Demo%20sent`, { headers: auth("greg", "test-password") });
+r = await realFetch(`${base}/admin?status=Demo%20sent`, { headers: { Cookie: session } });
 html = await r.text();
 check("Status filter works", html.includes("Kestrel Park") && !html.includes("xss@example.com"));
 
 const failId = (await pool.query("SELECT id FROM leads WHERE email = 'fail@example.com'")).rows[0].id;
 sent.length = 0;
-r = await realFetch(`${base}/admin/leads/${failId}/resend`, { method: "POST", redirect: "manual", headers: { ...auth("greg", "test-password"), Origin: base } });
+r = await formPost(`/admin/leads/${failId}/resend`, {}, session);
 ({ rows } = await pool.query("SELECT confirmation_sent_at FROM leads WHERE id = $1", [failId]));
 check("Resend confirmation works", r.status === 303 && sent.length === 1 && !!rows[0].confirmation_sent_at);
 
-await post({ ...good, name: "=HYPERLINK(\"http://x\")", email: "csv@example.com" }, { ip: "5.5.5.5" });
+await post({ ...good, name: '=HYPERLINK("http://x")', email: "csv@example.com" }, { ip: "5.5.5.5" });
 await wait(100);
-r = await realFetch(`${base}/admin/leads.csv`, { headers: auth("greg", "test-password") });
+r = await realFetch(`${base}/admin/leads.csv`, { headers: { Cookie: session } });
 const csv = await r.text();
 check("CSV export downloads", r.status === 200 && (r.headers.get("content-type") || "").includes("text/csv") && csv.includes("Kestrel Park"));
 check("CSV blocks spreadsheet formulas", csv.includes(`"'=HYPERLINK`));
+
+// Sign out
+r = await formPost("/admin/logout", {}, session);
+check("Sign out goes back to the sign-in page", r.status === 303 && r.headers.get("location") === "/admin/login?signed_out=1");
+r = await realFetch(`${base}/admin`, { redirect: "manual", headers: { Cookie: session } });
+check("Old session no longer works after signing out", r.status === 303);
+
+// Remember me
+sent.length = 0;
+r = await formPost("/admin/login", { email: "greg.wood@mitingu.com" });
+pending = cookieFrom(r, "mitingu_admin_pending");
+r = await formPost("/admin/verify", { code: lastCode(), remember: "1" }, pending);
+check("'Keep me signed in' sets a 30-day cookie", /Max-Age=2592000/.test(setCookies(r).find((c) => c.startsWith("mitingu_admin=")) || ""));
+
+// Too many wrong codes
+sent.length = 0;
+r = await formPost("/admin/login", { email: "greg@mitingu.com" });
+pending = cookieFrom(r, "mitingu_admin_pending");
+const good6 = lastCode();
+const bad6 = good6 === "123456" ? "654321" : "123456";
+for (let i = 0; i < 5; i++) r = await formPost("/admin/verify", { code: bad6 }, pending);
+r = await formPost("/admin/verify", { code: good6 }, pending);
+check("After 5 wrong tries even the right code is refused", r.status === 401);
+
+// Expired code
+sent.length = 0;
+r = await formPost("/admin/login", { email: "greg@mitingu.com" });
+pending = cookieFrom(r, "mitingu_admin_pending");
+await pool.query("UPDATE admin_codes SET expires_at = now() - interval '1 minute' WHERE used_at IS NULL");
+r = await formPost("/admin/verify", { code: lastCode() }, pending);
+check("Expired code refused", r.status === 401 && (await r.text()).includes("expired"));
+
+// Code requests are rate limited per email
+for (let i = 0; i < 6; i++) r = await formPost("/admin/login", { email: "greg.wood@mitingu.com" });
+check("Too many code requests are refused", r.status === 429);
 
 r = await realFetch(`${base}/healthz`);
 check("Health check", r.status === 200);

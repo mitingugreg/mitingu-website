@@ -7,8 +7,10 @@
 // Environment variables
 //   DATABASE_URL       Postgres connection string (required)
 //   SENDGRID_API_KEY   SendGrid API key with "Mail Send" permission
-//   ADMIN_PASSWORD     Password for /admin (username below)
-//   ADMIN_USER         Username for /admin (default: greg)
+//   ADMIN_EMAILS       Who can sign in to /admin, comma-separated
+//                      (default: greg@mitingu.com,greg.wood@mitingu.com).
+//                      Sign-in is by a 6-digit code emailed to that address.
+//   SESSION_SECRET     Optional extra secret for hashing sign-in codes
 //   FROM_EMAIL         Sender address (default: greg.wood@mitingu.com)
 //   FROM_NAME          Sender name (default: Greg Wood, Mitingu)
 //   NOTIFY_EMAIL       Where new-lead notifications go (default: greg@mitingu.com)
@@ -16,12 +18,19 @@
 //   DATABASE_SSL       "true" to force SSL to Postgres (external connections)
 
 import http from "node:http";
-import { createHash, timingSafeEqual } from "node:crypto";
+import { createHash, createHmac, randomBytes, randomInt, timingSafeEqual } from "node:crypto";
 import pg from "pg";
 
 const env = process.env;
 const PORT = Number(env.PORT || 10000);
-const ADMIN_USER = env.ADMIN_USER || "greg";
+const ADMIN_EMAILS = (env.ADMIN_EMAILS || "greg@mitingu.com,greg.wood@mitingu.com")
+  .split(",")
+  .map((s) => s.trim().toLowerCase())
+  .filter(Boolean);
+const CODE_MINUTES = 10;
+const CODE_ATTEMPTS = 5;
+const SESSION_HOURS = 12;
+const REMEMBER_DAYS = 30;
 const FROM_EMAIL = env.FROM_EMAIL || "greg.wood@mitingu.com";
 const FROM_NAME = env.FROM_NAME || "Greg Wood, Mitingu";
 const NOTIFY_EMAIL = env.NOTIFY_EMAIL || "greg@mitingu.com";
@@ -79,6 +88,22 @@ export async function migrate() {
       notify_error TEXT
     );
     CREATE INDEX IF NOT EXISTS leads_created_at_idx ON leads (created_at DESC);
+    CREATE TABLE IF NOT EXISTS admin_codes (
+      id SERIAL PRIMARY KEY,
+      email TEXT NOT NULL,
+      code_hash TEXT NOT NULL,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+      expires_at TIMESTAMPTZ NOT NULL,
+      attempts INT NOT NULL DEFAULT 0,
+      used_at TIMESTAMPTZ
+    );
+    CREATE INDEX IF NOT EXISTS admin_codes_email_idx ON admin_codes (email, created_at DESC);
+    CREATE TABLE IF NOT EXISTS admin_sessions (
+      token_hash TEXT PRIMARY KEY,
+      email TEXT NOT NULL,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+      expires_at TIMESTAMPTZ NOT NULL
+    );
   `);
 }
 
@@ -332,14 +357,67 @@ async function handleDemoRequest(req, res) {
 // ---------- Admin ----------
 
 const sha = (s) => createHash("sha256").update(String(s)).digest();
+const tokenHash = (t) => createHash("sha256").update(String(t)).digest("hex");
+const codeHash = (email, code) =>
+  createHmac("sha256", env.SESSION_SECRET || env.SENDGRID_API_KEY || "mitingu-leads")
+    .update(`${email}:${code}`)
+    .digest("hex");
 
-function authorised(req) {
-  if (!env.ADMIN_PASSWORD) return false;
-  const header = req.headers.authorization || "";
-  if (!header.startsWith("Basic ")) return false;
-  const [user, ...rest] = Buffer.from(header.slice(6), "base64").toString("utf8").split(":");
-  const pass = rest.join(":");
-  return timingSafeEqual(sha(user), sha(ADMIN_USER)) && timingSafeEqual(sha(pass), sha(env.ADMIN_PASSWORD));
+const SESSION_COOKIE = "mitingu_admin";
+const PENDING_COOKIE = "mitingu_admin_pending";
+
+function cookies(req) {
+  return Object.fromEntries(
+    String(req.headers.cookie || "")
+      .split(";")
+      .map((c) => c.trim().split("="))
+      .filter(([k]) => k)
+      .map(([k, ...v]) => [k, decodeURIComponent(v.join("="))]),
+  );
+}
+
+function cookie(name, value, { maxAge, path = "/admin" } = {}) {
+  const parts = [`${name}=${encodeURIComponent(value)}`, `Path=${path}`, "HttpOnly", "SameSite=Lax"];
+  if (env.NODE_ENV !== "test") parts.push("Secure");
+  if (maxAge !== undefined) parts.push(`Max-Age=${maxAge}`);
+  return parts.join("; ");
+}
+
+async function currentSession(req) {
+  const token = cookies(req)[SESSION_COOKIE];
+  if (!token) return null;
+  const { rows } = await pool.query("SELECT email FROM admin_sessions WHERE token_hash = $1 AND expires_at > now()", [tokenHash(token)]);
+  return rows[0] || null;
+}
+
+// Sign-in attempts: at most 5 code emails per address and 10 per network address an hour.
+const codeRequests = new Map();
+function tooManyCodes(key, limit) {
+  const now = Date.now();
+  const recent = (codeRequests.get(key) || []).filter((t) => now - t < 3600_000);
+  recent.push(now);
+  codeRequests.set(key, recent);
+  if (codeRequests.size > 5000) codeRequests.clear();
+  return recent.length > limit;
+}
+
+function signInEmail(code) {
+  const text = [
+    `Your sign-in code for Mitingu leads is ${code}.`,
+    "",
+    `It works once and expires in ${CODE_MINUTES} minutes.`,
+    "",
+    "If you didn't try to sign in, you can ignore this email: nobody can get in without the code.",
+  ].join("\n");
+  const html = `<!doctype html><html lang="en-GB"><body style="margin:0;padding:24px;background:#f5f7f2;font-family:Arial,Helvetica,sans-serif;color:#151716">
+<div style="max-width:480px;margin:0 auto;background:#ffffff;border-radius:12px;padding:32px;line-height:1.6;font-size:16px">
+<img src="https://www.mitingu.com/assets/email-logo.png" width="120" height="37" alt="Mitingu" style="display:block;border:0;width:120px;height:auto;margin:0 0 24px;font-weight:bold">
+<p style="margin:0 0 12px">Your sign-in code for Mitingu leads is:</p>
+<p style="margin:0 0 20px;font-size:32px;font-weight:bold;letter-spacing:6px">${code}</p>
+<p style="margin:0 0 12px">It works once and expires in ${CODE_MINUTES} minutes.</p>
+<p style="margin:0;color:#5d6562;font-size:14px">If you didn't try to sign in, you can ignore this email: nobody can get in without the code.</p>
+</div></body></html>`;
+  return { subject: `${code} is your Mitingu leads sign-in code`, text, html };
 }
 
 function sameOrigin(req) {
@@ -377,7 +455,7 @@ function websiteLink(site) {
   return `<a href="${esc(href)}" rel="noopener noreferrer" target="_blank">${esc(site)}</a>`;
 }
 
-function adminPage(leads, counts, filter, flash) {
+function adminPage(leads, counts, filter, flash, signedInAs) {
   const total = Object.values(counts).reduce((a, b) => a + b, 0);
   const tabs = [["All", total], ...STATUSES.map((s) => [s, counts[s] || 0])]
     .map(([label, n]) => {
@@ -450,12 +528,140 @@ select,input{font:inherit;font-size:.95rem;padding:8px 10px;border:1px solid #d9
 button{font:inherit;font-weight:700;font-size:.9rem;padding:9px 16px;border:0;border-radius:8px;background:#087b83;color:#fff;cursor:pointer}
 .resend{margin-top:8px}button.link{background:none;color:#087b83;padding:0;text-decoration:underline;font-weight:600}
 .empty{background:#fff;border-radius:12px;padding:24px;color:#5d6562}
+.account{display:flex;justify-content:flex-end;align-items:center;gap:14px;margin-bottom:12px;font-size:.88rem;color:#5d6562}.account form{margin:0}
 </style></head><body><div class="wrap">
+<div class="account"><span>Signed in as ${esc(signedInAs)}</span><form method="post" action="/admin/logout"><button type="submit" class="link">Sign out</button></form></div>
 <div class="top"><h1>Demo requests</h1><a class="btn" href="/admin/leads.csv${filter ? `?status=${encodeURIComponent(filter)}` : ""}">Download CSV</a></div>
 ${flash ? `<p class="flash">${esc(flash)}</p>` : ""}
 <nav class="tabs">${tabs}</nav>
 ${cards}
 </div></body></html>`;
+}
+
+function loginPage({ step = "email", message = "", error = "", email = "" } = {}) {
+  const body =
+    step === "code"
+      ? `<h1>Check your email</h1>
+<p class="lede">We've sent a 6-digit code to <strong>${esc(email)}</strong> if it's allowed to sign in. It expires in ${CODE_MINUTES} minutes.</p>
+<form method="post" action="/admin/verify">
+  <label for="code">Sign-in code</label>
+  <input id="code" name="code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9 ]{6,7}" maxlength="7" required autofocus>
+  <label class="check"><input type="checkbox" name="remember" value="1"> Keep me signed in on this device for ${REMEMBER_DAYS} days</label>
+  ${error ? `<p class="error" role="alert">${esc(error)}</p>` : ""}
+  <button type="submit">Sign in</button>
+</form>
+<form method="post" action="/admin/login" class="again"><input type="hidden" name="email" value="${esc(email)}"><button type="submit" class="link">Send a new code</button> · <a href="/admin/login">Use a different email</a></form>`
+      : `<h1>Sign in to Mitingu leads</h1>
+<p class="lede">Enter your email and we'll send you a one-time code.</p>
+${message ? `<p class="note">${esc(message)}</p>` : ""}
+<form method="post" action="/admin/login">
+  <label for="email">Email</label>
+  <input id="email" name="email" type="email" autocomplete="email" value="${esc(email)}" required autofocus>
+  ${error ? `<p class="error" role="alert">${esc(error)}</p>` : ""}
+  <button type="submit">Email me a code</button>
+</form>`;
+  return `<!doctype html>
+<html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow"><title>Sign in | Mitingu leads</title>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:#f5f7f2;color:#151716;font:16px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;padding:16px}
+.card{width:min(420px,100%);min-width:0;background:#fff;border:1px solid #d9e1dc;border-radius:14px;padding:32px}
+h1{margin:0 0 6px;font-size:1.45rem;letter-spacing:-.01em}.lede{margin:0 0 20px;color:#5d6562}
+form{display:flex;flex-direction:column;gap:10px}label{font-weight:700;font-size:.9rem}
+input{font:inherit;padding:11px 12px;border:1px solid #d9e1dc;border-radius:8px;width:100%;min-width:0}input:focus{outline:3px solid rgba(8,123,131,.25);border-color:#087b83}
+#code{font-size:1.5rem;letter-spacing:.3em;text-align:center}
+.check{display:flex;gap:8px;align-items:center;font-weight:400;color:#5d6562}.check input{width:18px;height:18px;flex:none}
+button{font:inherit;font-weight:700;padding:12px 16px;border:0;border-radius:8px;background:#087b83;color:#fff;cursor:pointer;margin-top:6px}
+.again{display:block;margin-top:18px;font-size:.9rem;color:#5d6562}.again button{display:inline;margin:0}
+button.link{background:none;color:#087b83;padding:0;text-decoration:underline;font-weight:600}a{color:#087b83}
+.error{margin:0;color:#b42318;font-size:.92rem}.note{margin:0 0 14px;background:#e6f1f0;border-radius:8px;padding:10px 12px}
+</style></head><body><main class="card">${body}</main></body></html>`;
+}
+
+async function handleLogin(req, res, url) {
+  const path = url.pathname;
+  const html = (status, page, headers = {}) => send(res, status, page, { ...adminHeaders, ...headers });
+
+  if (path === "/admin/login" && req.method === "GET") {
+    const pending = cookies(req)[PENDING_COOKIE];
+    if (url.searchParams.get("step") === "code" && pending) return html(200, loginPage({ step: "code", email: pending }));
+    const message = url.searchParams.get("signed_out") ? "You've signed out." : url.searchParams.get("expired") ? "Please sign in again." : "";
+    return html(200, loginPage({ message }));
+  }
+  if (req.method !== "POST") return send(res, 405, "Method not allowed");
+  if (!sameOrigin(req)) return send(res, 403, "Blocked: this form must be sent from the sign-in page.");
+  const form = parseBody(await readBody(req), req.headers["content-type"]);
+
+  if (path === "/admin/login") {
+    const email = String(form.email || "").trim().toLowerCase().slice(0, 254);
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return html(400, loginPage({ error: "Please enter a valid email address.", email }));
+    if (tooManyCodes(`ip:${clientIp(req)}`, 10) || tooManyCodes(`email:${email}`, 5)) {
+      return html(429, loginPage({ error: "Too many codes requested. Please wait a while and try again.", email }));
+    }
+    if (ADMIN_EMAILS.includes(email)) {
+      const code = String(randomInt(0, 1_000_000)).padStart(6, "0");
+      await pool.query("UPDATE admin_codes SET used_at = now() WHERE email = $1 AND used_at IS NULL", [email]);
+      await pool.query(
+        `INSERT INTO admin_codes (email, code_hash, expires_at) VALUES ($1, $2, now() + interval '${CODE_MINUTES} minutes')`,
+        [email, codeHash(email, code)],
+      );
+      try {
+        await sendEmail({ to: email, ...signInEmail(code) });
+      } catch (e) {
+        console.error(`Sign-in code email failed: ${e.message}`);
+        return html(502, loginPage({ error: "We couldn't send the code just now. Please try again in a minute.", email }));
+      }
+    }
+    // Same answer whether or not the address is allowed, so nobody can probe for valid emails.
+    return send(res, 303, "", {
+      Location: "/admin/login?step=code",
+      "Set-Cookie": cookie(PENDING_COOKIE, email, { maxAge: CODE_MINUTES * 60 }),
+    });
+  }
+
+  if (path === "/admin/verify") {
+    const email = cookies(req)[PENDING_COOKIE];
+    if (!email) return send(res, 303, "", { Location: "/admin/login?expired=1" });
+    const code = String(form.code || "").replace(/\s+/g, "");
+    const { rows } = await pool.query(
+      "SELECT * FROM admin_codes WHERE email = $1 AND used_at IS NULL AND expires_at > now() ORDER BY created_at DESC LIMIT 1",
+      [email],
+    );
+    const record = rows[0];
+    const wrong = (msg) => html(401, loginPage({ step: "code", email, error: msg }));
+    if (!record) return wrong("That code has expired. Send a new code and try again.");
+    if (record.attempts >= CODE_ATTEMPTS) return wrong("Too many wrong attempts. Send a new code and try again.");
+    const ok = /^\d{6}$/.test(code) && timingSafeEqual(Buffer.from(codeHash(email, code)), Buffer.from(record.code_hash));
+    if (!ok) {
+      await pool.query("UPDATE admin_codes SET attempts = attempts + 1 WHERE id = $1", [record.id]);
+      const left = CODE_ATTEMPTS - record.attempts - 1;
+      return wrong(left > 0 ? `That code isn't right. ${left} ${left === 1 ? "try" : "tries"} left.` : "Too many wrong attempts. Send a new code and try again.");
+    }
+    await pool.query("UPDATE admin_codes SET used_at = now() WHERE id = $1", [record.id]);
+    const token = randomBytes(32).toString("base64url");
+    const remember = form.remember === "1";
+    const seconds = remember ? REMEMBER_DAYS * 86400 : SESSION_HOURS * 3600;
+    await pool.query(
+      `INSERT INTO admin_sessions (token_hash, email, expires_at) VALUES ($1, $2, now() + make_interval(secs => $3))`,
+      [tokenHash(token), email, seconds],
+    );
+    await pool.query("DELETE FROM admin_sessions WHERE expires_at < now()");
+    await pool.query("DELETE FROM admin_codes WHERE created_at < now() - interval '1 day'");
+    return send(res, 303, "", {
+      Location: "/admin",
+      "Set-Cookie": [
+        cookie(SESSION_COOKIE, token, remember ? { maxAge: seconds } : {}),
+        cookie(PENDING_COOKIE, "", { maxAge: 0 }),
+      ],
+    });
+  }
+
+  if (path === "/admin/logout") {
+    const token = cookies(req)[SESSION_COOKIE];
+    if (token) await pool.query("DELETE FROM admin_sessions WHERE token_hash = $1", [tokenHash(token)]);
+    return send(res, 303, "", { Location: "/admin/login?signed_out=1", "Set-Cookie": cookie(SESSION_COOKIE, "", { maxAge: 0 }) });
+  }
+  return send(res, 404, "Not found");
 }
 
 function csvCell(v) {
@@ -465,11 +671,13 @@ function csvCell(v) {
 }
 
 async function handleAdmin(req, res, url) {
-  if (!env.ADMIN_PASSWORD) return send(res, 503, "The admin password hasn't been set yet (ADMIN_PASSWORD).");
-  if (!authorised(req)) {
-    return send(res, 401, "Sign in to see Mitingu leads.", { "WWW-Authenticate": 'Basic realm="Mitingu leads", charset="UTF-8"' });
-  }
   const path = url.pathname;
+  if (["/admin/login", "/admin/verify", "/admin/logout"].includes(path)) return handleLogin(req, res, url);
+  const session = await currentSession(req);
+  if (!session) {
+    if (req.method !== "GET") return send(res, 401, "Please sign in again.");
+    return send(res, 303, "", { Location: "/admin/login" });
+  }
 
   if (req.method === "POST") {
     if (!sameOrigin(req)) return send(res, 403, "Blocked: this form must be sent from the admin page.");
@@ -511,7 +719,7 @@ async function handleAdmin(req, res, url) {
       pool.query("SELECT status, count(*)::int AS n FROM leads GROUP BY status"),
     ]);
     const counts = Object.fromEntries(countRes.rows.map((r) => [r.status, r.n]));
-    return send(res, 200, adminPage(rows, counts, filter, url.searchParams.get("flash")), adminHeaders);
+    return send(res, 200, adminPage(rows, counts, filter, url.searchParams.get("flash"), session.email), adminHeaders);
   }
   return send(res, 404, "Not found");
 }
