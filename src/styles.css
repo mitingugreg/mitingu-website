@@ -3472,14 +3472,14 @@ h2 mark {
 }
 
 /* Personality page: give the badges their own colours */
-.rp-pick.is-spreadsheet-wrangler .strip,
-.rp-result[data-type="spreadsheet-wrangler"] .rp-hello {
+.rp-pick.is-technician .strip,
+.rp-result[data-type="technician"] .rp-hello {
   background: var(--marigold);
   color: var(--ink);
 }
 
-.rp-pick.is-bespoke-builder .strip,
-.rp-result[data-type="bespoke-builder"] .rp-hello {
+.rp-pick.is-builder .strip,
+.rp-result[data-type="builder"] .rp-hello {
   background: var(--ink);
   color: #ffffff;
 }
