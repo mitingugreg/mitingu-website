@@ -170,7 +170,7 @@ await wait(150);
 r = await realFetch(`${base}/admin`, { headers: { Cookie: session } });
 html = await r.text();
 check("Admin opens when signed in", r.status === 200 && html.includes("Demo requests") && html.includes("Kestrel Park"));
-check("Admin shows who is signed in and a sign-out button", html.includes("Signed in as greg@mitingu.com") && html.includes("Sign out"));
+check("Admin shows who is signed in and a sign-out button", html.includes(">greg@mitingu.com<") && html.includes("Sign out"));
 check("Admin escapes what visitors typed", !html.includes("<script>alert(1)") && html.includes("&lt;script&gt;"));
 check("Admin shows failed confirmation", html.includes("Confirmation not sent"));
 check("Admin is not indexable", (r.headers.get("x-robots-tag") || "").includes("noindex"));

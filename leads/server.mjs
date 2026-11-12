@@ -435,7 +435,7 @@ const adminHeaders = {
   "Cache-Control": "no-store",
   "X-Robots-Tag": "noindex, nofollow",
   "X-Frame-Options": "DENY",
-  "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; form-action 'self'; frame-ancestors 'none'",
+  "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; img-src https://www.mitingu.com; form-action 'self'; frame-ancestors 'none'",
 };
 
 const fmtDate = (d) =>
@@ -461,81 +461,130 @@ function adminPage(leads, counts, filter, flash, signedInAs) {
     .map(([label, n]) => {
       const href = label === "All" ? "/admin" : `/admin?status=${encodeURIComponent(label)}`;
       const on = (label === "All" && !filter) || label === filter;
-      return `<a class="tab${on ? " on" : ""}" href="${href}">${esc(label)} <span>${n}</span></a>`;
+      return `<a class="tab${on ? " on" : ""}" href="${href}"${on ? ' aria-current="page"' : ""}>${esc(label)}<span>${n}</span></a>`;
     })
     .join("");
-  const cards = leads.length
+  const statusClass = (s) => `s-${String(s).toLowerCase().replace(/[^a-z]+/g, "-")}`;
+  const shortDate = (d) =>
+    new Date(d).toLocaleString("en-GB", { timeZone: "Europe/London", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+
+  const rows = leads.length
     ? leads
         .map((l) => {
           const conf = l.confirmation_sent_at
             ? `<span class="ok">Confirmation sent ${esc(fmtDate(l.confirmation_sent_at))}</span>`
-            : `<span class="warn">Confirmation not sent${l.confirmation_error ? `: ${esc(l.confirmation_error)}` : ""}</span>`;
-          return `<article class="lead">
-  <header>
-    <div>
-      <h2>${esc(l.organisation)}</h2>
-      <p class="who">${esc(l.name)} · <a href="mailto:${esc(l.email)}">${esc(l.email)}</a> · ${websiteLink(l.website)}</p>
+            : `<span class="warn">Confirmation not sent${l.confirmation_error ? ` (${esc(l.confirmation_error)})` : ""}</span>`;
+          const meta = [(l.personality || "").replace(/^The /, ""), l.event_type, shortDate(l.created_at)].filter(Boolean).join(" · ");
+          return `<details class="row">
+  <summary data-meta="${esc(meta)}">
+    <span class="c-who"><strong>${esc(l.organisation)}</strong><span>${esc(l.name)}</span></span>
+    <span class="c-type">${esc((l.personality || "-").replace(/^The /, ""))}</span>
+    <span class="c-event">${esc(l.event_type || "-")}</span>
+    <span class="c-date">${esc(shortDate(l.created_at))}</span>
+    <span class="c-status"><span class="pill ${statusClass(l.status)}">${esc(l.status)}</span></span>
+    <span class="chev" aria-hidden="true"></span>
+  </summary>
+  <div class="detail">
+    <div class="facts">
+      <dl>
+        <dt>Email</dt><dd><a href="mailto:${esc(l.email)}">${esc(l.email)}</a></dd>
+        <dt>Website</dt><dd>${websiteLink(l.website)}</dd>
+        <dt>Event name or date</dt><dd>${esc(l.event || "-")}</dd>
+        <dt>Received</dt><dd>${esc(fmtDate(l.created_at))}</dd>
+        ${l.notes ? `<dt>Their notes</dt><dd>${esc(l.notes)}</dd>` : ""}
+      </dl>
+      <div class="mail">${conf}
+        <form method="post" action="/admin/leads/${l.id}/resend"><button type="submit" class="link">${l.confirmation_sent_at ? "Resend" : "Send"}</button></form>
+      </div>
     </div>
-    <span class="status s-${esc(l.status.toLowerCase().replace(/[^a-z]+/g, "-"))}">${esc(l.status)}</span>
-  </header>
-  <dl>
-    <div><dt>Received</dt><dd>${esc(fmtDate(l.created_at))}</dd></div>
-    <div><dt>Personality</dt><dd>${esc(l.personality || "-")}</dd></div>
-    <div><dt>Event type</dt><dd>${esc(l.event_type || "-")}</dd></div>
-    <div><dt>Event name or date</dt><dd>${esc(l.event || "-")}</dd></div>
-  </dl>
-  ${l.notes ? `<p class="notes"><strong>Their notes:</strong> ${esc(l.notes)}</p>` : ""}
-  <p class="mail">${conf}</p>
-  <form method="post" action="/admin/leads/${l.id}" class="edit">
-    <label>Status
-      <select name="status">${STATUSES.map((s) => `<option${s === l.status ? " selected" : ""}>${esc(s)}</option>`).join("")}</select>
-    </label>
-    <label class="grow">Internal note
-      <input name="internal_note" value="${esc(l.internal_note || "")}" maxlength="2000" placeholder="e.g. Demo link sent 12 Nov">
-    </label>
-    <button type="submit">Save</button>
-  </form>
-  <form method="post" action="/admin/leads/${l.id}/resend" class="resend">
-    <button type="submit" class="link">${l.confirmation_sent_at ? "Resend" : "Send"} confirmation email</button>
-  </form>
-</article>`;
+    <form method="post" action="/admin/leads/${l.id}" class="follow">
+      <label>Status
+        <select name="status">${STATUSES.map((s) => `<option${s === l.status ? " selected" : ""}>${esc(s)}</option>`).join("")}</select>
+      </label>
+      <label>Internal note
+        <textarea name="internal_note" rows="3" maxlength="2000" placeholder="e.g. Demo link sent 12 Nov">${esc(l.internal_note || "")}</textarea>
+      </label>
+      <button type="submit">Save</button>
+    </form>
+  </div>
+</details>`;
         })
         .join("")
-    : `<p class="empty">No leads${filter ? ` with status "${esc(filter)}"` : " yet"}.</p>`;
+    : `<p class="empty">No demo requests${filter ? ` marked "${esc(filter)}"` : " yet"}.</p>`;
 
   return `<!doctype html>
 <html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex, nofollow"><title>Leads | Mitingu</title>
+<meta name="robots" content="noindex, nofollow"><title>Demo requests | Mitingu leads</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#f5f7f2;color:#151716;font:16px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
-.wrap{width:min(1100px,calc(100% - 32px));margin:0 auto;padding:32px 0 64px}
-.top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}
-h1{margin:0;font-size:1.8rem;letter-spacing:-.02em}.top a.btn{background:#151716;color:#fff;padding:9px 14px;border-radius:8px;text-decoration:none;font-weight:700;font-size:.9rem}
-.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}.tab{padding:6px 12px;border:1px solid #d9e1dc;border-radius:999px;background:#fff;color:#151716;text-decoration:none;font-size:.9rem}
-.tab span{color:#5d6562}.tab.on{background:#087b83;border-color:#087b83;color:#fff}.tab.on span{color:#d8f0ef}
-.flash{background:#e6f1f0;border-radius:8px;padding:10px 14px;margin-bottom:16px}
-.lead{background:#fff;border:1px solid #d9e1dc;border-radius:12px;padding:20px 22px;margin-bottom:14px}
-.lead header{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
-.lead h2{margin:0;font-size:1.2rem}.who{margin:2px 0 0;color:#5d6562;font-size:.95rem;word-break:break-word}a{color:#087b83}
-.status{flex:none;padding:3px 10px;border-radius:999px;font-size:.8rem;font-weight:700;background:#eef1ef}
+*{box-sizing:border-box}
+body{margin:0;background:#f5f7f2;color:#151716;font:15px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+a{color:#087b83}
+.bar{background:#fff;border-bottom:1px solid #e3e8e5}
+.bar-in,.wrap{width:min(1120px,calc(100% - 32px));margin:0 auto}
+.bar-in{display:flex;align-items:center;justify-content:space-between;gap:16px;height:60px}
+.brand{display:flex;align-items:center;gap:10px;color:#151716;text-decoration:none;font-weight:700}
+.brand img{height:22px;width:auto;display:block}.brand span{padding-left:10px;border-left:1px solid #d9e1dc;color:#5d6562;font-weight:600}
+.who-am-i{display:flex;align-items:center;gap:12px;font-size:.85rem;color:#5d6562}.who-am-i form{margin:0}
+.wrap{padding:28px 0 64px}
+.head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+h1{margin:0;font-size:1.5rem;letter-spacing:-.01em}
+.csv{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border:1px solid #d9e1dc;border-radius:8px;background:#fff;color:#151716;text-decoration:none;font-weight:600;font-size:.85rem}
+.csv:hover{border-color:#087b83;color:#087b83}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.tab{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;color:#3d4542;text-decoration:none;font-size:.85rem;font-weight:600}
+.tab span{color:#8a938f;font-weight:500}.tab:hover{background:#eaefec}.tab.on{background:#151716;color:#fff}.tab.on span{color:#b8c2bd}
+.flash{margin:0 0 14px;padding:9px 12px;border-radius:8px;background:#e6f1f0;color:#065f65;font-size:.9rem}
+.list{background:#fff;border:1px solid #e3e8e5;border-radius:12px;overflow:hidden}
+.cols,.row summary{display:grid;grid-template-columns:minmax(0,2.2fr) minmax(0,1.2fr) minmax(0,1.5fr) minmax(0,1fr) 140px 20px;gap:16px;align-items:center;padding:0 18px}
+.cols{height:38px;border-bottom:1px solid #e3e8e5;color:#7a837f;font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.row{border-bottom:1px solid #eef1ef}.row:last-child{border-bottom:0}
+.row summary{min-height:60px;cursor:pointer;list-style:none}.row summary::-webkit-details-marker{display:none}
+.row summary:hover{background:#fafbf9}.row[open] summary{background:#fafbf9}
+.c-who{display:flex;flex-direction:column;min-width:0}.c-who strong,.c-who span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.c-who span{color:#5d6562;font-size:.85rem}
+.c-type,.c-event,.c-date{color:#3d4542;font-size:.88rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.c-date{color:#5d6562}
+.pill{display:inline-block;padding:2px 9px;border-radius:999px;font-size:.75rem;font-weight:700;white-space:nowrap}
 .s-new{background:#fdecc8;color:#6b4500}.s-building-demo{background:#e6f1f0;color:#065f65}.s-demo-sent{background:#dcecff;color:#174a8b}
 .s-follow-up-booked{background:#ece3fb;color:#4b2a85}.s-won{background:#d9f2df;color:#1e5b2c}.s-not-now{background:#eef1ef;color:#5d6562}
-dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px 20px;margin:16px 0 0}dt{color:#5d6562;font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;font-weight:700}dd{margin:0}
-.notes{margin:14px 0 0;padding-top:12px;border-top:1px solid #eef1ef}.mail{margin:10px 0 0;font-size:.88rem}.ok{color:#1e5b2c}.warn{color:#9a3412}
-.edit{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;margin-top:14px;padding-top:14px;border-top:1px solid #eef1ef}
-.edit label{display:flex;flex-direction:column;gap:4px;font-size:.8rem;font-weight:700;color:#5d6562}.edit .grow{flex:1 1 260px}
-select,input{font:inherit;font-size:.95rem;padding:8px 10px;border:1px solid #d9e1dc;border-radius:8px;background:#fff;color:#151716}
-button{font:inherit;font-weight:700;font-size:.9rem;padding:9px 16px;border:0;border-radius:8px;background:#087b83;color:#fff;cursor:pointer}
-.resend{margin-top:8px}button.link{background:none;color:#087b83;padding:0;text-decoration:underline;font-weight:600}
-.empty{background:#fff;border-radius:12px;padding:24px;color:#5d6562}
-.account{display:flex;justify-content:flex-end;align-items:center;gap:14px;margin-bottom:12px;font-size:.88rem;color:#5d6562}.account form{margin:0}
-</style></head><body><div class="wrap">
-<div class="account"><span>Signed in as ${esc(signedInAs)}</span><form method="post" action="/admin/logout"><button type="submit" class="link">Sign out</button></form></div>
-<div class="top"><h1>Demo requests</h1><a class="btn" href="/admin/leads.csv${filter ? `?status=${encodeURIComponent(filter)}` : ""}">Download CSV</a></div>
-${flash ? `<p class="flash">${esc(flash)}</p>` : ""}
-<nav class="tabs">${tabs}</nav>
-${cards}
-</div></body></html>`;
+.chev{width:8px;height:8px;border-right:2px solid #8a938f;border-bottom:2px solid #8a938f;transform:rotate(-45deg);justify-self:end}
+.row[open] .chev{transform:rotate(45deg)}
+.detail{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:28px;padding:6px 18px 22px;background:#fafbf9}
+dl{display:grid;grid-template-columns:140px minmax(0,1fr);gap:8px 14px;margin:0;font-size:.9rem}
+dt{color:#7a837f;font-weight:600}dd{margin:0;word-break:break-word}
+.mail{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:14px;font-size:.85rem}.mail form{margin:0}
+.ok{color:#1e5b2c}.warn{color:#9a3412}
+.follow{display:flex;flex-direction:column;gap:10px}
+.follow label{display:flex;flex-direction:column;gap:5px;font-size:.78rem;font-weight:700;color:#5d6562}
+select,textarea{font:inherit;font-size:.9rem;padding:8px 10px;border:1px solid #d9e1dc;border-radius:8px;background:#fff;color:#151716;width:100%}
+textarea{resize:vertical}select:focus,textarea:focus{outline:3px solid rgba(8,123,131,.2);border-color:#087b83}
+button{font:inherit;font-weight:700;font-size:.88rem;padding:8px 16px;border:0;border-radius:8px;background:#087b83;color:#fff;cursor:pointer;align-self:flex-start}
+button:hover{background:#066a71}
+button.link{background:none;color:#087b83;padding:0;text-decoration:underline;font-weight:600;font-size:inherit}
+.empty{margin:0;padding:32px 18px;color:#5d6562;text-align:center}
+@media (max-width:760px){
+  .cols{display:none}
+  .row summary{grid-template-columns:minmax(0,1fr) auto 14px;grid-template-areas:"who status chev" "meta meta meta";gap:4px 12px;padding:12px 16px}
+  .c-who{grid-area:who}.c-status{grid-area:status}.chev{grid-area:chev}
+  .c-type,.c-event,.c-date{grid-area:meta;display:none}
+  .row summary::after{content:attr(data-meta);grid-area:meta;color:#5d6562;font-size:.82rem}
+  .detail{grid-template-columns:1fr;gap:18px;padding:6px 16px 20px}
+  dl{grid-template-columns:110px minmax(0,1fr)}
+  .who-am-i span{display:none}.brand span{display:none}
+}
+</style></head><body>
+<header class="bar"><div class="bar-in">
+  <a class="brand" href="/admin"><img src="https://www.mitingu.com/assets/mitingu-logo.png" alt="Mitingu" width="72" height="22"><span>Leads</span></a>
+  <div class="who-am-i"><span>${esc(signedInAs)}</span><form method="post" action="/admin/logout"><button type="submit" class="link">Sign out</button></form></div>
+</div></header>
+<main class="wrap">
+  <div class="head"><h1>Demo requests</h1><a class="csv" href="/admin/leads.csv${filter ? `?status=${encodeURIComponent(filter)}` : ""}">Download CSV</a></div>
+  ${flash ? `<p class="flash" role="status">${esc(flash)}</p>` : ""}
+  <nav class="tabs" aria-label="Filter by status">${tabs}</nav>
+  <div class="list">
+    ${leads.length ? `<div class="cols" aria-hidden="true"><span>Organisation</span><span>Personality</span><span>Event type</span><span>Received</span><span>Status</span><span></span></div>` : ""}
+    ${rows}
+  </div>
+</main>
+</body></html>`;
 }
 
 function loginPage({ step = "email", message = "", error = "", email = "" } = {}) {
@@ -575,7 +624,8 @@ button{font:inherit;font-weight:700;padding:12px 16px;border:0;border-radius:8px
 .again{display:block;margin-top:18px;font-size:.9rem;color:#5d6562}.again button{display:inline;margin:0}
 button.link{background:none;color:#087b83;padding:0;text-decoration:underline;font-weight:600}a{color:#087b83}
 .error{margin:0;color:#b42318;font-size:.92rem}.note{margin:0 0 14px;background:#e6f1f0;border-radius:8px;padding:10px 12px}
-</style></head><body><main class="card">${body}</main></body></html>`;
+.logo{display:block;height:24px;width:auto;margin:0 0 22px}
+</style></head><body><main class="card"><img class="logo" src="https://www.mitingu.com/assets/mitingu-logo.png" alt="Mitingu" width="78" height="24">${body}</main></body></html>`;
 }
 
 async function handleLogin(req, res, url) {
