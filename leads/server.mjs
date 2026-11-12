@@ -196,6 +196,7 @@ export function confirmationEmail(lead) {
   ].join("\n");
   const html = `<!doctype html><html lang="en-GB"><body style="margin:0;padding:24px;background:#f5f7f2;font-family:Arial,Helvetica,sans-serif;color:#151716">
 <div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:12px;padding:32px;line-height:1.6;font-size:16px">
+<img src="https://www.mitingu.com/assets/email-logo.png" width="120" height="37" alt="Mitingu" style="display:block;border:0;outline:none;width:120px;height:auto;margin:0 0 28px;font-size:20px;font-weight:bold;color:#151716">
 <p style="margin:0 0 16px">Hi ${esc(first)},</p>
 <p style="margin:0 0 16px">Thanks for asking for a demo event site. We'll build it in ${esc(lead.organisation)}'s branding, with ${esc(sample)} already set up, and email you the link shortly.</p>
 <p style="margin:0 0 16px">You'll be able to click through it the way your guests and your team would. There's nothing to install and no obligation.</p>
