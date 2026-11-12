@@ -219,8 +219,8 @@ export const alternatives = [
   {
     path: "/whova-alternative",
     name: "Whova",
-    title: "Whova Alternative with a White-label Event App",
-    description: "Looking for a Whova alternative? Mitingu's attendee app carries your brand, with networking, registration, badge booths and lead capture.",
+    title: "Whova Alternatives with a White-label Event App",
+    description: "Comparing Whova alternatives? Mitingu's attendee app carries your brand, with networking, registration, badge booths and lead capture.",
     intro: [
       "Whova is an all-in-one event platform with a strong attendee app: agendas, maps, networking, community boards and gamification. It's popular with conferences, associations and academic events, and covers registration, check-in kiosks, badges, lead capture and virtual events too.",
       "For corporate event teams and agencies, the question is often less about features and more about whose event it looks like.",
