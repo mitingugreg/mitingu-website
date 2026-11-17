@@ -7,7 +7,7 @@
 //
 // Placeholders that wait on Greg (add them here when they arrive):
 //   - an event photo (CBRE, cropped and cleared) for the "On the day" section
-//   - a photo of Greg and his years in event tech for "Talk to a person"
+//   - optionally a team or onsite photo for the "Event people" section
 
 const LOGOS = `
       <img class="client-logo logo-booking" src="/assets/logo-booking.png" alt="Booking.com" loading="lazy" width="336" height="56">
@@ -150,8 +150,8 @@ export function renderHomeV2({ button, faqSection }) {
   </section>
 
   <section class="hp-section hp-person">
-    <h2>You'll talk to a person, not a ticket queue.</h2>
-    <p>Book a demo and you'll speak to Greg directly. He knows what goes wrong at 8.30 on the morning of an event, and he'll still pick up the phone the night before yours.</p>
+    <h2>Event people on the other end of the phone, not a ticket queue.</h2>
+    <p>The people who show you Mitingu are the same people who help you set up your first event. They know what goes wrong at 8.30 on the morning of an event, and they'll still pick up the phone the night before yours.</p>
     <p class="hp-contact"><a href="tel:+441608495288">01608 495288</a> · <a href="mailto:hello@mitingu.com">hello@mitingu.com</a></p>
   </section>
 
