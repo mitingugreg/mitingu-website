@@ -89,33 +89,31 @@ export function renderHomeV2({ button, faqSection }) {
   </section>
 
   <section class="hp-band hp-dark">
-    <div class="hp-hub">
-      <div class="hp-hub-copy">
-        <h3>A check-in desk at 8am. An information point by 10.</h3>
-        <p>Guests scan their QR code and the booth prints their badge on the spot. Once the morning rush is over, the same booths switch to an event information point at a time you set, where guests scan their badge to see their own agenda, recommended exhibitors and the floor plan. The booths keep working all day instead of standing idle by the door.</p>
-        <p class="hp-hub-note">The Mitingu Event Hub, branded for your event. Available early 2027.</p>
-      </div>
-      <div class="hp-hub-pics">
-        <figure>
-          <img src="/assets/event-hub-booths.webp" alt="Mitingu Event Hub self-service booths, each with a touchscreen, QR scanner and built-in badge printer, one printing a delegate badge" width="1030" height="656" loading="lazy" decoding="async">
-          <figcaption>Arrival: scan, check in and the badge prints.</figcaption>
-        </figure>
-        <figure>
-          <img src="/assets/event-hub-checkin-to-info.webp" alt="An Event Hub screen switching from check-in to a personalised event information screen with agenda, exhibitors and floor plan" width="941" height="410" loading="lazy" decoding="async">
-          <figcaption>Later: the same screen becomes a personal information point.</figcaption>
-        </figure>
-      </div>
-    </div>
     <div class="hp-onday">
       <div class="hp-onday-copy">
         <h2>On the day, everything works from the list you updated last night.</h2>
-        <p>Self-service booths print badges on the spot and staffed desks handle the awkward ones. The attendee app has every guest's pass, the agenda, and a floor plan that shows where each exhibitor is.</p>
-        <p>Exhibitors scan leads in the app and mark them hot, warm or cold, so their follow-up starts before they've packed up the stand.</p>
+        <p>Guests scan their QR code at a Mitingu Event Hub booth and their badge prints on the spot, while staffed desks handle the awkward ones. Once the morning rush is over, the same booths switch to an information point, so guests can check their agenda, find recommended exhibitors and open the floor plan.</p>
+        <p>The attendee app carries every guest's pass and the floor plan, and exhibitors scan leads and mark them hot, warm or cold, so their follow-up starts before they've packed up the stand.</p>
+        <p class="hp-onday-note">Event Hub booths, branded for your event, are available from early 2027.</p>
         ${button("/event-apps-onsite-registration", "See apps and onsite", "accent")}
       </div>
-      <div class="hp-phones">
-        <img src="/assets/app-leads.webp" alt="Lead capture in the attendee app, with hot, warm and cold scoring" width="800" height="1536" loading="lazy" decoding="async">
-        <img src="/assets/app-floorplan.webp" alt="Interactive floor plan in the attendee app, showing where each exhibitor is" width="800" height="1536" loading="lazy" decoding="async">
+      <div class="hp-gallery">
+        <figure>
+          <img src="/assets/onsite-booths.webp" alt="Mitingu Event Hub booths with touchscreens, QR scanners and built-in badge printers, one printing a delegate badge" width="600" height="450" loading="lazy" decoding="async">
+          <figcaption>Booths with built-in badge printers</figcaption>
+        </figure>
+        <figure>
+          <img src="/assets/onsite-app.webp" alt="The attendee app showing scored leads and the exhibition floor plan" width="600" height="450" loading="lazy" decoding="async">
+          <figcaption>Lead scoring and floor plan in the app</figcaption>
+        </figure>
+        <figure>
+          <img src="/assets/onsite-checkin-screen.webp" alt="Event Hub screen asking guests to scan their QR code to check in and print their badge" width="600" height="450" loading="lazy" decoding="async">
+          <figcaption>8am: scan in, badge prints</figcaption>
+        </figure>
+        <figure>
+          <img src="/assets/onsite-info-screen.webp" alt="The same Event Hub screen later in the day, showing agenda, recommended exhibitors, floor plan and help" width="600" height="450" loading="lazy" decoding="async">
+          <figcaption>10am: the same screen becomes an info point</figcaption>
+        </figure>
       </div>
     </div>
   </section>
