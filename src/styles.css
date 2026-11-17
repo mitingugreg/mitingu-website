@@ -3441,13 +3441,6 @@ textarea:focus {
   vertical-align: 0.08em;
 }
 
-h1 mark,
-h2 mark {
-  background: none;
-  color: inherit;
-  box-shadow: inset 0 -0.32em 0 var(--marigold-mark);
-}
-
 .op-card:nth-child(even) .op-icon,
 .stage-card:nth-child(even) span {
   background: var(--marigold-tint);
