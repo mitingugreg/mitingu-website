@@ -3429,18 +3429,6 @@ textarea:focus {
 /* ---------- Marigold accent (added 12 Nov 2026) ----------
    Teal stays the brand and main-button colour. Marigold is the second colour:
    used as a fill or mark with dark text, never as text on white. */
-.eyebrow::before,
-.rp-eyebrow::before {
-  content: "";
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  margin-right: 10px;
-  border-radius: 50%;
-  background: var(--marigold);
-  vertical-align: 0.08em;
-}
-
 .op-card:nth-child(even) .op-icon,
 .stage-card:nth-child(even) span {
   background: var(--marigold-tint);
