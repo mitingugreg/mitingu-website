@@ -79,8 +79,8 @@ export const guides = [
   },
   {
     path: "/best-event-registration-platforms-for-corporate-events",
-    title: "Event Registration Platforms for Corporate Events and Agencies: 10 Compared",
-    description: "Ten event registration platforms corporate event teams and agencies ask about, what each says it does best, and when each one fits. Updated November 2026.",
+    title: "Corporate Event Registration Software: 10 Platforms Compared",
+    description: "Comparing corporate event registration software? Ten platforms event teams and agencies ask about, what each says it does best, and when each fits.",
     eyebrow: "Comparison",
     h1: "Event registration platforms for corporate events and agencies: 10 compared",
     lead: "Choosing event registration software is mostly about matching the platform to the events you actually run. Here are ten platforms corporate event teams and agencies ask us about, what each says it's built for, and when each one is likely to fit.",
