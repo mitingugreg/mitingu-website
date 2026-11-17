@@ -93,6 +93,13 @@ export function renderHomeV2({ button, faqSection }) {
       <img src="/assets/event-hub-booths.webp" alt="A row of five Mitingu Event Hub self-service check-in booths, each with a touchscreen, QR scanner and badge printer" width="1536" height="496" loading="lazy" decoding="async">
       <figcaption>The Mitingu Event Hub: self-service check-in and badge printing booths, branded for your event. Available early 2027.</figcaption>
     </figure>
+    <div class="hp-switch">
+      <div class="hp-switch-copy">
+        <h3>A check-in desk at 8am. An information point by 10.</h3>
+        <p>Once the morning rush is over, the same booths switch to an event information point at a time you set. Guests scan their badge to see their own agenda, recommended exhibitors and the floor plan, so the booths keep working all day instead of standing idle by the door.</p>
+      </div>
+      <img src="/assets/event-hub-checkin-to-info.webp" alt="An Event Hub screen showing check-in and badge printing on arrival, then switching to a personalised event information screen with agenda, exhibitors and floor plan" width="941" height="410" loading="lazy" decoding="async">
+    </div>
     <div class="hp-onday">
       <div class="hp-onday-copy">
         <h2>On the day, everything works from the list you updated last night.</h2>
