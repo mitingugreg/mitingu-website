@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { alternatives, alternativesByPath, pay as altPay, clients as altClients } from "./alternatives.mjs";
 import { guides, guidesByPath } from "./guides.mjs";
+import { renderHomeV2 } from "./homepage.mjs";
 import { personalityPath, personalityMeta, renderPersonalityPage, personalityFaqs, personalityGraph } from "./personality.mjs";
 
 const contentUrl = new URL("../content/site-content.json", import.meta.url);
@@ -840,25 +841,7 @@ function renderEventAppsPage() {
 }
 
 function renderHomePage() {
-  return `
-    ${homeHeroSection()}
-    ${homeTrustedStrip()}
-    ${homeEventOperations()}
-    ${homeAppsOnsite()}
-    ${homeQuestions()}
-    ${homeEventIntelligence()}
-    ${homeAiColleague()}
-    ${homeMcp()}
-    ${homeEventBuilder()}
-    ${homeComparison()}
-    ${homeCapabilities()}
-    ${homeCollaboration()}
-    ${homeProof()}
-    ${homeAudiences()}
-    ${homeTextBand(homePage.philosophy || {}, "compact")}
-    ${faqSection("/")}
-    ${homeFinalCta()}
-  `;
+  return renderHomeV2({ button, faqSection });
 }
 
 function answerBox(title, text, facts = []) {

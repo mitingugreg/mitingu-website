@@ -3429,12 +3429,6 @@ textarea:focus {
 /* ---------- Marigold accent (added 12 Nov 2026) ----------
    Teal stays the brand and main-button colour. Marigold is the second colour:
    used as a fill or mark with dark text, never as text on white. */
-.op-card:nth-child(even) .op-icon,
-.stage-card:nth-child(even) span {
-  background: var(--marigold-tint);
-  color: var(--marigold-deep);
-}
-
 .showcase-dot.is-active::before {
   background: var(--marigold);
 }
@@ -3501,4 +3495,393 @@ textarea:focus {
 
 .rp-demo .rp-btn:focus-visible {
   outline-color: var(--marigold);
+}
+
+/* ---------- Homepage (redesigned 17 Nov 2026) ---------- */
+.button-outline-light {
+  border-color: rgba(255, 255, 255, 0.85);
+  background: transparent;
+  color: #ffffff;
+}
+
+.hp-hero,
+.hp-section,
+.hp-facts {
+  width: min(1160px, calc(100% - 48px));
+  margin: 0 auto;
+}
+
+.hp-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.02fr) minmax(0, 1fr);
+  gap: 56px;
+  align-items: center;
+  padding: 72px 0 48px;
+}
+
+.hp-hero h1 {
+  margin: 0 0 22px;
+  font-size: clamp(2rem, 3.3vw, 2.75rem);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.hp-lede {
+  margin: 0 0 28px;
+  color: #4b5350;
+  font-size: 1.15rem;
+  line-height: 1.6;
+}
+
+.hp-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.hp-actions .button {
+  min-height: 52px;
+  padding: 14px 22px;
+  white-space: normal;
+  text-align: left;
+}
+
+.hp-small {
+  margin: 14px 0 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.hp-hero-figure,
+.hp-shot {
+  margin: 0;
+}
+
+.hp-hero-figure img,
+.hp-shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 14px;
+}
+
+.hp-hero-figure img {
+  box-shadow: 0 40px 70px -30px rgba(21, 23, 22, 0.4);
+}
+
+.hp-hero-figure figcaption,
+.hp-shot figcaption {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.hp-logos {
+  grid-template-columns: minmax(0, 220px) minmax(0, 1fr);
+  align-items: center;
+  margin-bottom: 72px;
+}
+
+.hp-logos p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.hp-band {
+  padding: 88px max(24px, calc((100% - 1160px) / 2));
+}
+
+.hp-soft { background: var(--soft); }
+.hp-warm { background: var(--marigold-tint); }
+.hp-dark { background: var(--ink); color: #ffffff; }
+.hp-dark p { color: #c3cbc7; }
+.hp-dark a:not(.button) { color: var(--marigold-on-dark); }
+
+.hp-band h2,
+.hp-section h2 {
+  margin: 0 0 16px;
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+}
+
+.hp-split {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.6fr);
+  gap: 56px;
+}
+
+.hp-split-intro p {
+  color: #4b5350;
+}
+
+.hp-week-head,
+.hp-week-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 32px;
+}
+
+.hp-week-head {
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--ink);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hp-week-head span:first-child { color: var(--muted); }
+.hp-week-head span:last-child { color: var(--teal); }
+
+.hp-week-row {
+  padding: 20px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.hp-week-row:last-child { border-bottom: 0; }
+.hp-week-row p { margin: 0; line-height: 1.55; }
+.hp-now { color: var(--muted); }
+.hp-then { font-weight: 600; }
+
+.hp-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.hp-onday {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: 56px;
+  align-items: center;
+}
+
+.hp-onday-copy p { margin: 0 0 16px; line-height: 1.65; }
+.hp-onday-copy .button { margin-top: 12px; }
+
+.hp-phones {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.hp-phones img {
+  width: min(210px, 44%);
+  height: auto;
+}
+
+.hp-section {
+  padding: 96px 0;
+}
+
+.hp-narrow {
+  max-width: 760px;
+}
+
+.hp-narrow p { color: #4b5350; }
+.hp-dark .hp-narrow p { color: #c3cbc7; }
+
+.hp-steps {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  margin: 44px 0 48px;
+  padding: 0;
+  list-style: none;
+  border-top: 2px solid var(--ink);
+}
+
+.hp-steps li {
+  display: grid;
+  gap: 6px;
+  align-content: start;
+  padding: 20px 20px 0 0;
+}
+
+.hp-steps strong { font-size: 1.15rem; }
+.hp-steps span { color: var(--muted); font-size: 0.95rem; }
+.hp-steps .hp-step-num { color: var(--teal); font-size: 0.85rem; font-weight: 800; }
+
+.hp-shot img {
+  box-shadow: 0 0 0 1px var(--line), 0 30px 60px -32px rgba(21, 23, 22, 0.35);
+}
+
+.hp-kicker {
+  margin: 0 0 10px;
+  color: #6b4500;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.hp-story p {
+  margin: 0 0 18px;
+  color: #2f2a1e;
+  font-size: 1.15rem;
+  line-height: 1.65;
+}
+
+.hp-ai {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 56px;
+  align-items: center;
+}
+
+.hp-ai-copy p { color: #4b5350; }
+.hp-ai-copy .hp-small { color: var(--muted); }
+
+.hp-chat {
+  display: grid;
+  gap: 14px;
+  padding: 28px;
+  border-radius: 16px;
+  background: var(--soft);
+}
+
+.hp-chat p { margin: 0; }
+
+.hp-chat-label {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hp-chat-q {
+  justify-self: end;
+  max-width: 80%;
+  padding: 12px 16px;
+  border-radius: 14px 14px 4px 14px;
+  background: var(--ink);
+  color: #ffffff;
+}
+
+.hp-chat-a {
+  max-width: 92%;
+  padding: 14px 16px;
+  border-radius: 14px 14px 14px 4px;
+  background: #ffffff;
+  box-shadow: 0 0 0 1px var(--line);
+}
+
+.hp-facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  padding: 36px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.hp-facts div { display: grid; gap: 4px; }
+.hp-facts strong { font-size: 1.7rem; font-weight: 800; letter-spacing: -0.02em; }
+.hp-facts span { color: var(--muted); }
+
+.hp-person {
+  max-width: 760px;
+  margin-left: max(24px, calc((100% - 1160px) / 2));
+  width: auto;
+}
+
+.hp-person p { color: #4b5350; }
+.hp-contact { font-weight: 700; }
+.hp-contact a { color: var(--ink); }
+
+.hp-final h2 { font-size: clamp(2rem, 3.4vw, 2.8rem); }
+.hp-final .hp-actions { margin-top: 24px; }
+
+@media (max-width: 900px) {
+  .hp-hero,
+  .hp-split,
+  .hp-onday,
+  .hp-ai {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 36px;
+  }
+
+  .hp-hero { padding-top: 40px; }
+  .hp-logos { grid-template-columns: minmax(0, 1fr); }
+  .hp-band { padding-top: 64px; padding-bottom: 64px; }
+  .hp-section { padding: 64px 0; }
+
+  .hp-steps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .hp-steps li {
+    grid-template-columns: 36px minmax(0, 1fr);
+    padding: 16px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .hp-steps li span:last-child { grid-column: 2; }
+  .hp-facts { grid-template-columns: minmax(0, 1fr); }
+  .hp-person { margin-right: 24px; }
+}
+
+@media (max-width: 640px) {
+  .hp-week-head { display: none; }
+
+  .hp-week-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .hp-week-row .hp-sr {
+    position: static;
+    width: auto;
+    height: auto;
+    clip: auto;
+    display: block;
+    margin-bottom: 2px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .hp-now .hp-sr { color: var(--muted); }
+  .hp-then .hp-sr { color: var(--teal); }
+}
+
+/* ---------- Open layout for feature grids (17 Nov 2026) ----------
+   Replaces rows of identical boxed cards with ruled columns, so pages stop
+   looking templated. Styling only: no wording or headings change. Clickable
+   cards (solutions, resources, pricing) and image cards keep their boxes. */
+.card-grid {
+  column-gap: 40px;
+  row-gap: 44px;
+}
+
+.info-card,
+.module-card,
+.stage-card,
+.op-card {
+  border: 0;
+  border-top: 2px solid var(--ink);
+  border-radius: 0;
+  background: none;
+  padding: 18px 0 0;
+}
+
+.op-grid {
+  column-gap: 40px;
+  row-gap: 44px;
+}
+
+.op-icon,
+.stage-card span {
+  width: auto;
+  height: auto;
+  background: none;
+  color: var(--teal);
+  justify-content: flex-start;
+}
+
+.stage-card span {
+  padding: 0;
 }
