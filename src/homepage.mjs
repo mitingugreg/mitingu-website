@@ -89,6 +89,10 @@ export function renderHomeV2({ button, faqSection }) {
   </section>
 
   <section class="hp-band hp-dark">
+    <figure class="hp-booths">
+      <img src="/assets/event-hub-booths.webp" alt="A row of five Mitingu Event Hub self-service check-in booths, each with a touchscreen, QR scanner and badge printer" width="1536" height="496" loading="lazy" decoding="async">
+      <figcaption>The Mitingu Event Hub: self-service check-in and badge printing booths, branded for your event. Available early 2027.</figcaption>
+    </figure>
     <div class="hp-onday">
       <div class="hp-onday-copy">
         <h2>On the day, everything works from the list you updated last night.</h2>

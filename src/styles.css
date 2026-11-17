@@ -3885,3 +3885,28 @@ textarea:focus {
 .stage-card span {
   padding: 0;
 }
+
+.hp-booths {
+  margin: 0 0 64px;
+}
+
+.hp-booths img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 14px;
+}
+
+.hp-booths figcaption {
+  margin-top: 12px;
+  color: #c3cbc7;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 640px) {
+  .hp-booths img {
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    object-position: 50% 50%;
+  }
+}
