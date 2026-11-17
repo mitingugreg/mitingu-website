@@ -74,8 +74,31 @@ export function renderPage(path) {
     title,
     description,
     body: pageBodies[path](),
-    extraGraph: path === personalityPath ? personalityGraph : [],
+    extraGraph: path === personalityPath ? personalityGraph : guideItemListGraph(path),
   });
+}
+
+// Structured data (ItemList) for guide pages that rank several platforms, so
+// search engines and AI tools can read the list as a list. Names and links only.
+function guideItemListGraph(path) {
+  const guide = guidesByPath[path];
+  if (!guide?.itemList) return [];
+  const url = `https://www.mitingu.com${path}`;
+  return [
+    {
+      "@type": "ItemList",
+      "@id": `${url}#list`,
+      name: guide.h1,
+      numberOfItems: guide.itemList.length,
+      itemListOrder: "https://schema.org/ItemListUnordered",
+      itemListElement: guide.itemList.map(([name, href], index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name,
+        ...(href ? { url: `https://www.mitingu.com${href}` } : {}),
+      })),
+    },
+  ];
 }
 
 let latestBlogSection = () => "";
