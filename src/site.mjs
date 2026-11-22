@@ -2105,7 +2105,7 @@ const pageBodies = {
 function renderAlternativePage(alt) {
   const differences = alt.noPay ? alt.differences : [...alt.differences, altPay];
   return `
-    ${pageHero(`${alt.name} alternative`, `Looking for a ${alt.name} alternative?`, alt.intro[0], heroChecklist(alt.path, differences.map(([title]) => title)))}
+    ${pageHero(`${alt.name} alternative`, `Looking for ${/^[AEIOU]/i.test(alt.name) ? "an" : "a"} ${alt.name} alternative?`, alt.intro[0], heroChecklist(alt.path, differences.map(([title]) => title)))}
     ${answerBox(alt.answerTitle, `${alt.intro.slice(1).join(" ")} ${altClients}`, [])}
     <section class="content-band">
       ${sectionIntro("Where Mitingu is different", "What to test in a demo.")}

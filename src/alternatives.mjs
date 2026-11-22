@@ -123,8 +123,8 @@ export const alternatives = [
     title: "EventsAir Alternatives for Corporate Events",
     description: "Comparing EventsAir alternatives? Where Mitingu fits for corporate event teams and agencies, and where EventsAir may still suit you better.",
     intro: [
+      "If you're a corporate event team or an agency, the job is getting the next event live, branded and running, not configuring a platform built for every kind of planner. Mitingu puts registration, a white-label app and onsite check-in on one platform, and its AI Event Builder drafts the site, registration and emails from a plain-English description.",
       "EventsAir has been around since 1990 and covers almost everything: registration, apps, check-in, lead capture, abstracts, travel and accommodation, live streaming and AI assistants. It's built for every kind of event planner, from associations and congress organisers to corporate teams.",
-      "Breadth is useful, but it comes with set-up. If you're a corporate event team or an agency, most of your time goes on getting the next event live, branded and running smoothly. That's where Mitingu concentrates.",
     ],
     answerTitle: "Breadth is useful. Getting the next event live matters more.",
     differences: [
@@ -222,8 +222,8 @@ export const alternatives = [
     title: "Whova Alternatives with a White-label Event App",
     description: "Comparing Whova alternatives? Mitingu's attendee app carries your brand, with networking, registration, badge booths and lead capture.",
     intro: [
+      "Most lists of Whova alternatives compare features. For corporate event teams and agencies, the bigger question is whose name attendees see on their phone. Mitingu's attendee app is white-label for iOS and Android, carrying your brand or your client's, with registration, badge booths and lead capture on the same platform.",
       "Whova is an all-in-one event platform with a strong attendee app: agendas, maps, networking, community boards and gamification. It's popular with conferences, associations and academic events, and covers registration, check-in kiosks, badges, lead capture and virtual events too.",
-      "For corporate event teams and agencies, the question is often less about features and more about whose event it looks like.",
     ],
     answerTitle: "The question is often whose event it looks like.",
     differences: [
