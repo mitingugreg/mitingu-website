@@ -58,12 +58,13 @@ check("Valid request accepted", r.status === 200 && j.success === true && j.id >
 await wait(200);
 let { rows } = await pool.query("SELECT * FROM leads");
 check("Lead stored with every field", rows.length === 1 && Object.keys(good).every((k) => rows[0][k] === good[k]));
+check("No symptoms ticked stores an empty list", rows[0].symptoms === "");
 check("Status starts as New", rows[0].status === "New");
 const conf = sent.find((m) => m.personalizations[0].to[0].email === good.email);
 const note = sent.find((m) => m.personalizations[0].to[0].email === "greg@mitingu.com");
 check("Confirmation email sent to visitor", !!conf && conf.subject === "Your Mitingu demo site is on its way");
 check("Confirmation from greg.wood@mitingu.com", conf?.from.email === "greg.wood@mitingu.com");
-check("Confirmation names their organisation and event", conf?.content[0].value.includes("Kestrel Park's branding, with a sample awards evening"));
+check("Confirmation names the sample event and the one-working-day promise", conf?.content[0].value.includes("your organisation's branding, with a sample awards evening") && conf?.content[0].value.includes("within one working day"));
 check("Confirmation greets by first name", conf?.content[0].value.startsWith("Hi Sam,"));
 check("Notification email to Greg with subject", note?.subject === "Demo site request: Kestrel Park (Shopkeeper)");
 check("Notification reply-to is the visitor", note?.reply_to.email === good.email);
@@ -77,8 +78,62 @@ check("Bad email rejected with message", r.status === 400 && j.message.includes(
 r = await post({ ...good, website: "kestrelpark" });
 j = await r.json();
 check("Website without a dot rejected", r.status === 400 && j.message.includes("website"));
-r = await post({ ...good, name: "" });
-check("Blank name rejected", r.status === 400);
+r = await post({ ...good, website: "" }, { ip: "4.4.4.1" });
+check("Blank website rejected", r.status === 400);
+r = await post({ ...good, email: "" }, { ip: "4.4.4.1" });
+check("Blank email rejected", r.status === 400);
+
+// Short form: just email, website and event type, plus ticked symptoms
+r = await post(
+  { email: "alex@harbour.example", website: "https://www.harbour-events.co.uk/about", event_type: "Conference or summit", personality: "The Technician", symptoms: ["Half your inbox is guests asking whether they're actually booked on.", "  ", "The list on the door was printed the night before, and it's already wrong."] },
+  { ip: "4.4.4.2" },
+);
+j = await r.json();
+await wait(150);
+let short = (await pool.query("SELECT * FROM leads WHERE email = 'alex@harbour.example'")).rows[0];
+check("Short form accepted with only email, website and event type", r.status === 200 && j.success && !!short);
+check("Organisation filled in from the website", short?.organisation === "harbour-events.co.uk");
+check("Ticked symptoms stored, blanks dropped", short?.symptoms === "Half your inbox is guests asking whether they're actually booked on.\nThe list on the door was printed the night before, and it's already wrong.");
+const shortNote = sent.find((m) => m.subject === "Demo site request: harbour-events.co.uk (Technician)");
+check("Notification includes the ticked symptoms", !!shortNote && shortNote.content[0].value.includes("printed the night before"));
+const shortConf = sent.find((m) => m.personalizations[0].to[0].email === "alex@harbour.example");
+check("Confirmation greets 'Hi there' when no name given", shortConf?.content[0].value.startsWith("Hi there,"));
+
+// Optional details from the thank-you screen
+const details = (body, ip = "4.4.4.3") =>
+  realFetch(`${base}/api/demo-requests/details`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Origin: "https://www.mitingu.com", "X-Forwarded-For": ip },
+    body: JSON.stringify(body),
+  });
+check("Response carries a token for adding details", typeof j.token === "string" && j.token.length === 32);
+r = await details({ id: j.id, token: "0".repeat(32), name: "Hacker" });
+check("Details refused with the wrong token", r.status === 403);
+r = await details({ id: j.id, token: j.token, name: "Alex Moore", organisation: "Harbour Events", event: "Autumn summit", notes: "300 guests" });
+short = (await pool.query("SELECT * FROM leads WHERE id = $1", [j.id])).rows[0];
+check("Details added to the right lead", r.status === 200 && short.name === "Alex Moore" && short.organisation === "Harbour Events" && short.event === "Autumn summit" && short.notes === "300 guests");
+r = await details({ id: j.id, token: j.token, name: "", organisation: "" });
+short = (await pool.query("SELECT * FROM leads WHERE id = $1", [j.id])).rows[0];
+check("Blank details don't wipe what's there", short.name === "Alex Moore" && short.organisation === "Harbour Events");
+
+// Email me my result
+const resultPost = (body, ip = "4.4.4.4") =>
+  realFetch(`${base}/api/result-email`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Origin: "https://www.mitingu.com", "X-Forwarded-For": ip },
+    body: JSON.stringify(body),
+  });
+r = await resultPost({ email: "jo@acme.example", personality: "builder", symptoms: ["The developer is on holiday the week the agenda changes."] });
+await wait(150);
+const resLead = (await pool.query("SELECT * FROM leads WHERE email = 'jo@acme.example'")).rows[0];
+check("Result email: light lead stored as Result only", r.status === 200 && resLead?.status === "Result only" && resLead.source === "result-email" && resLead.personality === "The Builder");
+const resMail = sent.find((m) => m.personalizations[0].to[0].email === "jo@acme.example");
+check("Result email sent with their ticked symptom and the demo offer", !!resMail && resMail.subject === "Your registration personality: The Builder" && resMail.content[0].value.includes("on holiday the week the agenda changes") && resMail.content[0].value.includes("within one working day"));
+check("Greg told about the result request", sent.some((m) => m.subject === "Result emailed: acme.example (Builder)"));
+r = await resultPost({ email: "jo@acme.example", personality: "nonsense" });
+check("Result email refuses an unknown personality", r.status === 400);
+r = await resultPost({ email: "not-an-email", personality: "builder" });
+check("Result email refuses a bad address", r.status === 400);
 r = await post({ ...good, event_type: "Hacked" });
 await wait(100);
 ({ rows } = await pool.query("SELECT event_type FROM leads ORDER BY id DESC LIMIT 1"));

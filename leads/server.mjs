@@ -37,12 +37,14 @@ const FROM_EMAIL = env.FROM_EMAIL || "greg.wood@mitingu.com";
 const FROM_NAME = env.FROM_NAME || "Greg Wood, Mitingu";
 const NOTIFY_EMAIL = env.NOTIFY_EMAIL || "greg@mitingu.com";
 const ADMIN_HOST = (env.ADMIN_HOST || "").trim().toLowerCase();
+import { TYPES as RP_TYPES } from "../src/personality.mjs";
+
 const ALLOWED_ORIGINS = (env.ALLOWED_ORIGINS || "https://www.mitingu.com,https://mitingu.com")
   .split(",")
   .map((s) => s.trim())
   .filter(Boolean);
 
-export const STATUSES = ["New", "Building demo", "Demo sent", "Follow-up booked", "Won", "Not now"];
+export const STATUSES = ["New", "Building demo", "Demo sent", "Follow-up booked", "Won", "Not now", "Result only"];
 export const EVENT_TYPES = [
   "Client dinner or reception",
   "Conference or summit",
@@ -91,6 +93,7 @@ export async function migrate() {
       notify_error TEXT
     );
     CREATE INDEX IF NOT EXISTS leads_created_at_idx ON leads (created_at DESC);
+    ALTER TABLE leads ADD COLUMN IF NOT EXISTS symptoms TEXT;
     CREATE TABLE IF NOT EXISTS admin_codes (
       id SERIAL PRIMARY KEY,
       email TEXT NOT NULL,
@@ -188,9 +191,10 @@ export function validateLead(input) {
     notes: clean(input.notes, 4000),
     personality: clean(input.personality, 60),
     source: clean(input.source, 200) || "personality",
+    symptoms: cleanSymptoms(input.symptoms),
   };
-  if (!lead.name || !lead.email || !lead.organisation || !lead.website) {
-    return { error: "Please add your name, work email, organisation and website so we can build your demo." };
+  if (!lead.email || !lead.website) {
+    return { error: "Please add your work email and website so we can build your demo." };
   }
   if (!/^[^\s]+\.[^\s]{2,}$/.test(lead.website)) {
     return { error: "Please check your website address, for example yourcompany.co.uk." };
@@ -199,7 +203,33 @@ export function validateLead(input) {
     return { error: "That email address doesn't look quite right. Please check it." };
   }
   if (!EVENT_TYPES.includes(lead.event_type)) lead.event_type = "Something else";
+  if (!lead.organisation) lead.organisation = domainOf(lead.website);
   return { lead };
+}
+
+export function cleanSymptoms(v) {
+  const list = Array.isArray(v) ? v : String(v ?? "").split("\n");
+  return list
+    .map((x) => String(x).trim().slice(0, 300))
+    .filter(Boolean)
+    .slice(0, 10)
+    .join("\n");
+}
+
+export function domainOf(value) {
+  return String(value || "")
+    .trim()
+    .toLowerCase()
+    .replace(/^[a-z]+:\/\//, "")
+    .split(/[\/?#]/)[0]
+    .split("@")
+    .pop()
+    .replace(/^www\./, "") || "";
+}
+
+// Signed lead reference, so the thank-you screen can add optional details to its own lead only.
+export function leadToken(id) {
+  return createHmac("sha256", env.SESSION_SECRET || env.SENDGRID_API_KEY || "mitingu-leads").update(`lead:${id}`).digest("hex").slice(0, 32);
 }
 
 // ---------- Email ----------
@@ -211,7 +241,7 @@ export function confirmationEmail(lead) {
   const text = [
     `Hi ${first},`,
     "",
-    `Thanks for asking for a demo event site. We'll build it in ${lead.organisation}'s branding, with ${sample} already set up, and email you the link shortly.`,
+    `Thanks for asking for a demo event site. We'll build it in your organisation's branding, with ${sample} already set up, and email you the link within one working day.`,
     "",
     "You'll be able to click through it the way your guests and your team would. There's nothing to install and no obligation.",
     ...(personality ? ["", `Your registration personality, for the record: ${personality}.`] : []),
@@ -226,7 +256,7 @@ export function confirmationEmail(lead) {
 <div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:12px;padding:32px;line-height:1.6;font-size:16px">
 <img src="https://www.mitingu.com/assets/email-logo.png" width="120" height="37" alt="Mitingu" style="display:block;border:0;outline:none;width:120px;height:auto;margin:0 0 28px;font-size:20px;font-weight:bold;color:#151716">
 <p style="margin:0 0 16px">Hi ${esc(first)},</p>
-<p style="margin:0 0 16px">Thanks for asking for a demo event site. We'll build it in ${esc(lead.organisation)}'s branding, with ${esc(sample)} already set up, and email you the link shortly.</p>
+<p style="margin:0 0 16px">Thanks for asking for a demo event site. We'll build it in your organisation's branding, with ${esc(sample)} already set up, and email you the link within one working day.</p>
 <p style="margin:0 0 16px">You'll be able to click through it the way your guests and your team would. There's nothing to install and no obligation.</p>
 ${personality ? `<p style="margin:0 0 16px">Your registration personality, for the record: <strong>${esc(personality)}</strong>.</p>` : ""}
 <p style="margin:0 0 24px">If there's anything we should know before we build it, just reply to this email.</p>
@@ -245,13 +275,14 @@ export function notificationEmail(lead, adminUrl) {
     ["Event name or date", lead.event],
     ["Anything we should know?", lead.notes],
     ["Personality", lead.personality],
+    ["Ticked as their week", lead.symptoms],
   ];
   const text = rows.map(([k, v]) => `${k}: ${v || "-"}`).join("\n") + `\n\nAll leads: ${adminUrl}`;
   const html = `<!doctype html><html><body style="font-family:Arial,Helvetica,sans-serif;color:#151716">
 <table style="border-collapse:collapse">${rows
     .map(
       ([k, v]) =>
-        `<tr><td style="padding:6px 16px 6px 0;color:#5d6562;vertical-align:top">${esc(k)}</td><td style="padding:6px 0">${esc(v || "-")}</td></tr>`,
+        `<tr><td style="padding:6px 16px 6px 0;color:#5d6562;vertical-align:top">${esc(k)}</td><td style="padding:6px 0;white-space:pre-line">${esc(v || "-")}</td></tr>`,
     )
     .join("")}</table>
 <p><a href="${esc(adminUrl)}">Open all leads</a></p></body></html>`;
@@ -346,15 +377,156 @@ async function handleDemoRequest(req, res) {
   if (error) return sendJson(res, 400, { success: false, message: error }, cors);
 
   const { rows } = await pool.query(
-    `INSERT INTO leads (name, email, organisation, website, event_type, event, notes, personality, source)
-     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *`,
-    [lead.name, lead.email, lead.organisation, lead.website, lead.event_type, lead.event, lead.notes, lead.personality, lead.source],
+    `INSERT INTO leads (name, email, organisation, website, event_type, event, notes, personality, source, symptoms)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING *`,
+    [lead.name, lead.email, lead.organisation, lead.website, lead.event_type, lead.event, lead.notes, lead.personality, lead.source, lead.symptoms],
   );
   const saved = rows[0];
   const adminUrl = `https://${ADMIN_HOST || req.headers.host}/admin`;
   // Respond as soon as the lead is safely stored; emails follow.
-  sendJson(res, 200, { success: true, id: saved.id }, cors);
+  sendJson(res, 200, { success: true, id: saved.id, token: leadToken(saved.id) }, cors);
   await Promise.all([sendConfirmation(saved), sendNotification(saved, adminUrl)]);
+}
+
+async function publicPost(req, res) {
+  const cors = corsHeaders(req);
+  if (req.method === "OPTIONS") { send(res, 204, "", cors); return null; }
+  if (req.method !== "POST") { sendJson(res, 405, { success: false, message: "Method not allowed" }, cors); return null; }
+  if (req.headers.origin && !ALLOWED_ORIGINS.includes(req.headers.origin)) {
+    sendJson(res, 403, { success: false, message: "Not allowed" }, cors);
+    return null;
+  }
+  if (rateLimited(clientIp(req))) {
+    sendJson(res, 429, { success: false, message: "Too many requests. Please try again in a little while." }, cors);
+    return null;
+  }
+  try {
+    return { cors, input: parseBody(await readBody(req), req.headers["content-type"]) };
+  } catch (e) {
+    sendJson(res, e.status || 400, { success: false, message: "We couldn't read that request." }, cors);
+    return null;
+  }
+}
+
+// Optional details added from the thank-you screen, for the lead just created.
+async function handleLeadDetails(req, res) {
+  const got = await publicPost(req, res);
+  if (!got) return;
+  const { cors, input } = got;
+  const id = Number(input.id);
+  if (!Number.isInteger(id) || id < 1 || String(input.token || "") !== leadToken(id)) {
+    return sendJson(res, 403, { success: false, message: "Not allowed" }, cors);
+  }
+  const clean = (v, max) => String(v ?? "").trim().slice(0, max);
+  const name = clean(input.name, 200);
+  const organisation = clean(input.organisation, 200);
+  const event = clean(input.event, 200);
+  const notes = clean(input.notes, 4000);
+  await pool.query(
+    `UPDATE leads SET
+       name = CASE WHEN $2 <> '' THEN $2 ELSE name END,
+       organisation = CASE WHEN $3 <> '' THEN $3 ELSE organisation END,
+       event = CASE WHEN $4 <> '' THEN $4 ELSE event END,
+       notes = CASE WHEN $5 <> '' THEN $5 ELSE notes END,
+       updated_at = now()
+     WHERE id = $1`,
+    [id, name, organisation, event, notes],
+  );
+  sendJson(res, 200, { success: true }, cors);
+}
+
+export function resultEmail(type, key, symptoms) {
+  const link = `https://www.mitingu.com/personality#${key}`;
+  const ticked = symptoms ? symptoms.split("\n").filter(Boolean) : [];
+  const list = ticked.length ? ticked : type.symptoms;
+  const text = [
+    "Hi,",
+    "",
+    `Here's your registration personality: ${type.name}.`,
+    type.tag,
+    "",
+    ticked.length ? "The ones you said sound like your week:" : "Symptoms you might recognise:",
+    ...list.map((s) => `- ${s}`),
+    "",
+    `What it's quietly costing you: ${type.cost}`,
+    "",
+    "What changes on Mitingu:",
+    ...type.gains.map((g) => `- ${g}`),
+    "",
+    "Want to see it with your own branding? Reply with your website and we'll build you a demo event site within one working day. No obligation.",
+    "",
+    `Your result: ${link}`,
+    "",
+    "Greg Wood",
+    "Mitingu",
+  ].join("\n");
+  const li = (arr) => arr.map((s) => `<li style="margin:0 0 6px">${esc(s)}</li>`).join("");
+  const html = `<!doctype html><html lang="en-GB"><body style="margin:0;padding:24px;background:#f5f7f2;font-family:Arial,Helvetica,sans-serif;color:#151716">
+<div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:12px;padding:32px;line-height:1.6;font-size:16px">
+<img src="https://www.mitingu.com/assets/email-logo.png" width="120" height="37" alt="Mitingu" style="display:block;border:0;width:120px;height:auto;margin:0 0 28px">
+<div style="border:1px solid #d9e1dc;border-radius:12px;overflow:hidden;margin:0 0 24px">
+<div style="background:#087b83;color:#ffffff;padding:12px 20px;font-weight:bold;letter-spacing:1px">HELLO <span style="font-weight:normal;letter-spacing:0">my registration personality is</span></div>
+<div style="padding:18px 20px"><div style="font-size:26px;font-weight:bold;margin:0 0 6px">${esc(type.name.replace(/^The /, ""))}</div><div style="color:#5d6562">${esc(type.tag)}</div></div>
+</div>
+<p style="margin:0 0 8px;font-weight:bold">${ticked.length ? "The ones you said sound like your week" : "Symptoms you might recognise"}</p>
+<ul style="margin:0 0 20px;padding-left:20px">${li(list)}</ul>
+<p style="margin:0 0 8px;font-weight:bold">What it's quietly costing you</p>
+<p style="margin:0 0 20px">${esc(type.cost)}</p>
+<p style="margin:0 0 8px;font-weight:bold">What changes on Mitingu</p>
+<ul style="margin:0 0 24px;padding-left:20px">${li(type.gains)}</ul>
+<div style="background:#fdf1d6;border-radius:10px;padding:18px 20px;margin:0 0 24px">
+<p style="margin:0 0 8px;font-weight:bold">See it with your own branding</p>
+<p style="margin:0">Reply to this email with your website and we'll build you a demo event site in your branding within one working day. No obligation, nothing to install.</p>
+</div>
+<p style="margin:0 0 24px"><a href="${esc(link)}" style="color:#087b83">See your result again</a></p>
+<p style="margin:0">Greg Wood<br>Mitingu<br><a href="https://www.mitingu.com" style="color:#087b83">www.mitingu.com</a></p>
+</div></body></html>`;
+  return { subject: `Your registration personality: ${type.name}`, text, html };
+}
+
+// "Email me my result": a lighter lead with just an email address.
+async function handleResultEmail(req, res) {
+  const got = await publicPost(req, res);
+  if (!got) return;
+  const { cors, input } = got;
+  if (input.botcheck) return sendJson(res, 200, { success: true }, cors);
+  const email = String(input.email || "").trim().slice(0, 254);
+  const key = String(input.personality || "").trim();
+  const type = RP_TYPES[key];
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return sendJson(res, 400, { success: false, message: "That email address doesn't look quite right. Please check it." }, cors);
+  }
+  if (!type) return sendJson(res, 400, { success: false, message: "Please pick a personality first." }, cors);
+  const symptoms = cleanSymptoms(input.symptoms);
+  const domain = email.split("@")[1].toLowerCase();
+  const { rows } = await pool.query(
+    `INSERT INTO leads (name, email, organisation, website, event_type, personality, source, status, symptoms)
+     VALUES ('', $1, $2, $2, NULL, $3, 'result-email', 'Result only', $4) RETURNING *`,
+    [email, domain, type.name, symptoms],
+  );
+  const saved = rows[0];
+  sendJson(res, 200, { success: true }, cors);
+  const adminUrl = `https://${ADMIN_HOST || req.headers.host}/admin`;
+  try {
+    await sendEmail({ to: email, replyTo: FROM_EMAIL, ...resultEmail(type, key, symptoms) });
+    await pool.query("UPDATE leads SET confirmation_sent_at = now(), confirmation_error = NULL WHERE id = $1", [saved.id]);
+  } catch (e) {
+    console.error(`Result email failed for lead ${saved.id}: ${e.message}`);
+    await pool.query("UPDATE leads SET confirmation_error = $2 WHERE id = $1", [saved.id, e.message.slice(0, 500)]);
+  }
+  try {
+    const lines = [`${email} asked for their result by email.`, `Personality: ${type.name}`, `Ticked: ${symptoms || "-"}`, "", `All leads: ${adminUrl}`];
+    await sendEmail({
+      to: NOTIFY_EMAIL,
+      replyTo: email,
+      subject: `Result emailed: ${domain} (${type.name.replace(/^The /, "")})`,
+      text: lines.join("\n"),
+      html: `<!doctype html><html><body style="font-family:Arial,Helvetica,sans-serif;color:#151716;white-space:pre-line">${esc(lines.slice(0, 3).join("\n"))}\n\n<a href="${esc(adminUrl)}">Open all leads</a></body></html>`,
+    });
+    await pool.query("UPDATE leads SET notified_at = now() WHERE id = $1", [saved.id]);
+  } catch (e) {
+    await pool.query("UPDATE leads SET notify_error = $2 WHERE id = $1", [saved.id, e.message.slice(0, 500)]);
+  }
 }
 
 // ---------- Admin ----------
@@ -471,6 +643,12 @@ function adminPage(leads, counts, filter, flash, signedInAs) {
   const shortDate = (d) =>
     new Date(d).toLocaleString("en-GB", { timeZone: "Europe/London", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
 
+  const ago = (d) => {
+    const mins = Math.max(0, Math.round((Date.now() - new Date(d).getTime()) / 60000));
+    if (mins < 60) return `${mins} min ago`;
+    const hrs = Math.round(mins / 60);
+    return hrs < 48 ? `${hrs} hr${hrs === 1 ? "" : "s"} ago` : `${Math.round(hrs / 24)} days ago`;
+  };
   const rows = leads.length
     ? leads
         .map((l) => {
@@ -483,7 +661,7 @@ function adminPage(leads, counts, filter, flash, signedInAs) {
     <span class="c-who"><strong>${esc(l.organisation)}</strong><span>${esc(l.name)}</span></span>
     <span class="c-type">${esc((l.personality || "-").replace(/^The /, ""))}</span>
     <span class="c-event">${esc(l.event_type || "-")}</span>
-    <span class="c-date">${esc(shortDate(l.created_at))}</span>
+    <span class="c-date">${esc(shortDate(l.created_at))}${l.status === "New" ? `<span class="ago">${esc(ago(l.created_at))}</span>` : ""}</span>
     <span class="c-status"><span class="pill ${statusClass(l.status)}">${esc(l.status)}</span></span>
     <span class="chev" aria-hidden="true"></span>
   </summary>
@@ -495,6 +673,8 @@ function adminPage(leads, counts, filter, flash, signedInAs) {
         <dt>Event name or date</dt><dd>${esc(l.event || "-")}</dd>
         <dt>Received</dt><dd>${esc(fmtDate(l.created_at))}</dd>
         ${l.notes ? `<dt>Their notes</dt><dd>${esc(l.notes)}</dd>` : ""}
+        ${l.symptoms ? `<dt>Ticked as their week</dt><dd style="white-space:pre-line">${esc(l.symptoms)}</dd>` : ""}
+        ${l.source === "result-email" ? `<dt>How they came in</dt><dd>Asked for their result by email (no demo request yet)</dd>` : ""}
       </dl>
       <div class="mail">${conf}
         <form method="post" action="/admin/leads/${l.id}/resend"><button type="submit" class="link">${l.confirmation_sent_at ? "Resend" : "Send"}</button></form>
@@ -547,7 +727,7 @@ h1{margin:0;font-size:1.5rem;letter-spacing:-.01em}
 .c-type,.c-event,.c-date{color:#3d4542;font-size:.88rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.c-date{color:#5d6562}
 .pill{display:inline-block;padding:2px 9px;border-radius:999px;font-size:.75rem;font-weight:700;white-space:nowrap}
 .s-new{background:#f2b233;color:#151716}.s-building-demo{background:#fdf1d6;color:#6b4500}.s-demo-sent{background:#e6f1f0;color:#065f65}
-.s-follow-up-booked{background:#ece3fb;color:#4b2a85}.s-won{background:#087b83;color:#fff}.s-not-now{background:#eef1ef;color:#5d6562}
+.s-follow-up-booked{background:#ece3fb;color:#4b2a85}.s-won{background:#087b83;color:#fff}.s-not-now{background:#eef1ef;color:#5d6562}.s-result-only{background:#f5f7f2;color:#5d6562;box-shadow:inset 0 0 0 1px #d9e1dc}.ago{display:block;color:#8a5d00;font-size:.75rem;font-weight:700}
 .chev{width:8px;height:8px;border-right:2px solid #8a938f;border-bottom:2px solid #8a938f;transform:rotate(-45deg);justify-self:end}
 .row[open] .chev{transform:rotate(45deg)}
 .detail{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:28px;padding:6px 18px 22px;background:#fafbf9}
@@ -787,6 +967,8 @@ export const server = http.createServer(async (req, res) => {
       return send(res, 200, "ok");
     }
     if (url.pathname === "/api/demo-requests") return await handleDemoRequest(req, res);
+    if (url.pathname === "/api/demo-requests/details") return await handleLeadDetails(req, res);
+    if (url.pathname === "/api/result-email") return await handleResultEmail(req, res);
     const isAdminPath = url.pathname === "/" || url.pathname === "/admin" || url.pathname.startsWith("/admin/");
     const host = String(req.headers.host || "").toLowerCase();
     if (isAdminPath && ADMIN_HOST && host !== ADMIN_HOST && req.method === "GET") {

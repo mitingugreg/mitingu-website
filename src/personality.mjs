@@ -257,7 +257,7 @@ export function renderPersonalityPage(site) {
   <section id="view-start" class="rp-hero" aria-labelledby="rp-title">
     <p class="rp-eyebrow">30-second quiz</p>
     <h1 id="rp-title">What's your registration personality?</h1>
-    <p class="rp-lede">Every event organiser we meet runs registration in one of five ways. Each one has a point where it quietly starts eating your time. Pick the badge that sounds like you.</p>
+    <p class="rp-lede">Every event organiser we meet runs registration in one of five ways. Each one has a point where it quietly starts eating your time. Pick the badge that sounds like you, and we'll build you a free demo event site to match.</p>
     <p class="rp-quiz-prompt">Not sure? <a href="#quiz">Take the 30-second quiz</a></p>
     <div class="rp-picker" id="picker"></div>
     <div class="rp-or">
@@ -293,8 +293,9 @@ export function renderPersonalityPage(site) {
     </div>
 
     <div class="rp-section">
-      <h2>Symptoms you might recognise</h2>
-      <ul class="rp-symptoms" id="r-symptoms"></ul>
+      <h2>Which of these sound like your week?</h2>
+      <p class="rp-muted">Tick any that apply. We'll use them to shape your demo.</p>
+      <ul class="rp-symptoms rp-tick" id="r-symptoms"></ul>
     </div>
 
     <div class="rp-section">
@@ -310,7 +311,12 @@ export function renderPersonalityPage(site) {
 
     <div class="rp-demo" id="demo">
       <h2>See it with your own branding</h2>
-      <p class="rp-muted">Tell us a little about you and we'll build a demo event site in your organisation's branding, with a sample event already set up, so you can click through it the way your guests and your team would. No obligation, and nothing to install.</p>
+      <p class="rp-muted">Three details and we'll build a demo event site in your organisation's branding, with a sample event already set up, so you can click through it the way your guests and your team would.</p>
+      <ul class="rp-next">
+        <li>Your demo site link, in your branding, within one working day</li>
+        <li>Built by a person, not an automated sales sequence</li>
+        <li>No obligation, and nothing to install</li>
+      </ul>
       <form id="demo-form" action="${endpoint}" method="POST" novalidate>
         <input type="hidden" name="access_key" value="${site.formAccessKey || ""}">
         <input type="hidden" name="subject" id="f-subject" value="Demo site request from the personality page">
@@ -320,22 +326,14 @@ export function renderPersonalityPage(site) {
           <input type="checkbox" id="f-botcheck" name="botcheck" tabindex="-1" autocomplete="off">
         </div>
         <div class="rp-field">
-          <label for="f-name">Your name</label>
-          <input id="f-name" name="name" autocomplete="name" required>
-        </div>
-        <div class="rp-field">
           <label for="f-email">Work email</label>
           <input id="f-email" name="email" type="email" autocomplete="email" required>
         </div>
         <div class="rp-field">
-          <label for="f-org">Organisation</label>
-          <input id="f-org" name="organisation" autocomplete="organization" required>
-        </div>
-        <div class="rp-field">
-          <label for="f-web">Your website</label>
+          <label for="f-web">Your website <span class="rp-opt">(for your branding)</span></label>
           <input id="f-web" name="website" inputmode="url" autocomplete="url" placeholder="e.g. yourcompany.co.uk" required>
         </div>
-        <div class="rp-field">
+        <div class="rp-field full">
           <label for="f-kind">What kind of event should we build?</label>
           <select id="f-kind" name="event_type" required>
             <option>Client dinner or reception</option>
@@ -346,14 +344,7 @@ export function renderPersonalityPage(site) {
             <option>Something else</option>
           </select>
         </div>
-        <div class="rp-field">
-          <label for="f-event">Event name or date <span class="rp-opt">(optional)</span></label>
-          <input id="f-event" name="event" placeholder="e.g. Spring client dinner, March">
-        </div>
-        <div class="rp-field full">
-          <label for="f-notes">Anything we should know? <span class="rp-opt">(optional)</span></label>
-          <textarea id="f-notes" name="notes" placeholder="Number of guests, paid or free, anything awkward"></textarea>
-        </div>
+        <input type="hidden" id="f-symptoms" name="symptoms">
         <input type="hidden" id="f-type" name="personality">
         <p class="rp-error full" id="f-error" role="alert"></p>
         <div class="rp-form-actions">
@@ -361,6 +352,18 @@ export function renderPersonalityPage(site) {
           <span class="rp-small">We'll only use your details to set up your demo. <a href="/privacy-policy">Privacy policy</a></span>
         </div>
       </form>
+      <p class="rp-call">Rather talk it through first? <a href="https://calendar.app.google/KEUX6y2QWYxhrUPw7" target="_blank" rel="noopener" id="book-call">Book a 15-minute call</a></p>
+    </div>
+
+    <div class="rp-later">
+      <h3>Not ready for a demo yet?</h3>
+      <p class="rp-muted">Get your result by email, with the symptoms you ticked, to come back to or pass on to a colleague.</p>
+      <form id="result-form" class="rp-inline" novalidate>
+        <label class="rp-sr" for="r-email">Email address</label>
+        <input id="r-email" type="email" autocomplete="email" placeholder="you@company.com">
+        <button class="rp-btn ghost" type="submit" id="r-send">Email me my result</button>
+      </form>
+      <p class="rp-small" id="r-msg" role="status"></p>
     </div>
 
     <div class="rp-section">
@@ -372,8 +375,32 @@ export function renderPersonalityPage(site) {
   <!-- THANKS -->
   <section id="view-thanks" class="rp-thanks" hidden>
     <p class="rp-eyebrow">Request received</p>
-    <h1 id="t-title">Thanks.</h1>
-    <p class="rp-lede">We're building your demo event site and will email you the link shortly. In the meantime, if you know a Technician who needs rescuing, feel free to send them this page.</p>
+    <h1 id="t-title">Thanks. We're on it.</h1>
+    <p class="rp-lede">Your demo event site link will be with you within one working day. Check your inbox for a confirmation now.</p>
+    <form id="more-form" class="rp-more" novalidate>
+      <h2>Want it even closer to the real thing? <span class="rp-opt">(optional)</span></h2>
+      <div class="rp-field">
+        <label for="m-name">Your name</label>
+        <input id="m-name" autocomplete="name">
+      </div>
+      <div class="rp-field">
+        <label for="m-org">Organisation</label>
+        <input id="m-org" autocomplete="organization">
+      </div>
+      <div class="rp-field">
+        <label for="m-event">Event name or date</label>
+        <input id="m-event" placeholder="e.g. Spring client dinner, March">
+      </div>
+      <div class="rp-field">
+        <label for="m-notes">Anything we should know?</label>
+        <input id="m-notes" placeholder="Number of guests, paid or free, anything awkward">
+      </div>
+      <div class="rp-form-actions">
+        <button class="rp-btn" type="submit" id="m-save">Add these details</button>
+        <span class="rp-small" id="m-msg" role="status"></span>
+      </div>
+    </form>
+    <p class="rp-muted">Know someone else who'd recognise themselves? Send them the quiz.</p>
     <div class="rp-or">
       <button class="rp-btn ghost" type="button" id="copy-link">Copy the link to this quiz</button>
       <span class="rp-small" id="copy-msg" aria-live="polite"></span>
@@ -407,6 +434,16 @@ function personalityScript(site) {
   var answers = [];
   var FALLBACK_EMAIL = ${JSON.stringify(site.email || "hello@mitingu.com")};
   var LEADS_ENDPOINT = ${JSON.stringify(site.leadsEndpoint || "")};
+  var LEADS_BASE = LEADS_ENDPOINT.replace(/\\/api\\/demo-requests$/, "");
+  var ticked = false, formStarted = false, viaQuiz = false, lastLead = null;
+
+  function track(name, params) {
+    try { if (window.gtag) window.gtag("event", name, params || {}); } catch (e) {}
+  }
+
+  function tickedSymptoms() {
+    return Array.prototype.slice.call(document.querySelectorAll("#r-symptoms input:checked")).map(function (el) { return el.value; });
+  }
 
   function $(id) { return document.getElementById(id); }
 
@@ -448,11 +485,23 @@ function personalityScript(site) {
 
     var ul = $("r-symptoms");
     ul.innerHTML = "";
-    t.symptoms.forEach(function (s) {
+    t.symptoms.forEach(function (s, i) {
       var li = document.createElement("li");
-      li.textContent = s;
+      var id = "sym-" + i;
+      li.innerHTML = '<input type="checkbox"><label></label>';
+      li.firstChild.id = id;
+      li.firstChild.value = s;
+      li.lastChild.htmlFor = id;
+      li.lastChild.textContent = s;
+      li.firstChild.addEventListener("change", function () {
+        if (!ticked) { ticked = true; track("rp_symptom_tick", { personality: t.name }); }
+      });
       ul.appendChild(li);
     });
+    ticked = false;
+    formStarted = false;
+    track("rp_result_view", { personality: t.name, via: viaQuiz ? "quiz" : "pick" });
+    viaQuiz = false;
 
     var g = $("r-gains");
     g.innerHTML = "";
@@ -496,6 +545,7 @@ function personalityScript(site) {
           quizIndex++;
           renderQuestion();
         } else {
+          viaQuiz = true;
           location.hash = scoreQuiz();
         }
       });
@@ -529,7 +579,7 @@ function personalityScript(site) {
   });
 
   function flag(fields) {
-    ["f-name", "f-email", "f-org", "f-web"].forEach(function (id) {
+    ["f-email", "f-web"].forEach(function (id) {
       if (fields.indexOf(id) > -1) $(id).setAttribute("aria-invalid", "true");
       else $(id).removeAttribute("aria-invalid");
     });
@@ -539,18 +589,15 @@ function personalityScript(site) {
   var form = $("demo-form");
   form.addEventListener("submit", function (e) {
     e.preventDefault();
-    var name = $("f-name").value.trim();
     var email = $("f-email").value.trim();
-    var org = $("f-org").value.trim();
     var web = $("f-web").value.trim();
+    var org = web.replace(/^[a-z]+:\\/\\//i, "").replace(/^www\\./i, "").split(/[\\/?#]/)[0];
     var err = $("f-error");
     var blank = [];
-    if (!name) blank.push("f-name");
     if (!email) blank.push("f-email");
-    if (!org) blank.push("f-org");
     if (!web) blank.push("f-web");
     if (blank.length) {
-      err.textContent = "Please add your name, work email, organisation and website so we can build your demo.";
+      err.textContent = "Please add your work email and website so we can build your demo.";
       flag(blank);
       return;
     }
@@ -570,12 +617,16 @@ function personalityScript(site) {
     var keyField = form.querySelector("input[name=access_key]");
     var button = $("f-submit");
     var personality = $("f-type").value || "Not chosen";
+    var symptoms = tickedSymptoms();
+    $("f-symptoms").value = symptoms.join("\\n");
     $("f-subject").value = "Demo site request: " + org + " (" + personality.replace(/^The /, "") + ")";
 
-    var done = function () {
+    var done = function (data) {
       submitted = true;
-      if (window.gtag) window.gtag("event", "generate_lead", { form: "personality_demo", personality: personality });
-      $("t-title").textContent = "Thanks, " + name.split(" ")[0] + ".";
+      lastLead = data && data.id && data.token ? { id: data.id, token: data.token } : null;
+      track("generate_lead", { form: "personality_demo", personality: personality, symptoms_ticked: symptoms.length });
+      $("more-form").hidden = !lastLead;
+      $("m-org").value = org;
       form.reset();
       location.hash = "thanks";
     };
@@ -608,12 +659,13 @@ function personalityScript(site) {
 
     // Main route: the Mitingu leads service stores the lead and sends the confirmation email.
     var payload = {};
-    ["name", "email", "organisation", "website", "event_type", "event", "notes", "personality", "botcheck"].forEach(function (field) {
+    ["email", "website", "event_type", "personality", "botcheck"].forEach(function (field) {
       var el = form.elements[field];
       if (!el) return;
       payload[field] = el.type === "checkbox" ? (el.checked ? "on" : "") : el.value;
     });
     payload.source = "personality";
+    payload.symptoms = symptoms;
     var controller = window.AbortController ? new AbortController() : null;
     var timer = controller ? setTimeout(function () { controller.abort(); }, 20000) : null;
     fetch(LEADS_ENDPOINT, {
@@ -625,7 +677,7 @@ function personalityScript(site) {
       .then(function (response) {
         if (timer) clearTimeout(timer);
         return response.json().catch(function () { return {}; }).then(function (data) {
-          if (response.ok && data.success) { reset(); done(); return; }
+          if (response.ok && data.success) { reset(); done(data); return; }
           if (response.status === 400 || response.status === 429) {
             err.textContent = data.message || "Please check your details and try again.";
             reset();
@@ -639,6 +691,69 @@ function personalityScript(site) {
         viaWeb3Forms();
       });
   });
+
+  form.addEventListener("focusin", function () {
+    if (!formStarted) { formStarted = true; track("rp_form_start", { personality: $("f-type").value }); }
+  });
+
+  function postJson(path, body) {
+    return fetch(LEADS_BASE + path, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body)
+    }).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (d) { return { ok: r.ok && d.success, data: d }; });
+    });
+  }
+
+  $("result-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var email = $("r-email").value.trim();
+    var msg = $("r-msg");
+    if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) {
+      msg.textContent = "Please check your email address.";
+      $("r-email").setAttribute("aria-invalid", "true");
+      $("r-email").focus();
+      return;
+    }
+    $("r-email").removeAttribute("aria-invalid");
+    if (!LEADS_BASE) { msg.textContent = "Sorry, that isn't available right now. Please email " + FALLBACK_EMAIL + "."; return; }
+    var btn = $("r-send");
+    btn.disabled = true;
+    msg.textContent = "Sending…";
+    postJson("/api/result-email", { email: email, personality: current, symptoms: tickedSymptoms(), botcheck: $("f-botcheck").checked ? "on" : "" })
+      .then(function (res) {
+        btn.disabled = false;
+        if (res.ok) {
+          msg.textContent = "Sent. Check your inbox for your result.";
+          $("r-email").value = "";
+          track("rp_result_email", { personality: $("f-type").value });
+        } else {
+          msg.textContent = (res.data && res.data.message) || "Sorry, that didn't send. Please try again.";
+        }
+      })
+      .catch(function () { btn.disabled = false; msg.textContent = "Sorry, that didn't send. Please try again in a moment."; });
+  });
+
+  $("more-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (!lastLead) return;
+    var msg = $("m-msg");
+    var btn = $("m-save");
+    btn.disabled = true;
+    msg.textContent = "Saving…";
+    postJson("/api/demo-requests/details", {
+      id: lastLead.id, token: lastLead.token,
+      name: $("m-name").value.trim(), organisation: $("m-org").value.trim(),
+      event: $("m-event").value.trim(), notes: $("m-notes").value.trim()
+    }).then(function (res) {
+      btn.disabled = false;
+      msg.textContent = res.ok ? "Saved. Thanks, that helps." : "Sorry, that didn't save. You can reply to the confirmation email instead.";
+      if (res.ok) track("rp_details_added", {});
+    }).catch(function () { btn.disabled = false; msg.textContent = "Sorry, that didn't save. You can reply to the confirmation email instead."; });
+  });
+
+  $("book-call").addEventListener("click", function () { track("rp_book_call", { personality: $("f-type").value }); });
 
   $("copy-link").addEventListener("click", function () {
     var url = "https://www.mitingu.com/personality";

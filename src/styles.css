@@ -3942,3 +3942,160 @@ textarea:focus {
 .rp-pick:hover .go {
   text-decoration: underline;
 }
+
+/* Result page: tick boxes, next steps, lighter options (23 Nov 2026) */
+.rp-symptoms.rp-tick {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.rp-symptoms.rp-tick li {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.rp-symptoms.rp-tick li::before {
+  content: none;
+  display: none;
+}
+
+.rp-symptoms.rp-tick input {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin: 2px 0 0;
+  accent-color: var(--teal);
+  cursor: pointer;
+}
+
+.rp-symptoms.rp-tick label {
+  cursor: pointer;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.rp-symptoms.rp-tick li:has(input:checked) {
+  border-color: var(--teal);
+  background: #eef6f6;
+}
+
+.rp-next {
+  margin: 0 0 22px;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 6px;
+}
+
+.rp-next li {
+  position: relative;
+  padding-left: 22px;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.rp-next li::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 0.55em;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--marigold);
+}
+
+.rp-call {
+  margin: 18px 0 0;
+  color: #c3cbc7;
+  font-size: 0.95rem;
+}
+
+.rp-call a {
+  color: var(--marigold-on-dark);
+  font-weight: 700;
+}
+
+.rp-later {
+  margin-top: 28px;
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+
+.rp-later h3 {
+  margin: 0 0 6px;
+}
+
+.rp-inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.rp-inline input {
+  flex: 1 1 240px;
+  min-height: 46px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font: inherit;
+}
+
+.rp-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.rp-more {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 16px;
+  margin: 28px 0;
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  text-align: left;
+}
+
+.rp-more h2 {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.rp-more .rp-form-actions {
+  grid-column: 1 / -1;
+}
+
+.rp-more input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font: inherit;
+  box-sizing: border-box;
+}
+
+@media (max-width: 640px) {
+  .rp-more {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.rp-more label {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
