@@ -3918,3 +3918,27 @@ textarea:focus {
   font-size: 0.82rem;
   line-height: 1.4;
 }
+
+/* Personality cards explain themselves (23 Nov 2026) */
+.rp-pick .tag {
+  padding: 0 1rem;
+  color: var(--ink);
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+
+.rp-pick .quote {
+  font-size: 0.88rem;
+  font-style: italic;
+}
+
+.rp-pick .go {
+  padding: 0 1rem 0.1rem;
+  color: var(--teal);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.rp-pick:hover .go {
+  text-decoration: underline;
+}

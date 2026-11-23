@@ -424,9 +424,11 @@ function personalityScript(site) {
       b.className = "rp-pick is-" + key + (key === "juggler" ? " juggler" : "");
       b.innerHTML =
         '<span class="strip"><span>Delegate</span><span class="code"></span></span>' +
-        '<span class="name"></span><span class="quote"></span>';
+        '<span class="name"></span><span class="tag"></span><span class="quote"></span>' +
+        '<span class="go" aria-hidden="true">That’s me →</span>';
       b.querySelector(".code").textContent = t.code;
       b.querySelector(".name").textContent = t.name;
+      b.querySelector(".tag").textContent = t.tag;
       b.querySelector(".quote").textContent = t.quote;
       b.addEventListener("click", function () { location.hash = key; });
       wrap.appendChild(b);
