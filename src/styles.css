@@ -4099,3 +4099,35 @@ textarea:focus {
   font-size: 0.9rem;
   font-weight: 700;
 }
+
+/* Homepage: builder and email results side by side (24 Nov 2026) */
+.hp-shots {
+  display: grid;
+  grid-template-columns: 2.22fr 1.6fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.hp-shots figure {
+  margin: 0;
+}
+
+.hp-shots img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 0 0 1px var(--line), 0 24px 48px -30px rgba(21, 23, 22, 0.35);
+}
+
+.hp-shots figcaption {
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+@media (max-width: 760px) {
+  .hp-shots {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

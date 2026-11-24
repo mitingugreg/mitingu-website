@@ -126,10 +126,16 @@ export function renderHomeV2({ button, faqSection }) {
     <ol class="hp-steps">
       ${STEPS.map(([title, text], i) => `<li><span class="hp-step-num">0${i + 1}</span><strong>${title}</strong><span>${text}</span></li>`).join("")}
     </ol>
-    <figure class="hp-shot">
-      <img src="/assets/showcase-communications.webp" alt="Email analytics in Mitingu showing opens and clicks for an invitation, a reminder and a survey" width="1800" height="1125" loading="lazy" decoding="async">
-      <figcaption>The invitation, the reminder and the survey for one event, with opens and clicks next to the guest list they came from.</figcaption>
-    </figure>
+    <div class="hp-shots">
+      <figure>
+        <img src="/assets/showcase-event-builder.webp" alt="The Mitingu event builder: step-by-step set-up on the left, with a live preview of the branded event page guests will see on the right" width="1568" height="705" loading="lazy" decoding="async">
+        <figcaption>Build it: step by step with a live preview of what guests see, or just say what you want changed.</figcaption>
+      </figure>
+      <figure>
+        <img src="/assets/showcase-communications.webp" alt="Email analytics in Mitingu showing opens and clicks for an invitation, a reminder and a survey" width="1800" height="1125" loading="lazy" decoding="async">
+        <figcaption>Follow it: opens and clicks for every invitation, reminder and survey, next to the guest list.</figcaption>
+      </figure>
+    </div>
   </section>
 
   <section class="hp-band hp-warm">
