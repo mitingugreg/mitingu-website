@@ -53,10 +53,10 @@ export function renderHomeV2({ button, faqSection }) {
       <h1>Running the event is hard enough without also running the app supplier, the badge printer and the spreadsheet that joins them up.</h1>
       <p class="hp-lede">Mitingu puts your event site, registration, emails, attendee app and check-in into one place, all working from one guest list. Change a session time once and it's right everywhere. And when your director asks how it went, the answer is already there instead of buried in four exports.</p>
       <div class="hp-actions">
-        ${button("/personality", "Get a free demo site in your branding", "accent")}
+        ${button("/personality", "What's your registration personality?", "accent")}
         ${button("/book-a-demo", "Book a demo")}
       </div>
-      <p class="hp-small">We build the demo site, you click around it. No obligation, nothing to install.</p>
+      <p class="hp-small">A 30-second quiz for event organisers. No sign-up needed to see your result.</p>
     </div>
     <figure class="hp-hero-figure">
       <img src="/assets/showcase-branded-event-site.webp" alt="A branded Mitingu event site for a partner summit, on a laptop and a phone" width="1800" height="1125" fetchpriority="high" decoding="async">
@@ -181,9 +181,9 @@ export function renderHomeV2({ button, faqSection }) {
   <section class="hp-band hp-dark hp-final">
     <div class="hp-narrow">
       <h2>See your next event on Mitingu before you commit to anything.</h2>
-      <p>Tell us a little about it and we'll build a demo event site in your branding, with a sample event already set up, so you can click through it the way your guests and your team would.</p>
+      <p>Tell us about the event on your mind and we'll show you how we'd set up its registration, in a 15-minute chat with no hard sell.</p>
       <div class="hp-actions">
-        ${button("/personality", "Get my free demo site", "accent")}
+        <a class="button button-accent" href="https://calendar.app.google/KEUX6y2QWYxhrUPw7" target="_blank" rel="noopener"><span>Book a 15-minute chat</span></a>
         ${button("/book-a-demo", "Book a demo", "outline-light")}
       </div>
       <p class="hp-small">Not sure where you'd start? <a href="/personality">Take the 30-second registration personality quiz.</a></p>

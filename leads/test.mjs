@@ -123,12 +123,12 @@ const resultPost = (body, ip = "4.4.4.4") =>
     headers: { "Content-Type": "application/json", Origin: "https://www.mitingu.com", "X-Forwarded-For": ip },
     body: JSON.stringify(body),
   });
-r = await resultPost({ email: "jo@acme.example", personality: "builder", symptoms: ["The developer is on holiday the week the agenda changes."] });
+r = await resultPost({ email: "jo@acme.example", name: "Jo Bloggs", personality: "builder", source: "personality utm_source=email&utm_campaign=nov" });
 await wait(150);
 const resLead = (await pool.query("SELECT * FROM leads WHERE email = 'jo@acme.example'")).rows[0];
-check("Result email: light lead stored as Result only", r.status === 200 && resLead?.status === "Result only" && resLead.source === "result-email" && resLead.personality === "The Builder");
+check("Result email: light lead stored as Result only, with name and campaign", r.status === 200 && resLead?.status === "Result only" && resLead.source === "result-email personality utm_source=email&utm_campaign=nov" && resLead.personality === "The Builder" && resLead.name === "Jo Bloggs");
 const resMail = sent.find((m) => m.personalizations[0].to[0].email === "jo@acme.example");
-check("Result email sent with their ticked symptom and the demo offer", !!resMail && resMail.subject === "Your registration personality: The Builder" && resMail.content[0].value.includes("on holiday the week the agenda changes") && resMail.content[0].value.includes("within one working day"));
+check("Profile email has superpower, time, quick win and the booking link", !!resMail && resMail.subject === "Your registration personality: The Builder" && resMail.content[0].value.startsWith("Hi Jo,") && ["You care how it looks", "Waiting for the one person", "anyone on the team can update", "calendar.app.google"].every((x) => resMail.content[0].value.includes(x)));
 check("Greg told about the result request", sent.some((m) => m.subject === "Result emailed: acme.example (Builder)"));
 r = await resultPost({ email: "jo@acme.example", personality: "nonsense" });
 check("Result email refuses an unknown personality", r.status === 400);

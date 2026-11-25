@@ -76,6 +76,7 @@ export function renderPage(path) {
     description,
     body: pageBodies[path](),
     extraGraph: path === personalityPath ? personalityGraph : guideItemListGraph(path),
+    chrome: path !== personalityPath,
   });
 }
 
@@ -128,7 +129,7 @@ export function renderNotFound() {
   });
 }
 
-export function layout({ path, title, description, body, ogImage = "/screenshot.jpeg", ogType = "website", extraGraph = [], breadcrumbs = null }) {
+export function layout({ path, title, description, body, ogImage = "/screenshot.jpeg", ogType = "website", extraGraph = [], breadcrumbs = null, chrome = true }) {
   const fullTitle =
     path === "/"
       ? "Mitingu | Event Registration Software, Apps and Check-in"
@@ -161,15 +162,18 @@ export function layout({ path, title, description, body, ogImage = "/screenshot.
     <link rel="icon" href="/favicon.ico" sizes="48x48">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/styles.css">${chrome ? "" : `
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&family=Inter:wght@400;500;600;700&display=swap">`}
     ${jsonLd(path, fullTitle, description, extraGraph, breadcrumbs)}
   </head>
-  <body>
-    ${header()}
+  <body${chrome ? "" : ' class="pq-body"'}>
+    ${chrome ? header() : ""}
     <main>
       ${body}
     </main>
-    ${footer()}
+    ${chrome ? footer() : ""}
     ${cookieBanner()}
     ${path === "/" ? homepageShowcaseScript() : ""}
     ${cookieScript()}

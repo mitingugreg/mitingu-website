@@ -1,181 +1,142 @@
-// Registration personality page: www.mitingu.com/personality
+// Registration personality quiz: www.mitingu.com/personality
 //
-// Landing page for the cold email campaign. Visitors pick one of five organiser
-// types (or take a 4-question quiz), see a result, and can request a demo event
-// site in their own branding. Four views on one address, switched by the hash:
-//   #start, #quiz, #<type-key> (a result), #thanks (only after a real submission).
+// Rebuilt 25 Nov 2026 from Greg's brief ("Brief: Mitingu registration
+// personality quiz page") and its design mock-up. One job: get event organisers
+// through a 30-second, six-question quiz to their result, then make it easy to
+// book a 15-minute chat with Greg.
 //
-// All result and quiz wording lives in TYPES and QUESTIONS just below: edit the
-// words there, not in the markup. The page and its script both read them.
-//
-// The demo form posts to Web3Forms (the same account as the Book a Demo form),
-// which emails each request to Greg. Keep the field names as they are
-// (name, email, organisation, website, event_type, event, notes, personality):
-// the AI builder will read the same fields later.
+// All wording lives in TYPES, QUESTIONS and the markup below. The browser
+// script is public/personality-quiz.js; it reads TYPES and QUESTIONS from the
+// JSON block this page writes, so the wording is only ever edited here.
+// The leads service (leads/server.mjs) also imports TYPES for the result email.
 
-// ---- WORDING: edit the result and quiz words here (used by the page and its script) ----
-// Results: one entry per type.
+export const BOOKING_URL = "https://calendar.app.google/KEUX6y2QWYxhrUPw7";
+export const EXAMPLE_EMAIL = "greg@mitingu.com";
+
 export const TYPES = {
-  "stickler": {
+  stickler: {
     name: "The Stickler",
+    short: "Stickler",
     code: "ST-01",
-    quote: "“The system doesn't really do that, but…”",
+    colour: "#2EC4B6",
+    shadow: "#1B7F76",
+    icon: "clipboard",
     tag: "Same platform every year, same workarounds every time the brief changes.",
-    symptoms: [
-      "The brief changes, and the first question is “will the system let us?”",
-      "There's one question you really need on the form, and the platform won't let you ask it.",
-      "Your event site looks like everyone else's on the same platform, with your logo in the corner.",
-      "You know the workaround for the workaround, and you're the only one who does.",
-      "“How did it go?” still ends with an export and an evening in Excel.",
-      "The renewal comes round, nobody loves it, and nobody has time to look at anything else."
-    ],
-    cost: "The hours spent bending every new brief to fit the platform, instead of the platform fitting the brief.",
-    lead: "Keep what works. Run one event on Mitingu and compare.",
-    gains: [
-      "Forms built around your event, awkward questions included",
-      "Event sites that look like your organisation, not the platform",
-      "Reports that answer “was it worth it?” without an export"
-    ]
+    superpower: "You know your system inside out, and you get it done.",
+    time: "Working around it every time a brief doesn't fit.",
+    win: "Let the registration flex to the event, not the other way round.",
+    cta: "Want the platform to bend for once?",
   },
-  "technician": {
+  technician: {
     name: "The Technician",
+    short: "Technician",
     code: "TE-02",
-    quote: "“Did you get my email?”",
+    colour: "#FFD23F",
+    shadow: "#B38F00",
+    icon: "grid",
     tag: "Spreadsheets, forms and fifty “did you get my email?” emails.",
-    symptoms: [
-      "guest_list_FINAL_v7.xlsx exists, and someone is still working from v6.",
-      "Half your inbox is guests asking whether they're actually booked on.",
-      "A dietary requirement once arrived by text message, and nobody wrote it down.",
-      "You've pasted the same confirmation email into 140 replies.",
-      "“Is Sarah coming or not?” takes three inboxes and a phone call to answer.",
-      "The list on the door was printed the night before, and it's already wrong."
-    ],
-    cost: "Hours of copying, chasing and checking, plus the nagging worry that the list on the door is out of date.",
-    lead: "Same flexibility, without the copying, pasting and chasing.",
-    gains: [
-      "One live guest list that keeps itself up to date",
-      "Confirmations and reminders that send themselves, so guests stop asking",
-      "Check-in on the day from the same list"
-    ]
+    superpower: "Nothing gets past you.",
+    time: "Spreadsheets, merges and chasing replies.",
+    win: "One place for every registration, so the lists build themselves.",
+    cta: "Want to close a few tabs?",
   },
-  "builder": {
+  builder: {
     name: "The Builder",
+    short: "Builder",
     code: "BU-03",
-    quote: "“I'll have to ask the developer.”",
+    colour: "#FF8A5B",
+    shadow: "#B85A33",
+    icon: "spanner",
     tag: "A lovely site that only one person knows how to change.",
-    symptoms: [
-      "Changing a date or a speaker means an email to the developer, then a wait.",
-      "The developer is on holiday the week the agenda changes.",
-      "The site looks fantastic. The registrations land in an inbox.",
-      "Every new event is a new build, and a new invoice.",
-      "The guest emails live somewhere else entirely, and so does the guest list.",
-      "Nobody else on the team dares touch it, in case it breaks."
-    ],
-    cost: "Paying to rebuild much the same thing for every event, and waiting on one person for every change.",
-    lead: "The tailored look you love, and you can change it yourself.",
-    gains: [
-      "Your own look and feel, ready to reuse for the next event",
-      "Change wording, dates, speakers and forms yourself, in minutes",
-      "Registration, emails and reporting in one place"
-    ]
+    superpower: "You care how it looks, and it shows.",
+    time: "Waiting for the one person who can change it.",
+    win: "A setup anyone on the team can update in minutes.",
+    cta: "Want to make the changes yourself?",
   },
-  "shopkeeper": {
+  shopkeeper: {
     name: "The Shopkeeper",
+    short: "Shopkeeper",
     code: "SK-04",
-    quote: "“It's in the order notes. Somewhere.”",
+    colour: "#B9A6FF",
+    shadow: "#7C66CC",
+    icon: "bag",
     tag: "Event places sold like T-shirts, with dietary needs in the “notes” box.",
-    symptoms: [
-      "One person bought four places. You know the name of one of them.",
-      "Dietary needs, access requirements and plus-ones all live in the order notes box.",
-      "“Can I transfer my place?” sets off a small admin project.",
-      "Your shop knows what sold. It doesn't know who's actually coming.",
-      "Finance wants invoices and VAT receipts, and they're done by hand.",
-      "Badges get made by hand the night before."
-    ],
-    cost: "Chasing guest details after the sale, and building the guest list by hand from order reports.",
-    lead: "Keep taking payments online, and get a proper guest list with them.",
-    gains: [
-      "Every guest's details collected as they book, group bookings included",
-      "Online payments, with the guest list built as you go",
-      "Reminders, badges and check-in from the same list"
-    ]
+    superpower: "You sell places quickly and simply.",
+    time: "Reading notes boxes and fixing who's actually coming.",
+    win: "Ask the right questions for each guest type when they register.",
+    cta: "Want to know who's actually coming?",
   },
-  "juggler": {
+  juggler: {
     name: "The Juggler",
+    short: "Juggler",
     code: "JG-05",
-    quote: "“Which system is this one on?”",
+    colour: "#FF5CA8",
+    shadow: "#A8306B",
+    icon: "juggle",
     tag: "All of the above, sometimes in the same week.",
-    symptoms: [
-      "The conference is on a platform, the dinners are on a form, and the webinar is on something else.",
-      "Every new event starts with “which system are we using for this one?”",
-      "The same VIP gets three different-looking invitations from you in one month.",
-      "Nobody can see the whole year's events, or guests, in one place.",
-      "A new team member has to learn three systems before they can help.",
-      "The end-of-year report takes a week of stitching numbers together."
-    ],
-    cost: "Running several systems to do one job, then stitching the numbers together at the end of the year.",
-    lead: "Put the whole programme in one place.",
-    gains: [
-      "Every event in one place, from a small dinner to a paid conference",
-      "The same branding and guest details across your whole programme",
-      "Reporting across all your events, not one at a time"
-    ]
-  }
+    superpower: "Calm under pressure. You make it work.",
+    time: "Stitching forms, spreadsheets and inboxes together.",
+    win: "Every guest type through one registration, each with its own questions.",
+    cta: "Want to drop a few plates?",
+  },
 };
+
 export const ORDER = ["stickler", "technician", "builder", "shopkeeper", "juggler"];
+
 // Old result links (before 12 Nov 2026) still open the matching result.
 export const OLD_KEYS = { "platform-loyalist": "stickler", "spreadsheet-wrangler": "technician", "bespoke-builder": "builder" };
 
-// Each answer maps to a personality, in ORDER.
+// Answers A-D score Stickler, Technician, Builder, Shopkeeper. The most-picked
+// type wins; a tie, or picking all four, makes a Juggler.
+export const ANSWER_TYPES = ["stickler", "technician", "builder", "shopkeeper"];
 export const QUESTIONS = [
   {
-    q: "A guest emails to change their dietary requirement. What happens next?",
+    q: "The brief changes two weeks out. What happens next?",
     a: [
-      "I update it in our event platform",
-      "I find the right row in the spreadsheet. Eventually.",
-      "I ask whoever looks after the site to change it",
-      "I dig out their order and add a comment",
-      "Depends which event it's for"
-    ]
+      "We bend it to fit the platform we always use.",
+      "New tab on the spreadsheet, and a round of “did you get my email?”",
+      "We wait for the one person who can change the website.",
+      "Add a new ticket type and hope the notes box copes.",
+    ],
   },
   {
-    q: "How do the joining instructions go out?",
-    a: [
-      "Scheduled from the platform's email tool",
-      "Mail merge, and fingers crossed",
-      "A separate email tool, with the list exported from the site",
-      "The order confirmation covers it. Sort of.",
-      "A different way for every event"
-    ]
+    q: "Where do your speakers' and sponsors' details live?",
+    a: ["The same system as last year, mostly.", "A spreadsheet, plus a few inboxes.", "On the event site, if Sam updated it.", "In the order notes."],
   },
   {
-    q: "Your director asks “how did it go?” Where does the answer come from?",
-    a: [
-      "An export from the platform, tidied up in Excel",
-      "The spreadsheet is the report",
-      "I ask whoever built the site for the numbers",
-      "The shop's sales report",
-      "Three different places, stitched together"
-    ]
+    q: "Someone asks for a list of who's coming, with dietary needs, by tomorrow. You…",
+    a: ["Run the usual report and tidy it by hand.", "Merge three spreadsheets and pray.", "Ask the person who built the site.", "Export orders and read every “notes” box."],
   },
   {
-    q: "Setting up your next event looks like…",
-    a: [
-      "Copy the last one and wrestle with the template",
-      "New form, new spreadsheet, new folder",
-      "A new brief to the web developer",
-      "Add a new product to the shop",
-      "First, decide which system to use"
-    ]
-  }
+    q: "Your registration form is…",
+    a: ["The one we've always used.", "Several forms, held together with formulas.", "Beautiful, and a bit fragile.", "A checkout."],
+  },
+  {
+    q: "Your VIPs get…",
+    a: ["The same form as everyone else.", "A separate email, sent by hand.", "A special page we built for them.", "A “VIP ticket”."],
+  },
+  {
+    q: "When does registration keep you up late?",
+    a: ["Every time the brief doesn't fit.", "Chasing replies.", "When the site needs changing and the builder's away.", "Sorting out who's actually coming."],
+  },
 ];
-// ---- end of wording ----
+
+export function scoreAnswers(answers) {
+  const counts = {};
+  for (const key of answers) counts[key] = (counts[key] || 0) + 1;
+  const keys = Object.keys(counts);
+  if (!keys.length) return "juggler";
+  if (keys.length >= 4) return "juggler";
+  const top = Math.max(...Object.values(counts));
+  const winners = keys.filter((k) => counts[k] === top);
+  return winners.length === 1 ? winners[0] : "juggler";
+}
 
 export const personalityPath = "/personality";
 
 export const personalityMeta = [
   "What's your registration personality?",
-  "Five ways event organisers run registration, and where each one quietly eats your time. Pick your badge or take the 30-second quiz.",
+  "A 30-second quiz for event organisers. Answer six quick questions, meet your registration personality, and see where your setup quietly eats your time.",
 ];
 
 // Questions answered on the page (also published as FAQPage structured data).
@@ -190,11 +151,11 @@ export const personalityFaqs = [
   ],
   [
     "How does the registration personality quiz work?",
-    "Four questions about how you handle a guest's dietary change, send joining instructions, report on an event and set up the next one. Each answer matches one set-up, and the one you choose most often is your result. A tie makes you a Juggler. It takes about 30 seconds and your answers are not saved.",
+    "Six quick questions, one tap each. Each answer points to one of four set-ups, and the one you pick most often is your result. A tie, or a real mix of all four, makes you a Juggler. It takes about 30 seconds and you see your result straight away, with no sign-up.",
   ],
   [
-    "Can I see Mitingu with my own branding?",
-    "Yes. Fill in the short form on your result and Mitingu will build a demo event site in your organisation's branding, with a sample event already set up, so you can click through it the way your guests and your team would. There is no obligation and nothing to install.",
+    "What happens after the quiz?",
+    "You see your superpower, where your time goes and one quick win for your type. If you'd like to talk it through, you can book a 15-minute chat: tell us about the event on your mind and we'll show you how we'd set up its registration, with no hard sell.",
   ],
   [
     "How do I stop running event registration on spreadsheets?",
@@ -213,563 +174,195 @@ export const personalityGraph = [
       "@id": `https://www.mitingu.com/personality#${key}`,
       name: TYPES[key].name,
       termCode: TYPES[key].code,
-      description: `${TYPES[key].tag} ${TYPES[key].cost}`,
+      description: `${TYPES[key].tag} Where the time goes: ${TYPES[key].time}`,
       url: `https://www.mitingu.com/personality#${key}`,
     })),
   },
 ];
 
-function escapeHtml(text) {
+function esc(text) {
   return String(text).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
-// Readable without JavaScript, so search engines and AI tools can see every type.
-function personalitiesSummary() {
-  return `<section class="rp-summary" aria-labelledby="rp-types-title">
-      <h2 id="rp-types-title">The five registration personalities</h2>
-      <p class="rp-muted">Every set-up works up to a point. Here's where each one starts to cost you.</p>
-      <ol class="rp-type-list">
-        ${ORDER.map((key) => {
-          const t = TYPES[key];
-          return `<li>
-          <span class="rp-type-code">${escapeHtml(t.code)}</span>
-          <div>
-            <h3><a href="#${key}">${escapeHtml(t.name)}</a></h3>
-            <p>${escapeHtml(t.tag)}</p>
-            <p class="rp-muted">Where it hurts: ${escapeHtml(t.cost.charAt(0).toLowerCase() + t.cost.slice(1))}</p>
-          </div>
-        </li>`;
-        }).join("")}
-      </ol>
-    </section>
-    <section class="rp-faq" aria-labelledby="rp-faq-title">
-      <h2 id="rp-faq-title">Questions</h2>
-      ${personalityFaqs
-        .map(([q, a]) => `<details><summary>${escapeHtml(q)}</summary><p>${escapeHtml(a)}</p></details>`)
-        .join("")}
-    </section>`;
-}
-
-export function renderPersonalityPage(site) {
-  const endpoint = site.formEndpoint || "https://api.web3forms.com/submit";
-  return `<div class="rp" data-rp>
-  <!-- START -->
-  <section id="view-start" class="rp-hero" aria-labelledby="rp-title">
-    <p class="rp-eyebrow">30-second quiz</p>
-    <h1 id="rp-title">What's your registration personality?</h1>
-    <p class="rp-lede">Every event organiser we meet runs registration in one of five ways. Each one has a point where it quietly starts eating your time. Pick the badge that sounds like you, and we'll build you a free demo event site to match.</p>
-    <p class="rp-quiz-prompt">Not sure? <a href="#quiz">Take the 30-second quiz</a></p>
-    <div class="rp-picker" id="picker"></div>
-    <div class="rp-or">
-      <span>Not sure which one you are?</span>
-      <button class="rp-btn" type="button" id="start-quiz">Take the 4-question quiz</button>
-    </div>
-    ${personalitiesSummary()}
-  </section>
-
-  <!-- QUIZ -->
-  <section id="view-quiz" class="rp-quiz" hidden>
-    <p class="rp-eyebrow" id="quiz-count">Question 1 of 4</p>
-    <div class="rp-progress" aria-hidden="true"><div id="quiz-bar" style="width:25%"></div></div>
-    <h2 id="quiz-q"></h2>
-    <div class="rp-answers" id="quiz-answers"></div>
-    <div class="rp-quiz-nav">
-      <button class="rp-link" type="button" id="quiz-back">Back</button>
-      <button class="rp-link" type="button" id="quiz-skip">Skip the quiz and pick a badge</button>
-    </div>
-  </section>
-
-  <!-- RESULT -->
-  <section id="view-result" class="rp-result" hidden>
-    <div class="rp-badge-holder">
-      <div class="rp-lanyard" aria-hidden="true"></div>
-      <div class="rp-badge">
-        <div class="rp-hole" aria-hidden="true"></div>
-        <div class="rp-hello"><strong>HELLO</strong><span>my registration personality is</span></div>
-        <h1 class="rp-who" id="r-name"></h1>
-        <p class="rp-tag" id="r-tag"></p>
-        <div class="rp-foot"><span>Delegate type</span><span id="r-code"></span></div>
-      </div>
-    </div>
-
-    <div class="rp-section">
-      <h2>Which of these sound like your week?</h2>
-      <p class="rp-muted">Tick any that apply. We'll use them to shape your demo.</p>
-      <ul class="rp-symptoms rp-tick" id="r-symptoms"></ul>
-    </div>
-
-    <div class="rp-section">
-      <h2>What it's quietly costing you</h2>
-      <p class="rp-cost" id="r-cost"></p>
-    </div>
-
-    <div class="rp-section">
-      <h2>What changes on Mitingu</h2>
-      <p class="rp-muted" id="r-lead"></p>
-      <div class="rp-gains" id="r-gains"></div>
-    </div>
-
-    <div class="rp-demo" id="demo">
-      <h2>See it with your own branding</h2>
-      <p class="rp-muted">Three details and we'll build a demo event site in your organisation's branding, with a sample event already set up, so you can click through it the way your guests and your team would.</p>
-      <ul class="rp-next">
-        <li>Your demo site link, in your branding, within one working day</li>
-        <li>Built by a person, not an automated sales sequence</li>
-        <li>No obligation, and nothing to install</li>
-      </ul>
-      <form id="demo-form" action="${endpoint}" method="POST" novalidate>
-        <input type="hidden" name="access_key" value="${site.formAccessKey || ""}">
-        <input type="hidden" name="subject" id="f-subject" value="Demo site request from the personality page">
-        <input type="hidden" name="from_name" value="Mitingu personality page">
-        <div class="rp-trap" aria-hidden="true">
-          <label for="f-botcheck">Leave this empty</label>
-          <input type="checkbox" id="f-botcheck" name="botcheck" tabindex="-1" autocomplete="off">
-        </div>
-        <div class="rp-field">
-          <label for="f-email">Work email</label>
-          <input id="f-email" name="email" type="email" autocomplete="email" required>
-        </div>
-        <div class="rp-field">
-          <label for="f-web">Your website <span class="rp-opt">(for your branding)</span></label>
-          <input id="f-web" name="website" inputmode="url" autocomplete="url" placeholder="e.g. yourcompany.co.uk" required>
-        </div>
-        <div class="rp-field full">
-          <label for="f-kind">What kind of event should we build?</label>
-          <select id="f-kind" name="event_type" required>
-            <option>Client dinner or reception</option>
-            <option>Conference or summit</option>
-            <option>Briefing or seminar</option>
-            <option>Webinar or hybrid event</option>
-            <option>Awards or gala</option>
-            <option>Something else</option>
-          </select>
-        </div>
-        <input type="hidden" id="f-symptoms" name="symptoms">
-        <input type="hidden" id="f-type" name="personality">
-        <p class="rp-error full" id="f-error" role="alert"></p>
-        <div class="rp-form-actions">
-          <button class="rp-btn" type="submit" id="f-submit">Build my demo site</button>
-          <span class="rp-small">We'll only use your details to set up your demo. <a href="/privacy-policy">Privacy policy</a></span>
-        </div>
-      </form>
-      <p class="rp-call">Rather talk it through first? <a href="https://calendar.app.google/KEUX6y2QWYxhrUPw7" target="_blank" rel="noopener" id="book-call">Book a 15-minute call</a></p>
-    </div>
-
-    <div class="rp-later">
-      <h3>Not ready for a demo yet?</h3>
-      <p class="rp-muted">Get your result by email, with the symptoms you ticked, to come back to or pass on to a colleague.</p>
-      <form id="result-form" class="rp-inline" novalidate>
-        <label class="rp-sr" for="r-email">Email address</label>
-        <input id="r-email" type="email" autocomplete="email" placeholder="you@company.com">
-        <button class="rp-btn ghost" type="submit" id="r-send">Email me my result</button>
-      </form>
-      <p class="rp-small" id="r-msg" role="status"></p>
-    </div>
-
-    <div class="rp-section">
-      <h3>Not quite you? Try another badge</h3>
-      <div class="rp-others" id="r-others"></div>
-    </div>
-  </section>
-
-  <!-- THANKS -->
-  <section id="view-thanks" class="rp-thanks" hidden>
-    <p class="rp-eyebrow">Request received</p>
-    <h1 id="t-title">Thanks. We're on it.</h1>
-    <p class="rp-lede">Your demo event site link will be with you within one working day. Check your inbox for a confirmation now.</p>
-    <form id="more-form" class="rp-more" novalidate>
-      <h2>Want it even closer to the real thing? <span class="rp-opt">(optional)</span></h2>
-      <div class="rp-field">
-        <label for="m-name">Your name</label>
-        <input id="m-name" autocomplete="name">
-      </div>
-      <div class="rp-field">
-        <label for="m-org">Organisation</label>
-        <input id="m-org" autocomplete="organization">
-      </div>
-      <div class="rp-field">
-        <label for="m-event">Event name or date</label>
-        <input id="m-event" placeholder="e.g. Spring client dinner, March">
-      </div>
-      <div class="rp-field">
-        <label for="m-notes">Anything we should know?</label>
-        <input id="m-notes" placeholder="Number of guests, paid or free, anything awkward">
-      </div>
-      <div class="rp-form-actions">
-        <button class="rp-btn" type="submit" id="m-save">Add these details</button>
-        <span class="rp-small" id="m-msg" role="status"></span>
-      </div>
-    </form>
-    <p class="rp-muted">Know someone else who'd recognise themselves? Send them the quiz.</p>
-    <div class="rp-or">
-      <button class="rp-btn ghost" type="button" id="copy-link">Copy the link to this quiz</button>
-      <span class="rp-small" id="copy-msg" aria-live="polite"></span>
-    </div>
-  </section>
-
-  <div class="rp-footline">
-    <span>Mitingu: event registration, communications and check-in. UK built, UK hosted.</span>
-    <a class="rp-link" href="#start">Start again</a>
-  </div>
-</div>
-${personalityScript(site)}`;
-}
-
+// JSON safe to drop inside a <script> element.
 function safeJson(value) {
-  return JSON.stringify(value).replace(/</g, "\\u003c");
+  return JSON.stringify(value).replace(/</g, "\\u003c").replace(/>/g, "\\u003e").replace(/&/g, "\\u0026").replace(/\u2028/g, "\\u2028").replace(/\u2029/g, "\\u2029");
 }
 
-function personalityScript(site) {
-  return `<script>
-(function () {
-  var TYPES = ${safeJson(TYPES)};
-  var ORDER = ${safeJson(ORDER)};
-  var OLD_KEYS = ${safeJson(OLD_KEYS)};
-  var QUESTIONS = ${safeJson(QUESTIONS)};
+const ICON_PATHS = {
+  clipboard: '<rect x="5" y="4" width="14" height="17" rx="2"></rect><path d="M9 4h6v3H9z"></path><path d="M9 12l2 2 4-4"></path>',
+  grid: '<rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 10h18M3 15h18M9 4v16M15 4v16"></path>',
+  spanner: '<path d="M14.7 6.3a4 4 0 0 0 5 5L12 19a2.1 2.1 0 0 1-3-3l7.7-7.7z"></path><path d="M14.7 6.3L17 4l3 3-2.3 2.3"></path>',
+  bag: '<path d="M5 8h14l-1 12H6z"></path><path d="M9 8V6a3 3 0 0 1 6 0v2"></path>',
+  juggle: '<circle cx="6" cy="15" r="3"></circle><circle cx="18" cy="15" r="3"></circle><circle cx="12" cy="6" r="3"></circle><path d="M8 12l2-3M16 12l-2-3"></path>',
+};
 
-  var views = ["start", "quiz", "result", "thanks"];
-  var current = null;
-  var submitted = false;
-  var quizIndex = 0;
-  var answers = [];
-  var FALLBACK_EMAIL = ${JSON.stringify(site.email || "hello@mitingu.com")};
-  var LEADS_ENDPOINT = ${JSON.stringify(site.leadsEndpoint || "")};
-  var LEADS_BASE = LEADS_ENDPOINT.replace(/\\/api\\/demo-requests$/, "");
-  var ticked = false, formStarted = false, viaQuiz = false, lastLead = null;
+export function icon(name, size = 48) {
+  return `<svg aria-hidden="true" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="#160B2E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICON_PATHS[name]}</svg>`;
+}
 
-  function track(name, params) {
-    try { if (window.gtag) window.gtag("event", name, params || {}); } catch (e) {}
-  }
+const CONFETTI = `
+  <svg class="pq-confetti" aria-hidden="true" viewBox="0 0 1200 520" preserveAspectRatio="xMidYMid slice">
+    <circle cx="90" cy="90" r="10" fill="#FFD23F"></circle>
+    <rect x="1080" y="70" width="22" height="22" rx="4" fill="#2EC4B6" transform="rotate(20 1091 81)"></rect>
+    <circle cx="1120" cy="300" r="7" fill="#D1006E"></circle>
+    <rect x="150" y="360" width="18" height="18" rx="3" fill="#FF5CA8" transform="rotate(-25 159 369)"></rect>
+    <path d="M40 250 l14 -24 l14 24 z" fill="#2EC4B6"></path>
+    <path d="M1010 430 l16 -28 l16 28 z" fill="#FFD23F"></path>
+    <rect x="300" y="60" width="12" height="22" rx="3" fill="#FF8A5B" transform="rotate(-30 306 71)"></rect>
+    <rect x="880" y="40" width="12" height="22" rx="3" fill="#B9A6FF" transform="rotate(25 886 51)"></rect>
+    <circle cx="980" cy="150" r="5" fill="#ffffff"></circle>
+    <circle cx="230" cy="190" r="5" fill="#ffffff"></circle>
+  </svg>`;
 
-  function tickedSymptoms() {
-    return Array.prototype.slice.call(document.querySelectorAll("#r-symptoms input:checked")).map(function (el) { return el.value; });
-  }
+const TILTS = ["-1.5deg", "1deg", "-0.5deg", "1.5deg", "-1deg"];
+const LETTERS = ["A", "B", "C", "D"];
 
-  function $(id) { return document.getElementById(id); }
+export function renderPersonalityPage(site = {}) {
+  const leadsEndpoint = site.leadsEndpoint || "";
+  const data = {
+    types: TYPES,
+    order: ORDER,
+    oldKeys: OLD_KEYS,
+    answerTypes: ANSWER_TYPES,
+    questions: QUESTIONS,
+    icons: ICON_PATHS,
+    bookingUrl: BOOKING_URL,
+    exampleEmail: EXAMPLE_EMAIL,
+    leadsBase: leadsEndpoint.replace(/\/api\/demo-requests$/, ""),
+    pageUrl: "https://www.mitingu.com/personality",
+  };
 
-  function show(view) {
-    views.forEach(function (v) { $("view-" + v).hidden = v !== view; });
-    window.scrollTo(0, 0);
-  }
+  return `
+<div class="pq" id="pq">
+  <header class="pq-top">
+    <a class="pq-logo" href="/" aria-label="Mitingu home"><img src="/assets/mitingu-logo-white.png" alt="Mitingu" width="750" height="211"></a>
+    <a class="pq-pill pq-pill-outline" href="#quiz" data-start>Take the quiz</a>
+  </header>
 
-  function buildPicker() {
-    var wrap = $("picker");
-    ORDER.forEach(function (key) {
-      var t = TYPES[key];
-      var b = document.createElement("button");
-      b.type = "button";
-      b.className = "rp-pick is-" + key + (key === "juggler" ? " juggler" : "");
-      b.innerHTML =
-        '<span class="strip"><span>Delegate</span><span class="code"></span></span>' +
-        '<span class="name"></span><span class="tag"></span><span class="quote"></span>' +
-        '<span class="go" aria-hidden="true">That’s me →</span>';
-      b.querySelector(".code").textContent = t.code;
-      b.querySelector(".name").textContent = t.name;
-      b.querySelector(".tag").textContent = t.tag;
-      b.querySelector(".quote").textContent = t.quote;
-      b.addEventListener("click", function () { location.hash = key; });
-      wrap.appendChild(b);
-    });
-  }
+  <section class="pq-view" id="view-start" aria-labelledby="pq-title">
+    <div class="pq-hero">
+      ${CONFETTI}
+      <p class="pq-tag">30-second quiz</p>
+      <h1 id="pq-title">What's your <span>registration</span> personality?</h1>
+      <p class="pq-lede">Every event organiser has one. Answer six quick questions, meet your type, and see where your setup quietly eats your time.</p>
+      <a class="pq-pill pq-pill-pink pq-pill-big" href="#quiz" data-start>Find out now →</a>
+      <p class="pq-small">No sign-up needed to see your result.</p>
+    </div>
 
-  function renderResult(key) {
-    var t = TYPES[key];
-    current = key;
-    $("view-result").setAttribute("data-type", key);
-    $("r-name").textContent = t.name.replace(/^The /, "");
-    $("r-tag").textContent = t.tag;
-    $("r-code").textContent = t.code;
-    $("r-cost").textContent = t.cost;
-    $("r-lead").textContent = t.lead;
-    $("f-type").value = t.name;
+    <div class="pq-cream">
+      <div class="pq-wrap">
+        <h2>Meet the five</h2>
+        <p class="pq-sub">Most organisers are a mix. Which one sounds like your week?</p>
+        <ul class="pq-five">
+          ${ORDER.map(
+            (key, i) => `<li style="--c:${TYPES[key].colour};--tilt:${TILTS[i]}">
+            ${icon(TYPES[key].icon)}
+            <h3>${esc(TYPES[key].name)}</h3>
+            <p>${esc(TYPES[key].tag)}</p>
+          </li>`,
+          ).join("")}
+        </ul>
+      </div>
+    </div>
 
-    var ul = $("r-symptoms");
-    ul.innerHTML = "";
-    t.symptoms.forEach(function (s, i) {
-      var li = document.createElement("li");
-      var id = "sym-" + i;
-      li.innerHTML = '<input type="checkbox"><label></label>';
-      li.firstChild.id = id;
-      li.firstChild.value = s;
-      li.lastChild.htmlFor = id;
-      li.lastChild.textContent = s;
-      li.firstChild.addEventListener("change", function () {
-        if (!ticked) { ticked = true; track("rp_symptom_tick", { personality: t.name }); }
-      });
-      ul.appendChild(li);
-    });
-    ticked = false;
-    formStarted = false;
-    track("rp_result_view", { personality: t.name, via: viaQuiz ? "quiz" : "pick" });
-    viaQuiz = false;
+    <div class="pq-how pq-wrap">
+      <div><span style="color:#FFD23F">1</span><h3>Answer six questions</h3><p>Tap the answer that sounds most like your last event. No wrong answers.</p></div>
+      <div><span style="color:#2EC4B6">2</span><h3>Meet your type</h3><p>Your personality, your superpower, and the bit of your setup that costs you evenings.</p></div>
+      <div><span style="color:#FF5CA8">3</span><h3>Get your evenings back</h3><p>One practical tip for your type, and an easy way to talk it through with us if you'd like.</p></div>
+    </div>
 
-    var g = $("r-gains");
-    g.innerHTML = "";
-    t.gains.forEach(function (s) {
-      var d = document.createElement("div");
-      d.className = "rp-gain";
-      d.textContent = s;
-      g.appendChild(d);
-    });
+    <div class="pq-wrap pq-faq">
+      <h2>Questions</h2>
+      ${personalityFaqs.map(([q, a]) => `<details><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join("")}
+    </div>
 
-    var o = $("r-others");
-    o.innerHTML = "";
-    ORDER.forEach(function (k) {
-      if (k === key) return;
-      var c = document.createElement("button");
-      c.type = "button";
-      c.className = "rp-chip";
-      c.textContent = TYPES[k].name;
-      c.addEventListener("click", function () { location.hash = k; });
-      o.appendChild(c);
-    });
-    show("result");
-  }
+    <div class="pq-wrap">
+      <div class="pq-band">
+        <h2>Ready to meet yourself?</h2>
+        <a class="pq-pill pq-pill-white" href="#quiz" data-start>Start the quiz →</a>
+      </div>
+    </div>
+  </section>
 
-  function renderQuestion() {
-    var q = QUESTIONS[quizIndex];
-    $("quiz-count").textContent = "Question " + (quizIndex + 1) + " of " + QUESTIONS.length;
-    $("quiz-bar").style.width = ((quizIndex + 1) / QUESTIONS.length * 100) + "%";
-    $("quiz-q").textContent = q.q;
-    $("quiz-back").hidden = quizIndex === 0;
-    var box = $("quiz-answers");
-    box.innerHTML = "";
-    q.a.forEach(function (text, i) {
-      var b = document.createElement("button");
-      b.type = "button";
-      b.className = "rp-answer";
-      b.textContent = text;
-      b.addEventListener("click", function () {
-        answers[quizIndex] = i;
-        if (quizIndex < QUESTIONS.length - 1) {
-          quizIndex++;
-          renderQuestion();
-        } else {
-          viaQuiz = true;
-          location.hash = scoreQuiz();
-        }
-      });
-      box.appendChild(b);
-    });
-  }
+  <section class="pq-view" id="view-quiz" hidden aria-live="polite">
+    <div class="pq-quiz pq-wrap">
+      <div class="pq-progress">
+        <div class="pq-bar" role="progressbar" aria-valuemin="1" aria-valuemax="${QUESTIONS.length}" aria-valuenow="1" id="q-bar"><span id="q-fill"></span></div>
+        <span id="q-count">1 of ${QUESTIONS.length}</span>
+      </div>
+      <p class="pq-honest">Be honest</p>
+      <h1 id="q-text" tabindex="-1"></h1>
+      <div class="pq-answers" id="q-answers">
+        ${LETTERS.map(
+          (l, i) => `<button type="button" class="pq-answer" data-i="${i}" style="--c:${TYPES[ANSWER_TYPES[i]].colour};--s:${TYPES[ANSWER_TYPES[i]].shadow}"><b>${l}</b><span></span></button>`,
+        ).join("")}
+      </div>
+      <div class="pq-quiz-foot">
+        <button type="button" class="pq-link" id="q-back">← Back</button>
+        <span>Tap an answer to move on</span>
+      </div>
+    </div>
+  </section>
 
-  function scoreQuiz() {
-    var tally = [0, 0, 0, 0, 0];
-    answers.forEach(function (i) { tally[i]++; });
-    var best = Math.max.apply(null, tally);
-    var leaders = tally.filter(function (n) { return n === best; }).length;
-    // A tie, or answers spread across setups, means a Juggler.
-    if (leaders > 1) return "juggler";
-    return ORDER[tally.indexOf(best)];
-  }
+  <section class="pq-view" id="view-result" hidden>
+    <div class="pq-reveal">
+      ${CONFETTI}
+      <div class="pq-burst" id="r-burst" aria-hidden="true"></div>
+      <p class="pq-drum">Drum roll… you are</p>
+      <div class="pq-badge" id="r-badge"></div>
+      <h1 id="r-name" tabindex="-1"></h1>
+      <p class="pq-lede" id="r-tag"></p>
+    </div>
+    <div class="pq-cream">
+      <div class="pq-wrap">
+        <div class="pq-cards">
+          <div><p class="pq-label" style="color:#0B7A75">Your superpower</p><p id="r-super"></p></div>
+          <div><p class="pq-label" style="color:#B0005D">Where your time goes</p><p id="r-time"></p></div>
+          <div><p class="pq-label" style="color:#6B2BD9">One quick win</p><p id="r-win"></p></div>
+        </div>
 
-  function route() {
-    var h = (location.hash || "").replace("#", "");
-    if (OLD_KEYS[h]) { history.replaceState(null, "", "#" + OLD_KEYS[h]); h = OLD_KEYS[h]; }
-    if (TYPES[h]) { renderResult(h); return; }
-    if (h === "quiz") { quizIndex = 0; answers = []; renderQuestion(); show("quiz"); return; }
-    if (h === "thanks" && submitted) { show("thanks"); return; }
-    show("start");
-  }
+        <div class="pq-cta">
+          <div>
+            <h2 id="r-cta">Want to drop a few plates?</h2>
+            <p>Tell us about the event on your mind. We'll show you how we'd set up its registration, in 15 minutes, no hard sell.</p>
+          </div>
+          <div class="pq-cta-actions">
+            <a class="pq-pill pq-pill-yellow" id="r-book" href="${BOOKING_URL}" target="_blank" rel="noopener">Book a 15-minute chat</a>
+            <a class="pq-cta-link" id="r-example" href="mailto:${EXAMPLE_EMAIL}">Or send me an example</a>
+          </div>
+        </div>
 
-  $("start-quiz").addEventListener("click", function () { location.hash = "quiz"; });
-  $("quiz-skip").addEventListener("click", function () { location.hash = "start"; });
-  $("quiz-back").addEventListener("click", function () {
-    if (quizIndex > 0) { quizIndex--; renderQuestion(); }
-  });
+        <form class="pq-profile" id="profile-form" novalidate>
+          <h3>Get your full profile by email <span>(optional)</span></h3>
+          <div class="pq-profile-row">
+            <label class="pq-sr" for="p-name">First name</label>
+            <input id="p-name" autocomplete="given-name" placeholder="First name">
+            <label class="pq-sr" for="p-email">Email</label>
+            <input id="p-email" type="email" autocomplete="email" placeholder="you@company.com">
+            <button type="submit" class="pq-pill pq-pill-dark" id="p-send">Send it</button>
+          </div>
+          <div class="pq-hp" aria-hidden="true"><label for="p-botcheck">Leave this empty</label><input type="checkbox" id="p-botcheck" tabindex="-1"></div>
+          <p class="pq-small" id="p-msg" role="status"></p>
+        </form>
 
-  function flag(fields) {
-    ["f-email", "f-web"].forEach(function (id) {
-      if (fields.indexOf(id) > -1) $(id).setAttribute("aria-invalid", "true");
-      else $(id).removeAttribute("aria-invalid");
-    });
-    if (fields.length) $(fields[0]).focus();
-  }
+        <div class="pq-share">
+          <div>
+            <span>Share your type:</span>
+            <a class="pq-pill pq-pill-line" id="r-linkedin" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fwww.mitingu.com%2Fpersonality" target="_blank" rel="noopener">LinkedIn</a>
+            <button type="button" class="pq-pill pq-pill-line" id="r-copy">Copy link</button>
+          </div>
+          <a href="#quiz" class="pq-retake" data-start>Retake the quiz</a>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  var form = $("demo-form");
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
-    var email = $("f-email").value.trim();
-    var web = $("f-web").value.trim();
-    var org = web.replace(/^[a-z]+:\\/\\//i, "").replace(/^www\\./i, "").split(/[\\/?#]/)[0];
-    var err = $("f-error");
-    var blank = [];
-    if (!email) blank.push("f-email");
-    if (!web) blank.push("f-web");
-    if (blank.length) {
-      err.textContent = "Please add your work email and website so we can build your demo.";
-      flag(blank);
-      return;
-    }
-    if (!/^[^\\s]+\\.[^\\s]{2,}$/.test(web)) {
-      err.textContent = "Please check your website address, for example yourcompany.co.uk.";
-      flag(["f-web"]);
-      return;
-    }
-    if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) {
-      err.textContent = "That email address doesn't look quite right. Please check it.";
-      flag(["f-email"]);
-      return;
-    }
-    err.textContent = "";
-    flag([]);
-
-    var keyField = form.querySelector("input[name=access_key]");
-    var button = $("f-submit");
-    var personality = $("f-type").value || "Not chosen";
-    var symptoms = tickedSymptoms();
-    $("f-symptoms").value = symptoms.join("\\n");
-    $("f-subject").value = "Demo site request: " + org + " (" + personality.replace(/^The /, "") + ")";
-
-    var done = function (data) {
-      submitted = true;
-      lastLead = data && data.id && data.token ? { id: data.id, token: data.token } : null;
-      track("generate_lead", { form: "personality_demo", personality: personality, symptoms_ticked: symptoms.length });
-      $("more-form").hidden = !lastLead;
-      $("m-org").value = org;
-      form.reset();
-      location.hash = "thanks";
-    };
-    var reset = function () {
-      button.disabled = false;
-      button.textContent = "Build my demo site";
-    };
-    var failed = function () {
-      err.textContent = "Sorry, that didn't send. Please try again in a moment, or email " + FALLBACK_EMAIL + " and we'll set up your demo from there.";
-      reset();
-    };
-
-    // Backup route: Web3Forms emails the request to Greg if the leads service can't be reached.
-    var viaWeb3Forms = function () {
-      if (!keyField || !keyField.value) { failed(); return; }
-      fetch(form.action, { method: "POST", body: new FormData(form), headers: { Accept: "application/json" } })
-        .then(function (response) {
-          return response.json().catch(function () { return {}; }).then(function (data) {
-            if (response.ok && data.success !== false) { reset(); done(); return; }
-            throw new Error((data && data.message) || "Request failed");
-          });
-        })
-        .catch(failed);
-    };
-
-    button.disabled = true;
-    button.textContent = "Sending…";
-
-    if (!LEADS_ENDPOINT) { viaWeb3Forms(); return; }
-
-    // Main route: the Mitingu leads service stores the lead and sends the confirmation email.
-    var payload = {};
-    ["email", "website", "event_type", "personality", "botcheck"].forEach(function (field) {
-      var el = form.elements[field];
-      if (!el) return;
-      payload[field] = el.type === "checkbox" ? (el.checked ? "on" : "") : el.value;
-    });
-    payload.source = "personality";
-    payload.symptoms = symptoms;
-    var controller = window.AbortController ? new AbortController() : null;
-    var timer = controller ? setTimeout(function () { controller.abort(); }, 20000) : null;
-    fetch(LEADS_ENDPOINT, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-      signal: controller ? controller.signal : undefined
-    })
-      .then(function (response) {
-        if (timer) clearTimeout(timer);
-        return response.json().catch(function () { return {}; }).then(function (data) {
-          if (response.ok && data.success) { reset(); done(data); return; }
-          if (response.status === 400 || response.status === 429) {
-            err.textContent = data.message || "Please check your details and try again.";
-            reset();
-            return;
-          }
-          viaWeb3Forms();
-        });
-      })
-      .catch(function () {
-        if (timer) clearTimeout(timer);
-        viaWeb3Forms();
-      });
-  });
-
-  form.addEventListener("focusin", function () {
-    if (!formStarted) { formStarted = true; track("rp_form_start", { personality: $("f-type").value }); }
-  });
-
-  function postJson(path, body) {
-    return fetch(LEADS_BASE + path, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body)
-    }).then(function (r) {
-      return r.json().catch(function () { return {}; }).then(function (d) { return { ok: r.ok && d.success, data: d }; });
-    });
-  }
-
-  $("result-form").addEventListener("submit", function (e) {
-    e.preventDefault();
-    var email = $("r-email").value.trim();
-    var msg = $("r-msg");
-    if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) {
-      msg.textContent = "Please check your email address.";
-      $("r-email").setAttribute("aria-invalid", "true");
-      $("r-email").focus();
-      return;
-    }
-    $("r-email").removeAttribute("aria-invalid");
-    if (!LEADS_BASE) { msg.textContent = "Sorry, that isn't available right now. Please email " + FALLBACK_EMAIL + "."; return; }
-    var btn = $("r-send");
-    btn.disabled = true;
-    msg.textContent = "Sending…";
-    postJson("/api/result-email", { email: email, personality: current, symptoms: tickedSymptoms(), botcheck: $("f-botcheck").checked ? "on" : "" })
-      .then(function (res) {
-        btn.disabled = false;
-        if (res.ok) {
-          msg.textContent = "Sent. Check your inbox for your result.";
-          $("r-email").value = "";
-          track("rp_result_email", { personality: $("f-type").value });
-        } else {
-          msg.textContent = (res.data && res.data.message) || "Sorry, that didn't send. Please try again.";
-        }
-      })
-      .catch(function () { btn.disabled = false; msg.textContent = "Sorry, that didn't send. Please try again in a moment."; });
-  });
-
-  $("more-form").addEventListener("submit", function (e) {
-    e.preventDefault();
-    if (!lastLead) return;
-    var msg = $("m-msg");
-    var btn = $("m-save");
-    btn.disabled = true;
-    msg.textContent = "Saving…";
-    postJson("/api/demo-requests/details", {
-      id: lastLead.id, token: lastLead.token,
-      name: $("m-name").value.trim(), organisation: $("m-org").value.trim(),
-      event: $("m-event").value.trim(), notes: $("m-notes").value.trim()
-    }).then(function (res) {
-      btn.disabled = false;
-      msg.textContent = res.ok ? "Saved. Thanks, that helps." : "Sorry, that didn't save. You can reply to the confirmation email instead.";
-      if (res.ok) track("rp_details_added", {});
-    }).catch(function () { btn.disabled = false; msg.textContent = "Sorry, that didn't save. You can reply to the confirmation email instead."; });
-  });
-
-  $("book-call").addEventListener("click", function () { track("rp_book_call", { personality: $("f-type").value }); });
-
-  $("copy-link").addEventListener("click", function () {
-    var url = "https://www.mitingu.com/personality";
-    var msg = $("copy-msg");
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(url).then(function () {
-        msg.textContent = "Copied: " + url;
-      }, function () { msg.textContent = url; });
-    } else {
-      msg.textContent = url;
-    }
-  });
-
-  buildPicker();
-  window.addEventListener("hashchange", route);
-  route();
-})();
-</script>`;
+  <footer class="pq-foot">
+    <span>Mitingu: event registration built around how your event actually works.</span>
+    <span>UK-built and UK-hosted · <a href="/">mitingu.com</a> · <a href="/privacy-policy">Privacy</a></span>
+  </footer>
+</div>
+<script type="application/json" id="pq-data">${safeJson(data)}</script>
+<script src="/personality-quiz.js?v=20261125" defer></script>`;
 }

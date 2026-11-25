@@ -37,7 +37,7 @@ const FROM_EMAIL = env.FROM_EMAIL || "greg.wood@mitingu.com";
 const FROM_NAME = env.FROM_NAME || "Greg Wood, Mitingu";
 const NOTIFY_EMAIL = env.NOTIFY_EMAIL || "greg@mitingu.com";
 const ADMIN_HOST = (env.ADMIN_HOST || "").trim().toLowerCase();
-import { TYPES as RP_TYPES } from "../src/personality.mjs";
+import { TYPES as RP_TYPES, BOOKING_URL } from "../src/personality.mjs";
 
 const ALLOWED_ORIGINS = (env.ALLOWED_ORIGINS || "https://www.mitingu.com,https://mitingu.com")
   .split(",")
@@ -435,52 +435,51 @@ async function handleLeadDetails(req, res) {
   sendJson(res, 200, { success: true }, cors);
 }
 
-export function resultEmail(type, key, symptoms) {
+export function resultEmail(type, key, name = "") {
   const link = `https://www.mitingu.com/personality#${key}`;
-  const ticked = symptoms ? symptoms.split("\n").filter(Boolean) : [];
-  const list = ticked.length ? ticked : type.symptoms;
+  const hello = name ? `Hi ${name.split(" ")[0]},` : "Hi,";
   const text = [
-    "Hi,",
+    hello,
     "",
     `Here's your registration personality: ${type.name}.`,
     type.tag,
     "",
-    ticked.length ? "The ones you said sound like your week:" : "Symptoms you might recognise:",
-    ...list.map((s) => `- ${s}`),
+    `Your superpower: ${type.superpower}`,
+    `Where your time goes: ${type.time}`,
+    `One quick win: ${type.win}`,
     "",
-    `What it's quietly costing you: ${type.cost}`,
-    "",
-    "What changes on Mitingu:",
-    ...type.gains.map((g) => `- ${g}`),
-    "",
-    "Want to see it with your own branding? Reply with your website and we'll build you a demo event site within one working day. No obligation.",
+    `${type.cta} Tell us about the event on your mind and we'll show you how we'd set up its registration, in 15 minutes, no hard sell.`,
+    `Book a 15-minute chat: ${BOOKING_URL}`,
     "",
     `Your result: ${link}`,
     "",
     "Greg Wood",
     "Mitingu",
   ].join("\n");
-  const li = (arr) => arr.map((s) => `<li style="margin:0 0 6px">${esc(s)}</li>`).join("");
-  const html = `<!doctype html><html lang="en-GB"><body style="margin:0;padding:24px;background:#f5f7f2;font-family:Arial,Helvetica,sans-serif;color:#151716">
-<div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:12px;padding:32px;line-height:1.6;font-size:16px">
-<img src="https://www.mitingu.com/assets/email-logo.png" width="120" height="37" alt="Mitingu" style="display:block;border:0;width:120px;height:auto;margin:0 0 28px">
-<div style="border:1px solid #d9e1dc;border-radius:12px;overflow:hidden;margin:0 0 24px">
-<div style="background:#087b83;color:#ffffff;padding:12px 20px;font-weight:bold;letter-spacing:1px">HELLO <span style="font-weight:normal;letter-spacing:0">my registration personality is</span></div>
-<div style="padding:18px 20px"><div style="font-size:26px;font-weight:bold;margin:0 0 6px">${esc(type.name.replace(/^The /, ""))}</div><div style="color:#5d6562">${esc(type.tag)}</div></div>
+  const card = (label, colour, body) =>
+    `<div style="border:3px solid #160B2E;border-radius:16px;padding:16px 18px;margin:0 0 12px"><div style="font-size:12px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;color:${colour};margin:0 0 6px">${label}</div><div>${esc(body)}</div></div>`;
+  const html = `<!doctype html><html lang="en-GB"><body style="margin:0;padding:24px;background:#FFF7E6;font-family:Arial,Helvetica,sans-serif;color:#160B2E">
+<div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:16px;overflow:hidden;line-height:1.6;font-size:16px">
+<div style="background:#160B2E;color:#ffffff;padding:28px 32px;text-align:center">
+<img src="https://www.mitingu.com/assets/mitingu-logo-white.png" width="110" alt="Mitingu" style="display:block;border:0;width:110px;height:auto;margin:0 auto 22px">
+<div style="color:#FFD23F;font-size:13px;font-weight:bold;letter-spacing:1px;text-transform:uppercase">Your registration personality</div>
+<div style="display:inline-block;margin:14px 0 10px;padding:6px 16px;border-radius:999px;background:${type.colour};color:#160B2E;font-weight:bold">${esc(type.code)}</div>
+<div style="font-size:34px;font-weight:bold;line-height:1.1">${esc(type.name)}</div>
+<div style="color:#D9D2EC;margin-top:8px">${esc(type.tag)}</div>
 </div>
-<p style="margin:0 0 8px;font-weight:bold">${ticked.length ? "The ones you said sound like your week" : "Symptoms you might recognise"}</p>
-<ul style="margin:0 0 20px;padding-left:20px">${li(list)}</ul>
-<p style="margin:0 0 8px;font-weight:bold">What it's quietly costing you</p>
-<p style="margin:0 0 20px">${esc(type.cost)}</p>
-<p style="margin:0 0 8px;font-weight:bold">What changes on Mitingu</p>
-<ul style="margin:0 0 24px;padding-left:20px">${li(type.gains)}</ul>
-<div style="background:#fdf1d6;border-radius:10px;padding:18px 20px;margin:0 0 24px">
-<p style="margin:0 0 8px;font-weight:bold">See it with your own branding</p>
-<p style="margin:0">Reply to this email with your website and we'll build you a demo event site in your branding within one working day. No obligation, nothing to install.</p>
+<div style="padding:28px 32px">
+<p style="margin:0 0 18px">${esc(hello)}</p>
+${card("Your superpower", "#0B7A75", type.superpower)}
+${card("Where your time goes", "#B0005D", type.time)}
+${card("One quick win", "#6B2BD9", type.win)}
+<div style="background:#D1006E;color:#ffffff;border-radius:16px;padding:20px 22px;margin:20px 0 24px">
+<div style="font-size:20px;font-weight:bold;margin:0 0 6px">${esc(type.cta)}</div>
+<div style="margin:0 0 14px">Tell us about the event on your mind. We'll show you how we'd set up its registration, in 15 minutes, no hard sell.</div>
+<a href="${esc(BOOKING_URL)}" style="display:inline-block;background:#FFD23F;color:#160B2E;font-weight:bold;text-decoration:none;padding:12px 22px;border-radius:999px">Book a 15-minute chat</a>
 </div>
-<p style="margin:0 0 24px"><a href="${esc(link)}" style="color:#087b83">See your result again</a></p>
-<p style="margin:0">Greg Wood<br>Mitingu<br><a href="https://www.mitingu.com" style="color:#087b83">www.mitingu.com</a></p>
-</div></body></html>`;
+<p style="margin:0 0 20px"><a href="${esc(link)}" style="color:#D1006E">See your result again</a></p>
+<p style="margin:0">Greg Wood<br>Mitingu<br><a href="https://www.mitingu.com" style="color:#160B2E">www.mitingu.com</a></p>
+</div></div></body></html>`;
   return { subject: `Your registration personality: ${type.name}`, text, html };
 }
 
@@ -498,24 +497,26 @@ async function handleResultEmail(req, res) {
   }
   if (!type) return sendJson(res, 400, { success: false, message: "Please pick a personality first." }, cors);
   const symptoms = cleanSymptoms(input.symptoms);
+  const name = String(input.name || "").trim().slice(0, 200);
+  const source = ("result-email " + String(input.source || "")).trim().slice(0, 200);
   const domain = email.split("@")[1].toLowerCase();
   const { rows } = await pool.query(
     `INSERT INTO leads (name, email, organisation, website, event_type, personality, source, status, symptoms)
-     VALUES ('', $1, $2, $2, NULL, $3, 'result-email', 'Result only', $4) RETURNING *`,
-    [email, domain, type.name, symptoms],
+     VALUES ($5, $1, $2, $2, NULL, $3, $6, 'Result only', $4) RETURNING *`,
+    [email, domain, type.name, symptoms, name, source],
   );
   const saved = rows[0];
   sendJson(res, 200, { success: true }, cors);
   const adminUrl = `https://${ADMIN_HOST || req.headers.host}/admin`;
   try {
-    await sendEmail({ to: email, replyTo: FROM_EMAIL, ...resultEmail(type, key, symptoms) });
+    await sendEmail({ to: email, replyTo: FROM_EMAIL, ...resultEmail(type, key, name) });
     await pool.query("UPDATE leads SET confirmation_sent_at = now(), confirmation_error = NULL WHERE id = $1", [saved.id]);
   } catch (e) {
     console.error(`Result email failed for lead ${saved.id}: ${e.message}`);
     await pool.query("UPDATE leads SET confirmation_error = $2 WHERE id = $1", [saved.id, e.message.slice(0, 500)]);
   }
   try {
-    const lines = [`${email} asked for their result by email.`, `Personality: ${type.name}`, `Ticked: ${symptoms || "-"}`, "", `All leads: ${adminUrl}`];
+    const lines = [`${name ? name + " (" + email + ")" : email} asked for their full profile by email.`, `Personality: ${type.name}`, `Came from: ${source}`, "", `All leads: ${adminUrl}`];
     await sendEmail({
       to: NOTIFY_EMAIL,
       replyTo: email,
@@ -674,7 +675,7 @@ function adminPage(leads, counts, filter, flash, signedInAs) {
         <dt>Received</dt><dd>${esc(fmtDate(l.created_at))}</dd>
         ${l.notes ? `<dt>Their notes</dt><dd>${esc(l.notes)}</dd>` : ""}
         ${l.symptoms ? `<dt>Ticked as their week</dt><dd style="white-space:pre-line">${esc(l.symptoms)}</dd>` : ""}
-        ${l.source === "result-email" ? `<dt>How they came in</dt><dd>Asked for their result by email (no demo request yet)</dd>` : ""}
+        ${String(l.source || "").startsWith("result-email") ? `<dt>How they came in</dt><dd>Took the quiz and asked for their full profile by email (${esc(l.source.replace(/^result-email ?/, "") || "personality")})</dd>` : ""}
       </dl>
       <div class="mail">${conf}
         <form method="post" action="/admin/leads/${l.id}/resend"><button type="submit" class="link">${l.confirmation_sent_at ? "Resend" : "Send"}</button></form>
