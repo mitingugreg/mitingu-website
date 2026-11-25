@@ -49,12 +49,12 @@ const STEPS = [
 export function renderHomeV2({ button, faqSection }) {
   return `
   <section class="hp-hero">
-    <svg class="hp-confetti" aria-hidden="true" viewBox="0 0 1200 560" preserveAspectRatio="none">
-      <rect x="1150" y="60" width="20" height="20" rx="4" fill="#2EC4B6" transform="rotate(20 1160 70)"></rect>
-      <circle cx="640" cy="70" r="8" fill="#FFD23F"></circle>
-      <path d="M1130 520 l14 -24 l14 24 z" fill="#FF8A5B"></path>
-      <rect x="600" y="500" width="12" height="22" rx="3" fill="#B9A6FF" transform="rotate(-25 606 511)"></rect>
-    </svg>
+    <div class="hp-confetti" aria-hidden="true">
+      <span class="hp-bit hp-bit-square hb1"></span>
+      <span class="hp-bit hp-bit-dot hb2"></span>
+      <span class="hp-bit hp-bit-tri hb3"></span>
+      <span class="hp-bit hp-bit-pill hb4"></span>
+    </div>
     <div class="hp-hero-copy">
       <p class="hp-tag">Registration, apps and onsite</p>
       <h1>Running the event is hard enough without also running the app supplier, the badge printer and the spreadsheet that joins them up.</h1>
@@ -188,13 +188,13 @@ export function renderHomeV2({ button, faqSection }) {
 
   <section class="hp-final-wrap">
     <div class="hp-final">
-      <svg class="hp-confetti" aria-hidden="true" viewBox="0 0 1152 380" preserveAspectRatio="none">
-        <circle cx="90" cy="70" r="9" fill="#FFD23F"></circle>
-        <rect x="1040" y="60" width="18" height="18" rx="3" fill="#FF5CA8" transform="rotate(25 1049 69)"></rect>
-        <path d="M70 300 l14 -24 l14 24 z" fill="#B9A6FF"></path>
-        <rect x="1060" y="290" width="12" height="22" rx="3" fill="#FF8A5B" transform="rotate(-20 1066 301)"></rect>
-        <circle cx="980" cy="200" r="5" fill="#ffffff"></circle>
-      </svg>
+      <div class="hp-confetti" aria-hidden="true">
+        <span class="hp-bit hp-bit-dot hf1"></span>
+        <span class="hp-bit hp-bit-square hf2"></span>
+        <span class="hp-bit hp-bit-tri hf3"></span>
+        <span class="hp-bit hp-bit-pill hf4"></span>
+        <span class="hp-bit hp-bit-dot hf5"></span>
+      </div>
       <h2>See your next event on Mitingu before you commit to anything.</h2>
       <p>Tell us about the event on your mind and we'll show you how we'd set up its registration, in a 15-minute chat with no hard sell.</p>
       <div class="hp-actions">
