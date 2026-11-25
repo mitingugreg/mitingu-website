@@ -49,7 +49,14 @@ const STEPS = [
 export function renderHomeV2({ button, faqSection }) {
   return `
   <section class="hp-hero">
+    <svg class="hp-confetti" aria-hidden="true" viewBox="0 0 1200 560" preserveAspectRatio="none">
+      <rect x="1150" y="60" width="20" height="20" rx="4" fill="#2EC4B6" transform="rotate(20 1160 70)"></rect>
+      <circle cx="640" cy="70" r="8" fill="#FFD23F"></circle>
+      <path d="M1130 520 l14 -24 l14 24 z" fill="#FF8A5B"></path>
+      <rect x="600" y="500" width="12" height="22" rx="3" fill="#B9A6FF" transform="rotate(-25 606 511)"></rect>
+    </svg>
     <div class="hp-hero-copy">
+      <p class="hp-tag">Registration, apps and onsite</p>
       <h1>Running the event is hard enough without also running the app supplier, the badge printer and the spreadsheet that joins them up.</h1>
       <p class="hp-lede">Mitingu puts your event site, registration, emails, attendee app and check-in into one place, all working from one guest list. Change a session time once and it's right everywhere. And when your director asks how it went, the answer is already there instead of buried in four exports.</p>
       <div class="hp-actions">
@@ -77,9 +84,9 @@ export function renderHomeV2({ button, faqSection }) {
         <p>None of this is anyone's fault. It's what happens when the site, the emails, the app and the door list all live in different places and you're the only thing connecting them.</p>
       </div>
       <div class="hp-week">
-        <div class="hp-week-head" aria-hidden="true"><span>This week</span><span>With Mitingu</span></div>
+        <div class="hp-week-head" aria-hidden="true"><span></span><span>This week</span><span>With Mitingu</span></div>
         ${WEEK.map(
-          ([now, then]) => `<div class="hp-week-row">
+          ([now, then], i) => `<div class="hp-week-row"><span class="hp-dot" aria-hidden="true">${i + 1}</span>
           <p class="hp-now"><span class="hp-sr">This week: </span>${now}</p>
           <p class="hp-then"><span class="hp-sr">With Mitingu: </span>${then}</p>
         </div>`,
@@ -91,6 +98,7 @@ export function renderHomeV2({ button, faqSection }) {
   <section class="hp-band hp-dark">
     <div class="hp-onday">
       <div class="hp-onday-copy">
+        <p class="hp-tag hp-tag-teal">On the day</p>
         <h2>On the day, everything works from the list you updated last night.</h2>
         <p>Guests scan their QR code at a Mitingu Event Hub booth and their badge prints on the spot, while staffed desks handle the awkward ones. Once the morning rush is over, the same booths switch to an information point, so guests can check their agenda, find recommended exhibitors and open the floor plan.</p>
         <p>The attendee app carries every guest's pass and the floor plan, and exhibitors scan leads and mark them hot, warm or cold, so their follow-up starts before they've packed up the stand.</p>
@@ -141,7 +149,7 @@ export function renderHomeV2({ button, faqSection }) {
   <section class="hp-band hp-warm">
     <div class="hp-split">
       <div class="hp-split-intro">
-        <p class="hp-kicker">A real brief, name changed</p>
+        <p class="hp-tag hp-tag-orange">A real brief, name changed</p>
         <h2>Every type of guest needed something different.</h2>
       </div>
       <div class="hp-story">
@@ -178,8 +186,15 @@ export function renderHomeV2({ button, faqSection }) {
 
   ${faqSection("/")}
 
-  <section class="hp-band hp-dark hp-final">
-    <div class="hp-narrow">
+  <section class="hp-final-wrap">
+    <div class="hp-final">
+      <svg class="hp-confetti" aria-hidden="true" viewBox="0 0 1152 380" preserveAspectRatio="none">
+        <circle cx="90" cy="70" r="9" fill="#FFD23F"></circle>
+        <rect x="1040" y="60" width="18" height="18" rx="3" fill="#FF5CA8" transform="rotate(25 1049 69)"></rect>
+        <path d="M70 300 l14 -24 l14 24 z" fill="#B9A6FF"></path>
+        <rect x="1060" y="290" width="12" height="22" rx="3" fill="#FF8A5B" transform="rotate(-20 1066 301)"></rect>
+        <circle cx="980" cy="200" r="5" fill="#ffffff"></circle>
+      </svg>
       <h2>See your next event on Mitingu before you commit to anything.</h2>
       <p>Tell us about the event on your mind and we'll show you how we'd set up its registration, in a 15-minute chat with no hard sell.</p>
       <div class="hp-actions">
