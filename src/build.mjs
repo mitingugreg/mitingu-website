@@ -142,13 +142,16 @@ Mitingu is built and supported in the UK (Cornwall) and works with companies in 
 - White-label attendee app for iOS and Android, carrying the client's brand: agenda, seminar booking with live places, speakers, exhibitors, interactive floor plan with exhibitor finder, venue information, announcements, attendee networking and meeting booking, and a QR attendee pass
 - App content management system connected to Mitingu, so organisers make last-minute agenda, room and announcement changes themselves
 - Onsite check-in: custom-branded self-service registration booths that print each attendee's badge on the spot when they scan their QR pass, plus staffed registration desks, all working from the same live attendee list; an offline option, and a version of the booths with battery backup for power cuts
-- Onsite support from the Mitingu team
+- Onsite support from the Mitingu team, including onsite technical support
 - Exhibitor lead capture with hot, warm and cold lead scoring
 
 ### After the event
 - Reporting on registrations, attendance, app activity, seminar bookings, leads, communications and NPS
 - Event Intelligence: ask questions of event data in plain English, generate reports and see what needs attention
 - Mitingu MCP: connect Claude, ChatGPT or Microsoft Copilot (where MCP is supported) to approved Mitingu event data
+
+### Done for you: Mitingu Crew
+Mitingu Crew (${origin}/managed-event-services) is Mitingu's managed event service for teams and agencies short of hands. Mitingu builds and runs the event registration and delegate communications (invitations, reminders, joining instructions and delegate enquiries), then provides experienced delegate managers for registration and help desks, self-service check-in booths with badge printers, the attendee app, and onsite technical support from Mitingu's own technical team. Clients can hand over the whole event or just part of it, see registrations and check-ins live, and are priced per event with a written quote.
 
 ## Why teams choose Mitingu
 - One supplier instead of three: registration, the event app and onsite check-in are one platform, so there is no exporting and matching data between systems after the event
@@ -175,6 +178,7 @@ Full details: ${origin}/pricing
 - [Platform overview](${origin}/platform)
 - [Event apps and onsite registration](${origin}/event-apps-onsite-registration): attendee app, self-service booths, staffed check-in and lead capture
 - [White-label event platform](${origin}/white-label-event-platform)
+- [Mitingu Crew: managed event registration and onsite support](${origin}/managed-event-services): done-for-you registration, delegate comms, delegate managers, check-in booths and onsite tech support
 - [Event registration](${origin}/enterprise-event-registration-platform)
 - [Event communications](${origin}/event-communications-platform)
 - [Event analytics and reporting](${origin}/event-analytics-reporting)

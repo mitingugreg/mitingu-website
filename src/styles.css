@@ -5373,3 +5373,12 @@ h2,
 }
 
 .hp-dark .hp-tag{color:var(--ink)}
+
+/* Mitingu Crew page photos */
+.crew-photos{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin:8px 0 40px}
+.crew-photos figure{margin:0}
+.crew-photos img{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;border:3px solid var(--ink);border-radius:14px;box-shadow:10px 10px 0 var(--q-teal)}
+.crew-photos figure:nth-child(2) img{box-shadow:10px 10px 0 var(--q-yellow)}
+.crew-photos figcaption{margin-top:14px;font-size:.9rem;color:#5b6461}
+@media (max-width:720px){.crew-photos{grid-template-columns:1fr;gap:24px}}
+.crew-hero img{height:auto!important;aspect-ratio:4/3;object-fit:cover;object-position:top}

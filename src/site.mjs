@@ -66,6 +66,7 @@ export const redirects = content.redirects;
 for (const alt of alternatives) metadata[alt.path] = [alt.title, alt.description];
 for (const guide of guides) metadata[guide.path] = [guide.title, guide.description];
 metadata[personalityPath] = personalityMeta;
+metadata["/managed-event-services"] = ["Managed Event Registration and Onsite Support | Mitingu Crew", "Mitingu Crew runs your event registration and delegate comms, then staffs the day with experienced delegate managers, check-in booths and onsite tech support."];
 export const pages = Object.keys(metadata);
 
 export function renderPage(path) {
@@ -75,7 +76,8 @@ export function renderPage(path) {
     title,
     description,
     body: pageBodies[path](),
-    extraGraph: path === personalityPath ? personalityGraph : guideItemListGraph(path),
+    extraGraph: path === personalityPath ? personalityGraph : path === "/managed-event-services" ? crewGraph : guideItemListGraph(path),
+    ...(path === "/managed-event-services" ? { ogImage: "/assets/crew-hall.jpg" } : {}),
     chrome: path !== personalityPath,
   });
 }
@@ -844,6 +846,99 @@ function renderEventAppsPage() {
   `;
 }
 
+function renderCrewPage() {
+  const path = "/managed-event-services";
+  return `
+    ${renderPageHero(path, {
+      eyebrow: "Mitingu Crew: managed event services",
+      title: "Too many events and not enough hands? Bring in the Crew.",
+      text: "Mitingu Crew is our done-for-you event service. We run your event registration and delegate communications, then turn up on the day with experienced delegate managers, check-in booths with badge printers, the attendee app and onsite tech support. You stay in charge of the event. We do the legwork.",
+    }, `<figure class="screenshot-frame crew-hero">
+      <img src="/assets/crew-hall.webp" alt="A busy exhibition hall seen from the balcony, with stands and delegates" width="960" height="720">
+      <figcaption>Busy floor, happy exhibitors, nobody queuing at the door.</figcaption>
+    </figure>`)}
+    ${renderAnswerBox(path, {
+      title: "Event registration, comms and onsite support, run for you.",
+      text: "Mitingu Crew is for event teams and agencies who need extra hands. We run registration and delegate communications on the Mitingu platform, staff the registration desk and help desk with experienced delegate managers, and bring our own technical team to set up and support check-in, badge printing and the event app. Your team can see every registration and check-in live.",
+      facts: ["Registration site built in your branding", "Invitations, reminders and joining instructions", "Delegate questions answered", "Attendee app set up and kept up to date", "Check-in booths with badge printers", "Experienced delegate managers and onsite tech support"],
+    })}
+    <section class="content-section">
+      ${sectionIntro("What we take off your plate", "Before, during and after. Or just the bit you are short of.", "Some teams hand us the whole event. Others just need the registration built, or extra hands on the day. Either is fine.")}
+      ${cards([
+        ["Before the event", "Your registration site built in your branding, with guest types, hotel bookings and payments set up. Invitations, reminders and joining instructions written and sent. The ‘I can’t find my email’ messages answered, so they don’t land on your desk."],
+        ["On the day", "Booths delivered and set up with badge printers. A staffed registration desk for walk-ins and VIPs. The app live and updated as things change. Delegate managers who know the guest list, and tech support on hand all day."],
+        ["After the event", "Thank-you and feedback emails sent. Attendance, app activity and leads reported. And a straight debrief: what worked, what didn’t, and what we would change next time."],
+      ], "info-card", "three")}
+    </section>
+    <section class="content-band">
+      ${sectionIntro("The Crew on the day", "Experienced delegate managers and onsite tech support.", "The technology is only half of it. The other half is people who have done this before and stay calm at 8.55am.")}
+      <div class="crew-photos">
+        <figure><img src="/assets/crew-help-desk.webp" alt="Two delegate managers on an event help desk, working on laptops" width="960" height="720" loading="lazy" decoding="async"><figcaption>Delegate managers on the help desk.</figcaption></figure>
+        <figure><img src="/assets/crew-plenary.webp" alt="A plenary room set with rows of chairs, stage lighting and screens, ready before the doors open" width="960" height="720" loading="lazy" decoding="async"><figcaption>Set, lit and ready before the doors open.</figcaption></figure>
+      </div>
+      ${cards([
+        ["Experienced delegate managers", "We work with a pool of experienced delegate managers who know how a registration desk should run. VIPs, walk-ins, name changes and ‘my colleague’s coming instead’, all sorted without a queue building up. Small team or large, we staff it to fit the event."],
+        ["Tech support from the people who built it", "Our own technical team sets up and looks after the booths, badge printers and app. You’re dealing with the people who built Mitingu, not someone reading the manual. Bigger events get more technical support on site."],
+        ["One point of contact", "One person who knows your event from the first brief to the final report. Not a ticket queue, and not a different name every time you ring."],
+      ], "info-card", "three")}
+    </section>
+    <section class="content-section">
+      ${sectionIntro("Who it’s for", "For teams who are good at events but short of time.")}
+      ${cards([
+        ["Corporate event teams", "A big conference, a supplier day or a run of client events on top of the day job. Hand us the registration and the front desk, and keep your team on the parts only they can do."],
+        ["Event agencies", "Registration, emails, the app and the booths can all carry your brand or your client’s. We deliver the registration side quietly in the background, so your client sees one team."],
+        ["Exhibitions, roadshows and summits", "Exhibitor lead capture, multi-day check-in, several venues in a row. The more moving parts there are, the more useful an extra crew becomes."],
+      ], "info-card", "three")}
+    </section>
+    <section class="content-band">
+      ${sectionIntro("How it works", "Four steps, no surprises.")}
+      ${cards([
+        ["1. Tell us about the event", "A 15-minute chat: what it is, who is coming, and which bits you would like off your plate."],
+        ["2. We send a plan and a price", "Priced per event, in writing, so you know exactly what you are getting before you commit."],
+        ["3. We build, you approve", "You see the registration site, emails and app before anything goes out. Nothing is sent without your OK."],
+        ["4. We run it, you host it", "We handle the logistics on the day so you can look after your guests and your stakeholders."],
+      ])}
+    </section>
+    ${faqSection(path)}
+    ${finalCta("", {
+      eyebrow: "Short on hands?",
+      title: "Tell us about the event. We’ll tell you how we’d run it.",
+      text: "No obligation. If Crew isn’t the right fit, we’ll say so.",
+      actionLabel: "Book a 15-minute chat",
+      actionHref: "https://calendar.app.google/KEUX6y2QWYxhrUPw7",
+    })}
+  `;
+}
+
+const crewGraph = [
+  {
+    "@type": "Service",
+    "@id": "https://www.mitingu.com/managed-event-services#service",
+    name: "Mitingu Crew",
+    alternateName: ["Managed event services", "Done-for-you event registration", "Onsite event registration and delegate management"],
+    serviceType: "Managed event registration and onsite event support",
+    url: "https://www.mitingu.com/managed-event-services",
+    image: "https://www.mitingu.com/assets/crew-hall.webp",
+    description: "A done-for-you event service: event registration and delegate communications run for you, plus experienced delegate managers, self-service check-in booths with badge printers, the attendee app and onsite technical support on the day.",
+    provider: { "@id": "https://www.mitingu.com/#organization" },
+    audience: { "@type": "BusinessAudience", audienceType: "Corporate event teams and event agencies" },
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: "Mitingu Crew services",
+      itemListElement: [
+        "Event registration website build and management",
+        "Delegate communications: invitations, reminders and joining instructions",
+        "Delegate enquiry handling",
+        "Onsite delegate managers for registration and help desks",
+        "Self-service check-in booths with badge printing",
+        "Attendee app set-up and live updates",
+        "Onsite event technical support",
+        "Post-event reporting and debrief",
+      ].map((name) => ({ "@type": "Offer", itemOffered: { "@type": "Service", name } })),
+    },
+  },
+];
+
 function renderHomePage() {
   return renderHomeV2({ button, faqSection });
 }
@@ -919,6 +1014,17 @@ function faqSection(path) {
 
 function faqsForPath(path) {
   const pageFaqs = {
+    "/managed-event-services": [
+      ["What is Mitingu Crew?", "Mitingu Crew is Mitingu's done-for-you managed event service. We build and run your event registration and delegate communications, then provide experienced delegate managers, self-service check-in booths with badge printers, the attendee app and onsite technical support on the day. You stay in charge of the event; we do the legwork."],
+      ["Can you provide registration staff or delegate managers for our event?", "Yes. Mitingu works with a pool of experienced delegate managers who staff registration desks and help desks, handle VIPs, walk-ins and name changes, and keep queues moving. We size the team to the event."],
+      ["What does a delegate manager do at an event?", "A delegate manager looks after attendees from arrival to departure: checking people in, printing or handing out badges, dealing with walk-ins, substitutions and VIPs, answering questions at the help desk, and keeping the attendee list accurate so the event team knows exactly who is in the room."],
+      ["Do you provide onsite technical support for event registration?", "Yes. Mitingu's own technical team sets up and supports the check-in booths, badge printers and event app on the day, and we add more technical support for larger events. You are dealing with the people who built the platform rather than a third party."],
+      ["Can we use Mitingu Crew for just part of an event?", "Yes. Some teams hand over the whole event. Others just need the registration built and run, the delegate communications handled, or extra people and kit on the day."],
+      ["Can an event agency use Mitingu Crew under its own brand?", "Yes. The registration site, emails, attendee app and check-in booths can carry the agency's brand or its client's, so the client sees one team."],
+      ["Do the check-in booths include badge printers?", "Yes. The booths have built-in badge printers, so attendees scan the QR pass on their phone and get their badge on the spot. A staffed desk handles walk-ins, VIPs and exceptions."],
+      ["Can our team still see what is happening during the event?", "Yes. Crew runs on the Mitingu platform, so your team can see registrations, communications and check-ins live throughout, and gets the same reports afterwards."],
+      ["How is Mitingu Crew priced?", "Per event. Tell us what you are running and which parts you would like us to handle, and we will send a written price before you commit."],
+    ],
     "/event-apps-onsite-registration": [
       [
         "Does Mitingu provide a branded event app?",
@@ -1826,6 +1932,7 @@ const pageBodies = {
     })}
   `,
   "/event-intelligence": () => renderEventIntelligencePage(),
+  "/managed-event-services": () => renderCrewPage(),
   "/event-apps-onsite-registration": () => renderEventAppsPage(),
   "/mcp": () => renderMcpPage(),
   "/pricing": () => `
