@@ -873,7 +873,7 @@ function renderCrewPage() {
     <section class="content-band">
       ${sectionIntro("The Crew on the day", "Experienced delegate managers and onsite tech support.", "The technology is only half of it. The other half is people who have done this before and stay calm at 8.55am.")}
       <div class="crew-photos">
-        <figure><img src="/assets/crew-help-desk.webp" alt="Two delegate managers on an event help desk, working on laptops" width="960" height="720" loading="lazy" decoding="async"><figcaption>Delegate managers on the help desk.</figcaption></figure>
+        <figure><img src="/assets/crew-help-desk-v2.webp" alt="Two delegate managers on an event help desk, working on laptops" width="960" height="720" loading="lazy" decoding="async"><figcaption>Delegate managers on the help desk.</figcaption></figure>
         <figure><img src="/assets/crew-plenary.webp" alt="A plenary room set with rows of chairs, stage lighting and screens, ready before the doors open" width="960" height="720" loading="lazy" decoding="async"><figcaption>Set, lit and ready before the doors open.</figcaption></figure>
       </div>
       ${cards([
