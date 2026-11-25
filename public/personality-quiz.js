@@ -133,7 +133,9 @@
     $("r-example").href = "mailto:" + D.exampleEmail + "?subject=" + encodeURIComponent("Example please: " + t.name);
     var shareUrl = D.pageUrl + "#" + key;
     $("r-linkedin").href = "https://www.linkedin.com/sharing/share-offsite/?url=" + encodeURIComponent(shareUrl);
-    $("p-msg").textContent = "";
+    $("demo-fields").hidden = false;
+    $("demo-form").classList.remove("is-done");
+    $("d-msg").textContent = "Your link arrives within one working day.";
     document.title = "I'm " + t.name + " | What's your registration personality? | Mitingu";
     show("result", "r-name");
     confetti();
@@ -152,38 +154,55 @@
     track("share", { method: "Copy link", personality: current ? T[current].name : "" });
   });
 
-  $("profile-form").addEventListener("submit", function (e) {
+  var demoStarted = false;
+  $("demo-form").addEventListener("focusin", function () {
+    if (!demoStarted) { demoStarted = true; track("demo_form_start", { personality: current ? T[current].name : "" }); }
+  });
+
+  $("demo-form").addEventListener("submit", function (e) {
     e.preventDefault();
-    var email = $("p-email").value.trim();
-    var msg = $("p-msg");
+    var email = $("d-email").value.trim();
+    var web = $("d-web").value.trim();
+    var msg = $("d-msg");
+    $("d-email").removeAttribute("aria-invalid");
+    $("d-web").removeAttribute("aria-invalid");
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       msg.textContent = "Please check your email address.";
-      $("p-email").setAttribute("aria-invalid", "true");
-      $("p-email").focus();
+      $("d-email").setAttribute("aria-invalid", "true");
+      $("d-email").focus();
       return;
     }
-    $("p-email").removeAttribute("aria-invalid");
+    if (!/[a-z0-9-]+\.[a-z]{2,}/i.test(web)) {
+      msg.textContent = "Please add your website, so we can use your branding.";
+      $("d-web").setAttribute("aria-invalid", "true");
+      $("d-web").focus();
+      return;
+    }
     if (!D.leadsBase) { msg.textContent = "Sorry, that isn't available right now. Please email " + D.exampleEmail + "."; return; }
-    var btn = $("p-send");
+    var btn = $("d-send");
     btn.disabled = true;
     msg.textContent = "Sending…";
-    var source = "personality" + (Object.keys(utm).length ? " " + Object.keys(utm).map(function (k) { return k + "=" + utm[k]; }).join("&") : "");
-    fetch(D.leadsBase + "/api/result-email", {
+    var source = "personality-quiz" + (Object.keys(utm).length ? " " + Object.keys(utm).map(function (k) { return k + "=" + utm[k]; }).join("&") : "");
+    fetch(D.leadsBase + "/api/demo-requests", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: email, name: $("p-name").value.trim(), personality: current, source: source, botcheck: $("p-botcheck").checked ? "on" : "" })
+      body: JSON.stringify({ email: email, website: web, event_type: "Something else", personality: current ? T[current].name : "", source: source, botcheck: $("d-botcheck").checked ? "on" : "" })
     }).then(function (r) {
       return r.json().catch(function () { return {}; }).then(function (d) { return { ok: r.ok && d.success, data: d }; });
     }).then(function (res) {
       btn.disabled = false;
       if (res.ok) {
-        msg.textContent = "Sent. Check your inbox for your full profile.";
-        $("p-email").value = "";
-        track("profile_email", { personality: T[current].name });
+        $("demo-fields").hidden = true;
+        $("demo-form").classList.add("is-done");
+        msg.textContent = "On it! Your demo site link will be with you within one working day. Check your inbox for a confirmation now.";
+        track("generate_lead", { form: "personality_demo", personality: current ? T[current].name : "" });
       } else {
         msg.textContent = (res.data && res.data.message) || "Sorry, that didn't send. Please try again.";
       }
-    }).catch(function () { btn.disabled = false; msg.textContent = "Sorry, that didn't send. Please try again in a moment."; });
+    }).catch(function () {
+      btn.disabled = false;
+      msg.textContent = "Sorry, that didn't send. Please try again in a moment, or email " + D.exampleEmail + ".";
+    });
   });
 
   // ----- Routing -----

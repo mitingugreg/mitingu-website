@@ -4867,3 +4867,94 @@ textarea:focus {
     transition: none !important;
   }
 }
+
+/* Quiz result: free demo site box (25 Nov 2026) */
+.pq-demo {
+  position: relative;
+  margin: 28px 0 0;
+  padding: 30px 28px 24px;
+  border: 3px solid var(--pq-ink);
+  border-radius: 28px;
+  background: #ffffff;
+  box-shadow: 0 8px 0 var(--pq-ink);
+  transform: rotate(-0.6deg);
+}
+
+.pq-demo-tag {
+  position: absolute;
+  top: -16px;
+  left: 24px;
+  margin: 0;
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: var(--pq-yellow);
+  color: var(--pq-ink);
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transform: rotate(-4deg);
+}
+
+.pq-demo h3 {
+  margin: 0 0 8px;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  line-height: 1.1;
+}
+
+.pq-demo-copy p {
+  margin: 0 0 18px;
+  max-width: 720px;
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+
+.pq-demo-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.pq-demo-row[hidden] {
+  display: none;
+}
+
+.pq-demo input {
+  flex: 1 1 220px;
+  min-height: 52px;
+  padding: 0 18px;
+  border: 2px solid var(--pq-ink);
+  border-radius: 999px;
+  background: var(--pq-cream);
+  color: var(--pq-ink);
+  font: 500 1rem Inter, system-ui, sans-serif;
+}
+
+.pq-demo .pq-pill-pink {
+  min-height: 52px;
+  box-shadow: 0 6px 0 #7A0041;
+}
+
+.pq-demo-note {
+  margin: 12px 0 0;
+  color: #4A3F63;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.pq-demo.is-done .pq-demo-note {
+  color: var(--pq-ink);
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+@media (max-width: 760px) {
+  .pq-demo {
+    padding: 28px 20px 22px;
+    transform: none;
+  }
+
+  .pq-demo .pq-pill-pink {
+    width: 100%;
+  }
+}

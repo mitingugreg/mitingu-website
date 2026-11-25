@@ -155,7 +155,7 @@ export const personalityFaqs = [
   ],
   [
     "What happens after the quiz?",
-    "You see your superpower, where your time goes and one quick win for your type. If you'd like to talk it through, you can book a 15-minute chat: tell us about the event on your mind and we'll show you how we'd set up its registration, with no hard sell.",
+    "You see your superpower, where your time goes and one quick win for your type. If you'd like to talk it through, you can book a 15-minute chat: tell us about the event on your mind and we'll show you how we'd set up its registration, with no hard sell. Or leave your work email and website and we'll build you a free demo event site in your own branding, with no call and no obligation.",
   ],
   [
     "How do I stop running event registration on spreadsheets?",
@@ -333,17 +333,21 @@ export function renderPersonalityPage(site = {}) {
           </div>
         </div>
 
-        <form class="pq-profile" id="profile-form" novalidate>
-          <h3>Get your full profile by email <span>(optional)</span></h3>
-          <div class="pq-profile-row">
-            <label class="pq-sr" for="p-name">First name</label>
-            <input id="p-name" autocomplete="given-name" placeholder="First name">
-            <label class="pq-sr" for="p-email">Email</label>
-            <input id="p-email" type="email" autocomplete="email" placeholder="you@company.com">
-            <button type="submit" class="pq-pill pq-pill-dark" id="p-send">Send it</button>
+        <form class="pq-demo" id="demo-form" novalidate>
+          <p class="pq-demo-tag">Free</p>
+          <div class="pq-demo-copy">
+            <h3>Fancy seeing it in your own branding?</h3>
+            <p>Pop in your work email and website and we'll build you a demo event site in your colours, with a sample event already set up. No call, no obligation, nothing to install.</p>
           </div>
-          <div class="pq-hp" aria-hidden="true"><label for="p-botcheck">Leave this empty</label><input type="checkbox" id="p-botcheck" tabindex="-1"></div>
-          <p class="pq-small" id="p-msg" role="status"></p>
+          <div class="pq-demo-row" id="demo-fields">
+            <label class="pq-sr" for="d-email">Work email</label>
+            <input id="d-email" type="email" autocomplete="email" placeholder="Work email">
+            <label class="pq-sr" for="d-web">Your website</label>
+            <input id="d-web" inputmode="url" autocomplete="url" placeholder="yourcompany.co.uk">
+            <button type="submit" class="pq-pill pq-pill-pink" id="d-send">Build my demo site</button>
+          </div>
+          <div class="pq-hp" aria-hidden="true"><label for="d-botcheck">Leave this empty</label><input type="checkbox" id="d-botcheck" tabindex="-1"></div>
+          <p class="pq-demo-note" id="d-msg" role="status">Your link arrives within one working day.</p>
         </form>
 
         <div class="pq-share">
@@ -364,5 +368,5 @@ export function renderPersonalityPage(site = {}) {
   </footer>
 </div>
 <script type="application/json" id="pq-data">${safeJson(data)}</script>
-<script src="/personality-quiz.js?v=20261125" defer></script>`;
+<script src="/personality-quiz.js?v=20261125b" defer></script>`;
 }
