@@ -383,6 +383,7 @@ function footer() {
         <a href="/about">About</a>
         <a href="/book-a-demo">Book a Demo</a>
         <a href="/privacy-policy">Privacy</a>
+        <a href="#cookie-settings" data-cookie-settings>Cookie settings</a>
         <a href="/terms-and-conditions">Terms</a>
       </div>
     </div>
@@ -430,12 +431,29 @@ function cookieScript() {
     window.gtag("config", GA_ID, { anonymize_ip: true });
   };
   if (stored === "accepted") loadAnalytics();
+  // Withdrawing consent: switch Analytics off for this visit and remove its cookies.
+  const stopAnalytics = () => {
+    window["ga-disable-" + GA_ID] = true;
+    const host = location.hostname.replace(/^www\./, "");
+    document.cookie.split(";").map((c) => c.split("=")[0].trim()).filter((n) => /^_ga/.test(n)).forEach((n) => {
+      ["", "; domain=" + host, "; domain=." + host].forEach((d) => {
+        document.cookie = n + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/" + d;
+      });
+    });
+  };
   const choose = (value) => {
     try { window.localStorage.setItem(KEY, value); } catch (e) {}
-    if (value === "accepted") loadAnalytics();
+    if (value === "accepted") { window["ga-disable-" + GA_ID] = false; loadAnalytics(); } else { stopAnalytics(); }
     banner.classList.remove("is-visible");
     window.setTimeout(() => { banner.hidden = true; }, 250);
   };
+  // "Cookie settings" links bring the banner back so visitors can change their mind.
+  document.querySelectorAll("[data-cookie-settings]").forEach((link) => link.addEventListener("click", (e) => {
+    e.preventDefault();
+    banner.hidden = false;
+    requestAnimationFrame(() => banner.classList.add("is-visible"));
+    banner.querySelector("[data-cookie-accept]").focus();
+  }));
   banner.querySelector("[data-cookie-accept]").addEventListener("click", () => choose("accepted"));
   banner.querySelector("[data-cookie-decline]").addEventListener("click", () => choose("declined"));
 })();

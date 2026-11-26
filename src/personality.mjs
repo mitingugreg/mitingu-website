@@ -364,7 +364,7 @@ export function renderPersonalityPage(site = {}) {
 
   <footer class="pq-foot">
     <span>Mitingu: event registration built around how your event actually works.</span>
-    <span>UK-built and UK-hosted · <a href="/">mitingu.com</a> · <a href="/privacy-policy">Privacy</a></span>
+    <span>UK-built and UK-hosted · <a href="/">mitingu.com</a> · <a href="/privacy-policy">Privacy</a> · <a href="#cookie-settings" data-cookie-settings>Cookie settings</a></span>
   </footer>
 </div>
 <script type="application/json" id="pq-data">${safeJson(data)}</script>
