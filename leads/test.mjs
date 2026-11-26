@@ -161,6 +161,30 @@ r = await post({ ...bad, email: "bot@spam.example", botcheck: "on" }, { ip: "5.5
 ({ rows } = await pool.query("SELECT 1 FROM leads WHERE email = 'bot@spam.example'"));
 check("Book a Demo: honeypot pretends success but stores nothing", r.status === 200 && rows.length === 0);
 
+// Sales pitches: kept quietly, no emails, not counted
+const { pitchReason } = await import("./server.mjs");
+const elliott = "Hi, I can show you where Mitingu's best customers are finding you, so you can put more money behind it. Should I send it over? Thanks, Elliott";
+let sentBefore = sent.length;
+r = await post({ ...bad, name: "Elliott Lee", email: "elliott@callsight.pro", organisation: "Callsight", notes: elliott }, { ip: "6.6.6.1" });
+j = await r.json();
+await wait(150);
+let pitchLead = (await pool.query("SELECT * FROM leads WHERE email = 'elliott@callsight.pro'")).rows[0];
+check("Pitch: blocked sender gets a normal-looking success", r.status === 200 && j.success === true && j.counted === false);
+check("Pitch: stored as Sales pitch with a note", pitchLead?.status === "Sales pitch" && /Filtered automatically \(blocked sender\)/.test(pitchLead.internal_note));
+check("Pitch: no emails sent", sent.length === sentBefore);
+r = await post({ ...bad, name: "Elliott", email: "elliott@another-tool.example", organisation: "Another", notes: elliott }, { ip: "6.6.6.2" });
+j = await r.json();
+check("Pitch: same wording from a new domain is caught by its phrases", j.counted === false);
+check("Pitch: SEO offer caught", pitchReason({ email: "a@b.example", notes: "We can get you on the first page of Google with our SEO package." }) === "sales phrase");
+const buyers = [
+  "We run about 30 client events a year and want one platform for registration and check-in. Can I send you our brief?",
+  "We're an agency running conferences for our clients. We have a brief for a 600-person summit in March, should I send it over?",
+  "Looking for a white-label app and badge printing for our sales kick-off. We want more qualified leads from our exhibitors too.",
+  "Do you offer a free trial? We noticed your website mentions multilingual events, which we need for Germany and France.",
+  "",
+];
+check("Pitch: genuine buyer messages are not flagged", buyers.every((n) => pitchReason({ email: "jo@buyer.example", notes: n }) === ""), buyers.map((n) => pitchReason({ email: "jo@buyer.example", notes: n })).join("|"));
+
 // Honeypot and origin
 const before = (await pool.query("SELECT count(*)::int n FROM leads")).rows[0].n;
 r = await post({ ...good, botcheck: "on" });
@@ -263,6 +287,12 @@ check("Status and note saved", r.status === 303 && rows[0].status === "Demo sent
 r = await realFetch(`${base}/admin?status=Demo%20sent`, { headers: { Cookie: session } });
 html = await r.text();
 check("Status filter works", html.includes("Kestrel Park") && !html.includes("xss@example.com"));
+r = await realFetch(`${base}/admin`, { headers: { Cookie: session } });
+html = await r.text();
+check("Sales pitches hidden from All", !html.includes("elliott@callsight.pro") && html.includes("Sales pitch"));
+r = await realFetch(`${base}/admin?status=Sales%20pitch`, { headers: { Cookie: session } });
+html = await r.text();
+check("Sales pitch tab shows them", html.includes("elliott@callsight.pro"));
 
 const failId = (await pool.query("SELECT id FROM leads WHERE email = 'fail@example.com'")).rows[0].id;
 sent.length = 0;

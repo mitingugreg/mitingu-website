@@ -1608,8 +1608,9 @@ function demoFormScript() {
     status.hidden = false;
     status.dataset.state = state;
   };
+  // via "" means the leads service filtered it as a sales pitch: thank them, but don't count it.
   const done = (via) => {
-    if (window.gtag) window.gtag("event", "generate_lead", { form: "book_a_demo", page_path: location.pathname, via });
+    if (via && window.gtag) window.gtag("event", "generate_lead", { form: "book_a_demo", page_path: location.pathname, via });
     form.reset();
     setStatus("Thank you. Your demo request has been sent and we will be in touch shortly.", "success");
   };
@@ -1636,7 +1637,7 @@ function demoFormScript() {
         }),
       });
       const data = await response.json().catch(() => ({}));
-      if (response.ok && data.success) { done("leads"); return true; }
+      if (response.ok && data.success) { done(data.counted === false ? "" : "leads"); return true; }
       if (response.status === 400 && data.message) { setStatus(data.message, "error"); return true; }
       return false;
     } catch (error) {

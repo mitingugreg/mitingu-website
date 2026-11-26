@@ -45,7 +45,46 @@ const ALLOWED_ORIGINS = (env.ALLOWED_ORIGINS || "https://www.mitingu.com,https:/
   .map((s) => s.trim())
   .filter(Boolean);
 
-export const STATUSES = ["New", "Building demo", "Demo sent", "Follow-up booked", "Won", "Not now", "Result only"];
+export const STATUSES = ["New", "Building demo", "Demo sent", "Follow-up booked", "Won", "Not now", "Result only", "Sales pitch"];
+
+// ---------- Sales pitches ----------
+// People selling to Mitingu through the demo form. They are kept (status "Sales pitch",
+// hidden from "All") but get no emails, and the site doesn't count them in Analytics.
+// The sender still sees the normal thank-you, so there's nothing to work around.
+// Extra blocked domains or addresses: BLOCKED_SENDERS (comma-separated) in Render.
+const BLOCKED_SENDERS = ["callsight.pro", ...String(env.BLOCKED_SENDERS || "").split(",")]
+  .map((s) => s.trim().toLowerCase())
+  .filter(Boolean);
+// Phrases that are almost never written by someone wanting to buy event software.
+const PITCH_STRONG = [
+  /\b(seo|backlinks?|guest posts?|domain authority|first page of google|rank(ing)? (higher|on google|#1))\b/i,
+  /\b(web ?design|website redesign|app development|mobile app development|outsourcing|offshore|virtual assistants?) (services?|team|agency|company)\b/i,
+  /\b(reply|respond) (with )?["']?(stop|no|unsubscribe)["']?\b/i,
+  /\bunsubscribe\b/i,
+];
+const PITCH_WEAK = [
+  /\b(should|shall) i send (it|this|them|that) (over|across)\b/i,
+  /\bwant me to send (it|this|them) (over|across)\b/i,
+  /\bi can (show|help|get|bring|drive|send|find|build) (you|your)\b/i,
+  /\b(i|we) (noticed|came across|found|visited) your (website|site|company|business)\b/i,
+  /\b(your|mitingu'?s) (best |ideal )?(customers|clients|traffic|leads|rankings?|visitors)\b/i,
+  /\b(more|qualified) (leads|traffic|customers|sales|appointments)\b/i,
+  /\b(put|spend|invest) more (money|budget)\b/i,
+  /\bfree (audit|report|analysis)\b/i,
+  /\b(partnership|collaboration|business) (opportunity|proposal)\b/i,
+];
+
+export function pitchReason(lead) {
+  const email = String(lead.email || "").toLowerCase();
+  const domain = email.split("@").pop();
+  if (BLOCKED_SENDERS.some((b) => email === b || domain === b || domain.endsWith("." + b))) return "blocked sender";
+  const text = [lead.notes, lead.event].filter(Boolean).join(" ");
+  if (!text) return "";
+  if (PITCH_STRONG.some((re) => re.test(text))) return "sales phrase";
+  const weak = PITCH_WEAK.filter((re) => re.test(text)).length;
+  return weak >= 2 ? "sales phrases" : "";
+}
+
 export const EVENT_TYPES = [
   "Client dinner or reception",
   "Conference or summit",
@@ -454,6 +493,16 @@ async function handleDemoRequest(req, res) {
   const { lead, error } = validateLead(input);
   if (error) return sendJson(res, 400, { success: false, message: error }, cors);
 
+  const pitch = pitchReason(lead);
+  if (pitch) {
+    const { rows } = await pool.query(
+      `INSERT INTO leads (name, email, organisation, website, event_type, event, notes, personality, source, symptoms, status, internal_note)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,'Sales pitch',$11) RETURNING id`,
+      [lead.name, lead.email, lead.organisation, lead.website, lead.event_type, lead.event, lead.notes, lead.personality, lead.source, lead.symptoms, `Filtered automatically (${pitch}). No emails sent.`],
+    );
+    return sendJson(res, 200, { success: true, id: rows[0].id, token: leadToken(rows[0].id), counted: false }, cors);
+  }
+
   const { rows } = await pool.query(
     `INSERT INTO leads (name, email, organisation, website, event_type, event, notes, personality, source, symptoms)
      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING *`,
@@ -710,7 +759,7 @@ function websiteLink(site) {
 }
 
 function adminPage(leads, counts, filter, flash, signedInAs) {
-  const total = Object.values(counts).reduce((a, b) => a + b, 0);
+  const total = Object.entries(counts).reduce((a, [s, n]) => (s === "Sales pitch" ? a : a + n), 0);
   const tabs = [["All", total], ...STATUSES.map((s) => [s, counts[s] || 0])]
     .map(([label, n]) => {
       const href = label === "All" ? "/admin" : `/admin?status=${encodeURIComponent(label)}`;
@@ -807,7 +856,7 @@ h1{margin:0;font-size:1.5rem;letter-spacing:-.01em}
 .c-type,.c-event,.c-date{color:#3d4542;font-size:.88rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.c-date{color:#5d6562}
 .pill{display:inline-block;padding:2px 9px;border-radius:999px;font-size:.75rem;font-weight:700;white-space:nowrap}
 .s-new{background:#f2b233;color:#151716}.s-building-demo{background:#fdf1d6;color:#6b4500}.s-demo-sent{background:#e6f1f0;color:#065f65}
-.s-follow-up-booked{background:#ece3fb;color:#4b2a85}.s-won{background:#087b83;color:#fff}.s-not-now{background:#eef1ef;color:#5d6562}.s-result-only{background:#f5f7f2;color:#5d6562;box-shadow:inset 0 0 0 1px #d9e1dc}.ago{display:block;color:#8a5d00;font-size:.75rem;font-weight:700}
+.s-follow-up-booked{background:#ece3fb;color:#4b2a85}.s-won{background:#087b83;color:#fff}.s-not-now{background:#eef1ef;color:#5d6562}.s-result-only{background:#f5f7f2;color:#5d6562;box-shadow:inset 0 0 0 1px #d9e1dc}.s-sales-pitch{background:#f3e4e1;color:#8a2f1f}.ago{display:block;color:#8a5d00;font-size:.75rem;font-weight:700}
 .chev{width:8px;height:8px;border-right:2px solid #8a938f;border-bottom:2px solid #8a938f;transform:rotate(-45deg);justify-self:end}
 .row[open] .chev{transform:rotate(45deg)}
 .detail{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:28px;padding:6px 18px 22px;background:#fafbf9}
@@ -1012,7 +1061,7 @@ async function handleAdmin(req, res, url) {
   }
 
   const filter = STATUSES.includes(url.searchParams.get("status")) ? url.searchParams.get("status") : "";
-  const where = filter ? "WHERE status = $1" : "";
+  const where = filter ? "WHERE status = $1" : "WHERE status <> 'Sales pitch'";
   const params = filter ? [filter] : [];
 
   if (path === "/admin/leads.csv") {

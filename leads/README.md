@@ -40,3 +40,15 @@ Postgres database `mitingu-leads-db`. The table is created on start-up.
     TEST_DATABASE_URL=postgres://... npm test
 
 Uses a throwaway database and fakes SendGrid, so nothing is sent.
+
+## Sales pitches
+
+People selling to Mitingu through the forms are filtered automatically
+(`pitchReason` in server.mjs): blocked senders (`callsight.pro`, plus any in the
+optional `BLOCKED_SENDERS` setting, comma-separated domains or addresses), clear
+sales wording (SEO, backlinks, "unsubscribe" and similar), or two or more typical
+pitch phrases ("I can show you…", "should I send it over?", "your best customers",
+"put more money behind it"). They are stored with status "Sales pitch", hidden from
+"All" (see the Sales pitch tab), get no emails, and aren't counted as leads in
+Google Analytics. The sender still sees the normal thank-you. If a real enquiry
+lands there, change its status and resend the confirmation.
