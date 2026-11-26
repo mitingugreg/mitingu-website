@@ -1,6 +1,7 @@
 // Mitingu leads service
 //
-// Receives demo requests from www.mitingu.com/personality, stores them in
+// Receives demo requests from www.mitingu.com (the personality quiz and the
+// main Book a Demo form), stores them in
 // Postgres, emails the visitor a confirmation and Greg a notification (both via
 // SendGrid), and serves a password-protected admin area at /admin.
 //
@@ -179,8 +180,12 @@ function rateLimited(ip) {
 
 // ---------- Validation ----------
 
+// The main Book a Demo form (/book-a-demo) sends source "book-a-demo <page>".
+export const isBookADemo = (lead) => String(lead?.source || "").startsWith("book-a-demo");
+
 export function validateLead(input) {
   const clean = (v, max) => String(v ?? "").trim().slice(0, max);
+  if (String(input.source || "").startsWith("book-a-demo")) return validateBookADemo(input, clean);
   const lead = {
     name: clean(input.name, 200),
     email: clean(input.email, 254),
@@ -204,6 +209,34 @@ export function validateLead(input) {
   }
   if (!EVENT_TYPES.includes(lead.event_type)) lead.event_type = "Something else";
   if (!lead.organisation) lead.organisation = domainOf(lead.website);
+  return { lead };
+}
+
+// Book a Demo asks for name, work email, company, event scale and a message (no website).
+const EVENT_SCALES = ["1-10 events a year", "10-100 events a year", "100+ events a year", "Agency or client delivery"];
+
+function validateBookADemo(input, clean) {
+  const scale = clean(input.event_scale, 60);
+  const message = clean(input.notes ?? input.message, 3800);
+  const lead = {
+    name: clean(input.name, 200),
+    email: clean(input.email, 254),
+    organisation: clean(input.organisation ?? input.company, 200),
+    website: clean(input.website, 300),
+    event_type: "",
+    event: "",
+    notes: [EVENT_SCALES.includes(scale) ? `Event scale: ${scale}` : "", message].filter(Boolean).join("\n\n"),
+    personality: "",
+    source: clean(input.source, 200),
+    symptoms: "",
+  };
+  if (!lead.name || !lead.email || !lead.organisation) {
+    return { error: "Please add your name, work email and company." };
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(lead.email)) {
+    return { error: "That email address doesn't look quite right. Please check it." };
+  }
+  if (!lead.website) lead.website = domainOf(lead.email);
   return { lead };
 }
 
@@ -235,6 +268,7 @@ export function leadToken(id) {
 // ---------- Email ----------
 
 export function confirmationEmail(lead) {
+  if (isBookADemo(lead)) return bookADemoConfirmation(lead);
   const first = firstName(lead.name);
   const sample = EVENT_PHRASE[lead.event_type] || "a sample event";
   const personality = lead.personality ? lead.personality : "";
@@ -265,7 +299,51 @@ ${personality ? `<p style="margin:0 0 16px">Your registration personality, for t
   return { subject: "Your Mitingu demo site is on its way", text, html };
 }
 
+function bookADemoConfirmation(lead) {
+  const first = firstName(lead.name);
+  const text = [
+    `Hi ${first},`,
+    "",
+    "Thanks for asking for a Mitingu demo. We'll be in touch within one working day to find a time that suits you.",
+    "",
+    "If there's anything we should know first, such as the events you're planning or what isn't working today, just reply to this email.",
+    "",
+    "Greg Wood",
+    "Mitingu",
+    "https://www.mitingu.com",
+  ].join("\n");
+  const html = `<!doctype html><html lang="en-GB"><body style="margin:0;padding:24px;background:#f5f7f2;font-family:Arial,Helvetica,sans-serif;color:#151716">
+<div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:12px;padding:32px;line-height:1.6;font-size:16px">
+<img src="https://www.mitingu.com/assets/email-logo.png" width="120" height="37" alt="Mitingu" style="display:block;border:0;outline:none;width:120px;height:auto;margin:0 0 28px;font-size:20px;font-weight:bold;color:#151716">
+<p style="margin:0 0 16px">Hi ${esc(first)},</p>
+<p style="margin:0 0 16px">Thanks for asking for a Mitingu demo. We'll be in touch within one working day to find a time that suits you.</p>
+<p style="margin:0 0 24px">If there's anything we should know first, such as the events you're planning or what isn't working today, just reply to this email.</p>
+<p style="margin:0">Greg Wood<br>Mitingu<br><a href="https://www.mitingu.com" style="color:#087b83">www.mitingu.com</a></p>
+</div></body></html>`;
+  return { subject: "Thanks for your Mitingu demo request", text, html };
+}
+
 export function notificationEmail(lead, adminUrl) {
+  if (isBookADemo(lead)) {
+    const page = String(lead.source).replace(/^book-a-demo ?/, "") || "/book-a-demo";
+    const rows = [
+      ["Name", lead.name],
+      ["Work email", lead.email],
+      ["Company", lead.organisation],
+      ["Message", lead.notes],
+      ["Sent from", `Book a Demo form on www.mitingu.com${page}`],
+    ];
+    const text = rows.map(([k, v]) => `${k}: ${v || "-"}`).join("\n") + `\n\nAll leads: ${adminUrl}`;
+    const html = `<!doctype html><html><body style="font-family:Arial,Helvetica,sans-serif;color:#151716">
+<table style="border-collapse:collapse">${rows
+      .map(
+        ([k, v]) =>
+          `<tr><td style="padding:6px 16px 6px 0;color:#5d6562;vertical-align:top">${esc(k)}</td><td style="padding:6px 0;white-space:pre-line">${esc(v || "-")}</td></tr>`,
+      )
+      .join("")}</table>
+<p><a href="${esc(adminUrl)}">Open all leads</a></p></body></html>`;
+    return { subject: `New Mitingu demo request: ${lead.organisation}`, text, html };
+  }
   const rows = [
     ["Name", lead.name],
     ["Work email", lead.email],
@@ -656,11 +734,11 @@ function adminPage(leads, counts, filter, flash, signedInAs) {
           const conf = l.confirmation_sent_at
             ? `<span class="ok">Confirmation sent ${esc(fmtDate(l.confirmation_sent_at))}</span>`
             : `<span class="warn">Confirmation not sent${l.confirmation_error ? ` (${esc(l.confirmation_error)})` : ""}</span>`;
-          const meta = [(l.personality || "").replace(/^The /, ""), l.event_type, shortDate(l.created_at)].filter(Boolean).join(" · ");
+          const meta = [isBookADemo(l) ? "Book a Demo" : (l.personality || "").replace(/^The /, ""), l.event_type, shortDate(l.created_at)].filter(Boolean).join(" · ");
           return `<details class="row">
   <summary data-meta="${esc(meta)}">
     <span class="c-who"><strong>${esc(l.organisation)}</strong><span>${esc(l.name)}</span></span>
-    <span class="c-type">${esc((l.personality || "-").replace(/^The /, ""))}</span>
+    <span class="c-type">${esc(isBookADemo(l) ? "Book a Demo" : (l.personality || "-").replace(/^The /, ""))}</span>
     <span class="c-event">${esc(l.event_type || "-")}</span>
     <span class="c-date">${esc(shortDate(l.created_at))}${l.status === "New" ? `<span class="ago">${esc(ago(l.created_at))}</span>` : ""}</span>
     <span class="c-status"><span class="pill ${statusClass(l.status)}">${esc(l.status)}</span></span>
@@ -673,8 +751,9 @@ function adminPage(leads, counts, filter, flash, signedInAs) {
         <dt>Website</dt><dd>${websiteLink(l.website)}</dd>
         <dt>Event name or date</dt><dd>${esc(l.event || "-")}</dd>
         <dt>Received</dt><dd>${esc(fmtDate(l.created_at))}</dd>
-        ${l.notes ? `<dt>Their notes</dt><dd>${esc(l.notes)}</dd>` : ""}
+        ${l.notes ? `<dt>Their notes</dt><dd style="white-space:pre-line">${esc(l.notes)}</dd>` : ""}
         ${l.symptoms ? `<dt>Ticked as their week</dt><dd style="white-space:pre-line">${esc(l.symptoms)}</dd>` : ""}
+        ${isBookADemo(l) ? `<dt>How they came in</dt><dd>Book a Demo form (${esc(l.source.replace(/^book-a-demo ?/, "") || "/book-a-demo")})</dd>` : ""}
         ${String(l.source || "").startsWith("result-email") ? `<dt>How they came in</dt><dd>Took the quiz and asked for their full profile by email (${esc(l.source.replace(/^result-email ?/, "") || "personality")})</dd>` : ""}
       </dl>
       <div class="mail">${conf}

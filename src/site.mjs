@@ -1569,7 +1569,7 @@ function resourceCards() {
 
 function demoForm() {
   const endpoint = site.formEndpoint || "https://api.web3forms.com/submit";
-  return `<form class="demo-form" data-demo-form action="${endpoint}" method="POST" novalidate>
+  return `<form class="demo-form" data-demo-form data-leads="${site.leadsEndpoint || ""}" action="${endpoint}" method="POST" novalidate>
     <input type="hidden" name="access_key" value="${site.formAccessKey || ""}">
     <input type="hidden" name="subject" value="New Mitingu demo request">
     <input type="hidden" name="from_name" value="Mitingu website">
@@ -1608,14 +1608,43 @@ function demoFormScript() {
     status.hidden = false;
     status.dataset.state = state;
   };
-  form.addEventListener("submit", async (event) => {
-    const keyField = form.querySelector("input[name=access_key]");
-    if (!keyField || !keyField.value) return;
-    event.preventDefault();
-    if (!form.reportValidity()) return;
-    button.disabled = true;
-    const original = button.innerHTML;
-    button.innerHTML = "<span>Sending...</span>";
+  const done = (via) => {
+    if (window.gtag) window.gtag("event", "generate_lead", { form: "book_a_demo", page_path: location.pathname, via });
+    form.reset();
+    setStatus("Thank you. Your demo request has been sent and we will be in touch shortly.", "success");
+  };
+  const failed = (detail) =>
+    setStatus("Sorry, something went wrong" + (detail ? ": " + detail : "") + ". Please email " + ${JSON.stringify(site.email)} + " instead.", "error");
+  // 1. Mitingu's own leads service (stores the request, emails Greg and the visitor).
+  // Returns true when handled (sent, or a message the visitor needs to fix), false to fall back.
+  const sendToLeads = async () => {
+    const leads = form.dataset.leads;
+    if (!leads) return false;
+    const val = (name) => (form.elements[name] && form.elements[name].value) || "";
+    try {
+      const response = await fetch(leads, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          name: val("name"),
+          email: val("email"),
+          organisation: val("company"),
+          event_scale: val("event_scale"),
+          notes: val("message"),
+          source: "book-a-demo " + location.pathname,
+          botcheck: form.elements.botcheck && form.elements.botcheck.checked ? "on" : "",
+        }),
+      });
+      const data = await response.json().catch(() => ({}));
+      if (response.ok && data.success) { done("leads"); return true; }
+      if (response.status === 400 && data.message) { setStatus(data.message, "error"); return true; }
+      return false;
+    } catch (error) {
+      return false;
+    }
+  };
+  // 2. Fallback: Web3Forms, which emails Greg directly.
+  const sendToWeb3Forms = async () => {
     try {
       const response = await fetch(form.action, {
         method: "POST",
@@ -1623,16 +1652,30 @@ function demoFormScript() {
         headers: { Accept: "application/json" },
       });
       if (response.ok) {
-        if (window.gtag) window.gtag("event", "generate_lead", { form: "book_a_demo", page_path: location.pathname });
-        form.reset();
-        setStatus("Thank you. Your demo request has been sent and we will be in touch shortly.", "success");
+        done("web3forms");
       } else {
         const data = await response.json().catch(() => ({}));
-        const detail = data && data.message ? data.message : "";
-        setStatus("Sorry, something went wrong" + (detail ? ": " + detail : "") + ". Please email " + ${JSON.stringify(site.email)} + " instead.", "error");
+        failed(data && data.message ? data.message : "");
       }
     } catch (error) {
       setStatus("Sorry, we could not send that. Please check your connection or email " + ${JSON.stringify(site.email)} + " instead.", "error");
+    }
+  };
+  form.addEventListener("submit", async (event) => {
+    const keyField = form.querySelector("input[name=access_key]");
+    const hasFallback = keyField && keyField.value;
+    if (!form.dataset.leads && !hasFallback) return;
+    event.preventDefault();
+    if (!form.reportValidity()) return;
+    button.disabled = true;
+    const original = button.innerHTML;
+    button.innerHTML = "<span>Sending...</span>";
+    try {
+      const handled = await sendToLeads();
+      if (!handled) {
+        if (hasFallback) await sendToWeb3Forms();
+        else failed("");
+      }
     } finally {
       button.disabled = false;
       button.innerHTML = original;

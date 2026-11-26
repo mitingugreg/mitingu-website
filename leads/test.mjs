@@ -139,6 +139,28 @@ await wait(100);
 ({ rows } = await pool.query("SELECT event_type FROM leads ORDER BY id DESC LIMIT 1"));
 check("Unknown event type stored as Something else", r.status === 200 && rows[0].event_type === "Something else");
 
+// Main Book a Demo form (no website field, its own wording)
+const bad = { name: "Priya Shah", email: "priya@northgate-events.example", organisation: "Northgate Events", event_scale: "10-100 events a year", notes: "We run 30 client events a year.", source: "book-a-demo /book-a-demo" };
+r = await post(bad, { ip: "5.5.5.1" });
+j = await r.json();
+await wait(150);
+const bLead = (await pool.query("SELECT * FROM leads WHERE email = 'priya@northgate-events.example'")).rows[0];
+check("Book a Demo: accepted without a website", r.status === 200 && j.success && !!bLead);
+check("Book a Demo: website taken from the email domain", bLead?.website === "northgate-events.example");
+check("Book a Demo: event scale and message stored in notes", bLead?.notes === "Event scale: 10-100 events a year\n\nWe run 30 client events a year.");
+check("Book a Demo: no event type or personality invented", bLead?.event_type === "" && bLead?.personality === "");
+const bConf = sent.find((m) => m.personalizations[0].to[0].email === bad.email);
+check("Book a Demo: confirmation has its own wording", bConf?.subject === "Thanks for your Mitingu demo request" && bConf.content[0].value.startsWith("Hi Priya,") && !bConf.content[0].value.includes("demo site"));
+const bNote = sent.find((m) => m.subject === "New Mitingu demo request: Northgate Events");
+check("Book a Demo: Greg notified with message and page", !!bNote && bNote.reply_to.email === bad.email && ["We run 30 client events", "10-100 events a year", "/book-a-demo"].every((x) => bNote.content[0].value.includes(x)));
+r = await post({ ...bad, name: "" }, { ip: "5.5.5.2" });
+check("Book a Demo: name required", r.status === 400);
+r = await post({ ...bad, email: "priya@nowhere" }, { ip: "5.5.5.2" });
+check("Book a Demo: bad email rejected", r.status === 400);
+r = await post({ ...bad, email: "bot@spam.example", botcheck: "on" }, { ip: "5.5.5.3" });
+({ rows } = await pool.query("SELECT 1 FROM leads WHERE email = 'bot@spam.example'"));
+check("Book a Demo: honeypot pretends success but stores nothing", r.status === 200 && rows.length === 0);
+
 // Honeypot and origin
 const before = (await pool.query("SELECT count(*)::int n FROM leads")).rows[0].n;
 r = await post({ ...good, botcheck: "on" });
