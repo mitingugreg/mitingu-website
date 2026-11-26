@@ -167,6 +167,12 @@ Mitingu Crew (${origin}/managed-event-services) is Mitingu's managed event servi
 - Organisations running events across multiple offices, regions or brands
 - Conferences, client events, supplier and partner summits, exhibitions, roadshows and internal events
 
+## Less suited
+- Programmes where live streaming, virtual or hybrid audiences, or webinars are central. Mitingu focuses on in-person events: streaming can be added when an event needs it, but it isn't where Mitingu's attention goes
+- Academic or association conferences that need abstract submission and review. Mitingu doesn't currently offer abstract management
+- Teams that only need registration and event websites, and already run the app and onsite through other suppliers they're happy with
+- Teams happy with their current set-up where nothing is pinching
+
 ## Pricing
 Full details: ${origin}/pricing
 - Platform Entry: from £399 a month, or £3,990 billed annually. For teams moving beyond ad hoc tools and single-event builds: a single branded account, core event websites and registration, event communications, event analytics and reporting, and launch support
